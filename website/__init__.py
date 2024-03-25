@@ -12,11 +12,14 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'woof!'
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_NAME}"
+    db.init_app(app)
 
-    from .dataset_views import data_views
-    from .experiment_views import expt_views
+    from .dataset_forms import data_views
+    from .experiment_forms import expt_views
+    from .home_dash import home_dash
     from .auth import auth
 
+    app.register_blueprint(home_dash, url_prefix="/")
     app.register_blueprint(data_views, url_prefix="/")
     app.register_blueprint(expt_views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
@@ -32,6 +35,8 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+
+    return app
 
 
 def create_database(app):
