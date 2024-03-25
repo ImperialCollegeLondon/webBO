@@ -8,7 +8,8 @@ dependencies = [
     'flask-sqlalchemy',
     'flask-login',
     'dash',
-    'baybe[chem]'
+    'baybe[chem]',
+    'flask-wtf',
 ]
 
 [project.optional-dependencies]

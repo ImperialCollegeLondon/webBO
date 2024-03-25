@@ -23,6 +23,7 @@ Installation instructions:: bash
   $ pip install flask-login
   $ pip install dash
   $ pip install 'baybe[chem]'
+  $ pip install flask-wtf
 
 Acknowledgements
 ================
