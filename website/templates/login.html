@@ -1,6 +1,15 @@
 {% extends "base.html" %} {% block title %}Login{% endblock %}
 
 {% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">web-BO</h1>
+    <br />
+    <p class="lead">This is a simple GUI to support Bayesian Optimization</p>
+    <hr class="my-4">
+    <p>web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes</p>
+    <br />
+    <button type="submit" class="btn btn-primary btn-lg" name="action" value="explore">Explore!</button>
+</div>
 <form method="POST">
     <h3 align="center">Login</h3>
     <div class="form-group">
@@ -12,6 +21,16 @@
         <input type="password" , class="form-control" id="password" name="password" placeholder="Enter password" />
     </div>
     <br />
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="row">
+        <div class="col">
+            <button type="submit" class="btn btn-primary" name="action" value="submit">Submit</button>
+        </div>
+        <div class="col">
+            <div class="align-self-end">
+                <button type="submit" class="btn btn-secondary" name="action" value="signup">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
 </form>
 {% endblock %}

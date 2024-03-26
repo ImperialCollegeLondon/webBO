@@ -11,19 +11,24 @@ auth = Blueprint("auth", __name__)
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
+        if request.form['action'] == 'submit':
+            email = request.form.get("email")
+            password = request.form.get("password")
 
-        user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
-                flash("logged in subbessfully!", category="success")
-                login_user(user, remember=True)
-                return redirect(url_for("views.home"))
+            user = User.query.filter_by(email=email).first()
+            if user:
+                if check_password_hash(user.password, password):
+                    flash("logged in subbessfully!", category="success")
+                    login_user(user, remember=True)
+                    return redirect(url_for("home_dash.home"))
+                else:
+                    flash("Incorrect password", category="error")
             else:
-                flash("Incorrect password", category="error")
-        else:
-            flash("Email does not exist", category="error")
+                flash("Email does not exist", category="error")
+        elif request.form['action'] == 'signup':
+            return redirect(url_for("auth.sign_up"))
+        elif request.form['action'] == 'explore':
+            pass
 
     return render_template("login.html", user=current_user)
 

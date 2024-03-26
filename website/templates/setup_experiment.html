@@ -1,0 +1,123 @@
+{% extends "base.html" %} {% block title %}Upload{% endblock %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='expt.css') }}">
+</head>
+<div class="container">
+    <!-- MultiStep Form -->
+    <div class="container-fluid" id="grad1">
+        <div class="row justify-content-center mt-0">
+            <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
+                <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                    <h2><strong>defining your experiment</strong></h2>
+                    <p>fill all form field to go to next step</p>
+                    <div class="row">
+                        <div class="col-md-12 mx-0">
+                            <form id="msform" method="POST" enctype="multipart/form-data">
+                                <!-- progressbar -->
+                                <ul id="progressbar">
+                                    <li class="active" id="account"><strong>Dataset</strong></li>
+                                    <li id="personal"><strong>Parameter Space</strong></li>
+                                    <li id="payment"><strong>Hyperparameters</strong></li>
+                                    <li id="confirm"><strong>Finish</strong></li>
+                                </ul>
+                                <!-- fieldsets -->
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title">Select your dataset</h2>
+                                        <div class="col">
+                                            {{ data_form.name.label }}
+                                            {{ data_form.name }}
+                                        </div>
+                                        <div class="col">
+                                            {{ data_form.dataset.label }}
+                                            {{ data_form.dataset() }}
+                                        </div>
+                                        <div class="col">
+                                            {{ data_form.target.label }}
+                                            {{ data_form.target() }}
+                                        </div>
+                                    </div>
+                                    <input type="button" name="next" class="next action-button" value="Next Step"
+                                        id="select_dataset_btn" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title">Define your parameter space</h2>
+                                        {% for variable in variable_names %}
+                                        <div class="form-group row">
+                                            <div class="col">
+                                                <label for={{variable[2]}}
+                                                    id="label-parameterspace-{{variable}}"></label>
+                                            </div>
+                                            <div class=" col">
+                                                <select class="selectpicker" id="select-parameterspace-{{variable}}"
+                                                    name="select-parameterspace-{{variable}}"
+                                                    onchange="addParameterElement(this.value, {{variable[2]}})">
+
+                                                </select>
+                                            </div>
+                                            <div class="col" id="new-elements-{{variable}}"
+                                                name="new-elements-{{variable}}"></div>
+                                            <div class="col" id="new-elements-min-{{variable}}"></div>
+                                            <div class="col" id="new-elements-to-{{variable}}"></div>
+                                            <div class="col" id="new-elements-max-{{variable}}"></div>
+                                            <div class="col" id="new-elements-cat-{{variable}}"></div>
+                                            </br>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <input type="button" name="previous" class="previous action-button-previous"
+                                        value="Previous" />
+                                    <input type="button" name="next" class="next action-button" value="Next Step" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title">Select your hyperparameters</h2>
+                                        <div class="col">
+                                            {{ hyp_form.kernel.label }}
+                                            {{ hyp_form.kernel() }}
+                                        </div>
+                                        <div class="col">
+                                            {{ hyp_form.acqFunc.label }}
+                                            {{ hyp_form.acqFunc() }}
+                                        </div>
+                                        <div class="col">
+                                            {{ hyp_form.opt_type.label }}
+                                            {{ hyp_form.opt_type() }}
+                                        </div>
+                                    </div>
+                                    <input type="button" name="previous" class="previous action-button-previous"
+                                        value="Previous" />
+                                    <input type="button" name="make_payment" class="next action-button"
+                                        value="Confirm" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title text-center">Success !</h2>
+                                        <br><br>
+                                        <div class="row justify-content-center">
+                                            <div class="col-3">
+                                                <img src="https://img.icons8.com/color/96/000000/ok--v2.png"
+                                                    class="fit-image">
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                        <div class="row justify-content-center">
+                                            <div class="col-7 text-center">
+                                                <h5>Experiment created</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

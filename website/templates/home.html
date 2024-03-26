@@ -1,17 +1,87 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
 
 {% block content %}
-<h2 align="center">Dashboard</h2>
+<div class="jumbotron">
+    <h1 class="display-4">web-BO</h1>
+    <p class="lead">This is a simple GUI to support Bayesian Optimization</p>
+    <hr class="my-4">
+    <p>web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes</p>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Explore!</a>
+</div>
 <br />
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <h3 align="center">Datasets</h3>
+    <div class="row g-5">
+        <div class="col-md-6 border-right">
+            <div class="col-md-12 alert alert-primary" role="alert">
+                <h3 align="center">Datasets</h3>
+            </div>
         </div>
-        <div class="col">
-            <h3 align="center">Experiments</h3>
+        <div class="col-md-6">
+            <div class="col-md-12 alert alert-info" role="alert">
+                <h3 align="center">Experiments</h3>
+            </div>
         </div>
     </div>
+    <div class="row g-5">
+        <div class="col-md-6 border-right">
+            <div class="col-md-12">
+                <ul class="list-group list-group-flush" id="datasets">
+                    {% for data in user.datas %}
+                    <a class="style-2 list-group-item list-group-item-active" type="submit"
+                        value="select-dataset-{{ data.id }}">
+                        <h4>
+                            <i class="bi bi-database"></i>
+                            <span style="padding-left:15px">
+                                {{ data.name }}
+                            </span>
+                            <button type="button" class="close" onClick="deleteDataset({{ data.id }})">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </h4>
+                    </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <ul class="list-group list-group-flush" id="datasets">
+                    {% for expt in user.expts %}
+                    <a class="style-2 list-group-item list-group-item-active" type="submit"
+                        value="select-dataset-{{ expt.id }}">
+                        <h4>
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span style="padding-left:15px">
+                                {{ expt.name }}
+                            </span>
+                            <button type="button" class="close" onClick="deleteExperiment({{ expt.id }})">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </h4>
+                    </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br />
+    <form method="POST">
+        <div class="row g-5">
+            <div class="col-md-6">
+                <div class="col-md-12" align="center">
+                    <button type="submit" class="btn btn-secondary" name="action" value="add-dataset">Add
+                        Dataset</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-12" align="center">
+                    <button type="submit" class="btn btn-secondary" name="action" value="add-experiment">Add
+                        Experiment</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
 </div>
 
 {% endblock %}

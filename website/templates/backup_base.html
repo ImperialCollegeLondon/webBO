@@ -71,15 +71,13 @@
             });
         }
     </script>
-
     <script type="text/javascript">
         $(document).ready(function () {
 
             var current_fs, next_fs, previous_fs; //fieldsets
             var opacity;
 
-            $(".next").click(function (event) {
-                event.preventDefault();
+            $(".next").click(function () {
 
                 current_fs = $(this).parent();
                 next_fs = $(this).parent().next();
@@ -88,56 +86,30 @@
                 $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
                 //Pass info to backend
-                //Build an object with the form data
-                var formData = {};
-                $('#msform').serializeArray().forEach(function (field) {
-                    formData[field.name] = field.value;
-                })
+                var form_info = document.getElementById("datahead");
 
-                //Assume you have an array of values to check against
-                var valuesToCheck = ['parameter-space-('.concat(formData['dataset']), formData['target']];
-                //Convert formData to an array of its values
-                var formDataValues = Object.values(formData);
-                //Use .some() to check if any of the formData values are in valuesToCheck
-                var hasValueToCheck = formDataValues.some(val => valuesToCheck.includes(val));
-                console.log(valuesToCheck)
-                // if hasValueToCheck is true, remove the key-value pair from formData
-                newFormData = {};
-                for (var key in formData) {
-                    var hasPartialMatch = valuesToCheck.some(function (valueToCheck) {
-                        return key.includes(valueToCheck);
-                    });
-                    if (!hasPartialMatch) {
-                        newFormData[key] = formData[key];
-                    }
-                }
-                for (var key in newFormData) {
-                    var element = document.getElementById('label-'.concat(key))
-                    if (element != null) {
-                        element.innerHTML = key;
-                    }
-                    console.log('label-'.concat(key))
-                    console.log(element)
-                }
-                console.log(newFormData)
-                console.log('------------------------------------')
-
-                //Pass info to backend
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url_for('experiment_forms._get_expt_info') }}", // replace with your endpoint
-                    data: JSON.stringify(formData), // form data as JSON
-                    contentType: "application/JSON",
-                    success: function (response) {
-                        // handle the response here
-                    },
+                fetch("/setup", {
+                    method: "POST",
+                    body: JSON.stringify({ dataset_name: form_info }),
                 });
 
                 //show the next fieldset
                 next_fs.show();
                 current_fs.hide();
                 //hide the current fieldset with style
+                current_fs.animate({ opacity: 0 }, {
+                    step: function (now) {
+                        // for making fielset appear animation
+                        opacity = 1 - now;
 
+                        current_fs.css({
+                            'display': 'none',
+                            'position': 'relative'
+                        });
+                        next_fs.css({ 'opacity': opacity });
+                    },
+                    duration: 600
+                });
             });
 
             $(".previous").click(function () {
@@ -175,9 +147,9 @@
 
             $(".submit").click(function () {
                 return false;
-            });
-        });
+            })
 
+        });
     </script>
     <script charset="utf-8" type="text/javascript">
 
@@ -219,71 +191,6 @@
 
         });
 
-    </script>
-    <script type="text/javascript">
-        function addParameterElement(val, row) {
-
-            var formData = {};
-            $('#msform').serializeArray().forEach(function (field) {
-                formData[field.name] = field.value;
-            })
-            //console.log(JSON.stringify(formData))
-
-            if (val == "cat") {
-                var element = document.createElement("i");
-                element.className = "bi-arrow-right-circle";
-                document.getElementById('new-elements-'.concat(row.id)).appendChild(element);
-                var element2 = document.createElement("input");
-                element2.className = "form-control";
-                element2.id = "formFile";
-                element2.name = "formFile-".concat(row.id);
-                element2.type = "file";
-                element2.placeholder = "upload list of options";
-                document.getElementById("new-elements-min-".concat(row.id)).appendChild(element2);
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-label", "Example input");
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-describedby", "button-addon");
-            }
-            else if (val == "subs") {
-                var element = document.createElement("i");
-                element.className = "bi-arrow-right-circle";
-                document.getElementById('new-elements-'.concat(row.id)).appendChild(element);
-                var element2 = document.createElement("input");
-                element2.className = "form-control";
-                element2.id = "formFile";
-                element2.name = "formFile-".concat(row.id);
-                element2.type = "file";
-                element2.placeholder = "upload list of options";
-                document.getElementById("new-elements-min-".concat(row.id)).appendChild(element2);
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-label", "Example input");
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-describedby", "button-addon");
-                options = `
-                    <select class="selectpicker" name="new-elements-subs">
-                        <option selected>Open this select menu</option>
-                        <option value="MORDRED">Mordred</option>
-                        <option value="RDKIT">rdkit</option>
-                        <option value="MORGAN_FP">Morgan FP</option>
-                        <option value="OHE">One-Hot Encoding</option>
-                    </select>
-                    `;
-                document.getElementById("new-elements-to-".concat(row.id)).insertAdjacentHTML('beforeend', options);
-            }
-            else {
-                var element1 = document.createElement("i");
-                element1.className = "bi-arrow-right-circle";
-                document.getElementById('new-elements-'.concat(row.id)).appendChild(element1);
-                var element2 = document.createElement("textarea");
-                element2.name = "new-elements-min-".concat(row.id);
-                element2.rows = "1";
-                element2.cols = "3";
-                document.getElementById('new-elements-min-'.concat(row.id)).appendChild(element2);
-                document.getElementById('new-elements-to-'.concat(row.id)).insertAdjacentHTML('beforeend', '<p>to</p>');
-                var element3 = document.createElement("textarea");
-                element3.name = "new-elements-max-".concat(row.id);
-                element3.rows = "1";
-                element3.cols = "3";
-                document.getElementById('new-elements-max-'.concat(row.id)).appendChild(element3);
-            }
-        }
     </script>
     {% endblock %}
 </body>

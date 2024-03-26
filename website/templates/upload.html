@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block title %}Upload{% endblock %}
+
+{% block content %}
+<h2 align="left">Upload your data!</h2>
+<form method="POST" enctype="multipart/form-data">
+    <div class="d-flex justify-content-center">
+        <div class="input-group w-auto">
+            <div class="col">
+                <input type="text" class="form-control" id="dataName" name="dataName" placeholder="Dataset Name" />
+            </div>
+            <div class="col">
+                <input class="form-control" type="file" id="formFile" name="formFile" placeholder="Example input"
+                    aria-label="Example input" aria-describedby="button-addon1" />
+            </div>
+            <div class="col">
+                <button class="btn btn-primary" type="submit" id="button-addon1" data-mdb-ripple-color="dark">
+                    upload!
+                </button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}
