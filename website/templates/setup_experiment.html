@@ -9,10 +9,10 @@
     <!-- MultiStep Form -->
     <div class="container-fluid" id="grad1">
         <div class="row justify-content-center mt-0">
-            <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
-                <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
-                    <h2><strong>defining your experiment</strong></h2>
-                    <p>fill all form field to go to next step</p>
+            <div class="col-12 col-sm-10 col-md-9 col-lg-8 text-center p-0 mt-3 mb-2">
+                <div class="card pt-4 pb-0 mt-3 mb-3">
+                    <h2><strong>define your experiment</strong></h2>
+                    <p>fill all form fields to go to the next step</p>
                     <div class="row">
                         <div class="col-md-12 mx-0">
                             <form id="msform" method="POST" enctype="multipart/form-data">
@@ -30,6 +30,13 @@
                                         <div class="col">
                                             {{ data_form.name.label }}
                                             {{ data_form.name }}
+                                            {% if data_form.name.errors %}
+                                            <ul class="errors">
+                                                {% for error in form.title.errors %}
+                                                <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% endif %}
                                         </div>
                                         <div class="col">
                                             {{ data_form.dataset.label }}
@@ -39,34 +46,52 @@
                                             {{ data_form.target.label }}
                                             {{ data_form.target() }}
                                         </div>
+                                        <div class="col" align="center">
+                                            {{ data_form.submit(class="submit-button") }}
+                                        </div>
                                     </div>
+                                    <h5>You must submit your dataset using the lavender button before proceeding.</h5>
                                     <input type="button" name="next" class="next action-button" value="Next Step"
                                         id="select_dataset_btn" />
                                 </fieldset>
                                 <fieldset>
                                     <div class="form-card">
                                         <h2 class="fs-title">Define your parameter space</h2>
+                                        <br />
+                                        <h6>
+                                            For every variable defining your search space, select the variable type, and
+                                            include additional, requested information.
+                                        </h6>
+                                        <br />
+                                        <hr />
+                                        <br />
                                         {% for variable in variable_names %}
-                                        <div class="form-group row">
+                                        {% if variable[0]|int == data_form.dataset.data|int %}
+                                        <div class="row">
                                             <div class="col">
                                                 <label for={{variable[2]}}
-                                                    id="label-parameterspace-{{variable}}"></label>
+                                                    id="label-parameterspace-{{variable[2]}}">{{variable[2]}}</label>
                                             </div>
                                             <div class=" col">
-                                                <select class="selectpicker" id="select-parameterspace-{{variable}}"
-                                                    name="select-parameterspace-{{variable}}"
-                                                    onchange="addParameterElement(this.value, {{variable[2]}})">
-
+                                                <select class="selectpicker" name="parameterspace-{{variable[2]}}"
+                                                    id="parameterspace-{{variable[2]}}"
+                                                    onchange="addParameterElement(this.value, {{variable}} )">
+                                                    <option selected>Open this select menu</option>
+                                                    <option value="int">Integer</option>
+                                                    <option value="cont">Continuous</option>
+                                                    <option value="cat">Categorical</option>
+                                                    <option value="subs">Chemical</option>
                                                 </select>
                                             </div>
-                                            <div class="col" id="new-elements-{{variable}}"
-                                                name="new-elements-{{variable}}"></div>
-                                            <div class="col" id="new-elements-min-{{variable}}"></div>
-                                            <div class="col" id="new-elements-to-{{variable}}"></div>
-                                            <div class="col" id="new-elements-max-{{variable}}"></div>
-                                            <div class="col" id="new-elements-cat-{{variable}}"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col" id="new-elements-{{variable[2]}}"
+                                                name="new-elements-{{variable[2]}}"></div>
                                             </br>
                                         </div>
+
+                                        <hr />
+                                        {% endif %}
                                         {% endfor %}
                                     </div>
                                     <input type="button" name="previous" class="previous action-button-previous"
@@ -98,10 +123,14 @@
                                     <div class="form-card">
                                         <h2 class="fs-title text-center">Success !</h2>
                                         <br><br>
-                                        <div class="row justify-content-center">
-                                            <div class="col-3">
-                                                <img src="https://img.icons8.com/color/96/000000/ok--v2.png"
-                                                    class="fit-image">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <form method="POST">
+                                                        <button type="submit" class="btn btn-success" id="expt_btn"
+                                                            name="expt_btn" value="run-expt">Run experiment</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                         <br><br>

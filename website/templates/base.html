@@ -73,6 +73,17 @@
     </script>
 
     <script type="text/javascript">
+        function deleteExperiment(noteId) {
+            fetch("/delete-experiment", {
+                method: "POST",
+                body: JSON.stringify({ noteId: noteId }),
+            }).then((_res) => {
+                window.location.href = "/";
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
         $(document).ready(function () {
 
             var current_fs, next_fs, previous_fs; //fieldsets
@@ -93,34 +104,7 @@
                 $('#msform').serializeArray().forEach(function (field) {
                     formData[field.name] = field.value;
                 })
-
-                //Assume you have an array of values to check against
-                var valuesToCheck = ['parameter-space-('.concat(formData['dataset']), formData['target']];
-                //Convert formData to an array of its values
-                var formDataValues = Object.values(formData);
-                //Use .some() to check if any of the formData values are in valuesToCheck
-                var hasValueToCheck = formDataValues.some(val => valuesToCheck.includes(val));
-                console.log(valuesToCheck)
-                // if hasValueToCheck is true, remove the key-value pair from formData
-                newFormData = {};
-                for (var key in formData) {
-                    var hasPartialMatch = valuesToCheck.some(function (valueToCheck) {
-                        return key.includes(valueToCheck);
-                    });
-                    if (!hasPartialMatch) {
-                        newFormData[key] = formData[key];
-                    }
-                }
-                for (var key in newFormData) {
-                    var element = document.getElementById('label-'.concat(key))
-                    if (element != null) {
-                        element.innerHTML = key;
-                    }
-                    console.log('label-'.concat(key))
-                    console.log(element)
-                }
-                console.log(newFormData)
-                console.log('------------------------------------')
+                console.log(formData)
 
                 //Pass info to backend
                 $.ajax({
@@ -129,7 +113,6 @@
                     data: JSON.stringify(formData), // form data as JSON
                     contentType: "application/JSON",
                     success: function (response) {
-                        // handle the response here
                     },
                 });
 
@@ -222,66 +205,61 @@
     </script>
     <script type="text/javascript">
         function addParameterElement(val, row) {
-
+            console.log(val)
+            console.log(row)
             var formData = {};
             $('#msform').serializeArray().forEach(function (field) {
                 formData[field.name] = field.value;
             })
-            //console.log(JSON.stringify(formData))
+            console.log(JSON.stringify(formData))
 
             if (val == "cat") {
-                var element = document.createElement("i");
-                element.className = "bi-arrow-right-circle";
-                document.getElementById('new-elements-'.concat(row.id)).appendChild(element);
                 var element2 = document.createElement("input");
                 element2.className = "form-control";
-                element2.id = "formFile";
-                element2.name = "formFile-".concat(row.id);
+                element2.id = "formFile-".concat(row);
+                element2.name = "formFile-".concat(row);
                 element2.type = "file";
                 element2.placeholder = "upload list of options";
-                document.getElementById("new-elements-min-".concat(row.id)).appendChild(element2);
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-label", "Example input");
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-describedby", "button-addon");
+                document.getElementById("new-elements-".concat(row)).appendChild(element2);
+                document.getElementById("new-elements-".concat(row)).setAttribute("aria-label", "Example input");
+                document.getElementById("new-elements-".concat(row)).setAttribute("aria-describedby", "button-addon");
             }
             else if (val == "subs") {
-                var element = document.createElement("i");
-                element.className = "bi-arrow-right-circle";
-                document.getElementById('new-elements-'.concat(row.id)).appendChild(element);
-                var element2 = document.createElement("input");
-                element2.className = "form-control";
-                element2.id = "formFile";
-                element2.name = "formFile-".concat(row.id);
-                element2.type = "file";
-                element2.placeholder = "upload list of options";
-                document.getElementById("new-elements-min-".concat(row.id)).appendChild(element2);
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-label", "Example input");
-                document.getElementById("new-elements-min-".concat(row.id)).setAttribute("aria-describedby", "button-addon");
-                options = `
-                    <select class="selectpicker" name="new-elements-subs">
-                        <option selected>Open this select menu</option>
-                        <option value="MORDRED">Mordred</option>
-                        <option value="RDKIT">rdkit</option>
-                        <option value="MORGAN_FP">Morgan FP</option>
-                        <option value="OHE">One-Hot Encoding</option>
-                    </select>
-                    `;
-                document.getElementById("new-elements-to-".concat(row.id)).insertAdjacentHTML('beforeend', options);
+                var newContent = `
+                    <div class="row">
+                        <div class="col">
+                            <input class="form-control" id="formFile-${row}" name="formFile-${row}" type="file" placeholder="upload list of options" />
+                        </div>
+                        <div class="col">
+                            <select class="selectpicker" name="new-elements-subs-${col}" id="new-elements-subs-${col}">
+                                <option selected>Select encoding</option>
+                                <option value="MORDRED">Mordred</option>
+                                <option value="RDKIT">rdkit</option>
+                                <option value="MORGAN_FP">Morgan FP</option>
+                                <option value="OHE">One-Hot Encoding</option>
+                            </select>
+                        </div>
+                    </div>
+                `
+                document.getElementById("new-elements-".concat(row)).insertAdjacentHTML('beforeend', newContent);
+
             }
             else {
-                var element1 = document.createElement("i");
-                element1.className = "bi-arrow-right-circle";
-                document.getElementById('new-elements-'.concat(row.id)).appendChild(element1);
-                var element2 = document.createElement("textarea");
-                element2.name = "new-elements-min-".concat(row.id);
-                element2.rows = "1";
-                element2.cols = "3";
-                document.getElementById('new-elements-min-'.concat(row.id)).appendChild(element2);
-                document.getElementById('new-elements-to-'.concat(row.id)).insertAdjacentHTML('beforeend', '<p>to</p>');
-                var element3 = document.createElement("textarea");
-                element3.name = "new-elements-max-".concat(row.id);
-                element3.rows = "1";
-                element3.cols = "3";
-                document.getElementById('new-elements-max-'.concat(row.id)).appendChild(element3);
+                var newContent = `
+                    <div class="row">
+                            <div class="col">
+                                <textarea name="min-vals-${row}" rows="1" cols="3"></textarea>
+                            </div>
+                            <div class="col" align="center">
+                                <p>to</p>
+                            </div>
+                            <div class="col">
+                                <textarea name="max-vals-${row}" rows="1" cols="3" ></textarea>
+                            </div>
+                    </div>
+                `
+                document.getElementById("new-elements-".concat(row)).insertAdjacentHTML('beforeend', newContent);
+
             }
         }
     </script>

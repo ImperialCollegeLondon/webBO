@@ -7,6 +7,13 @@ html {
     height: 100%;
 }
 
+highlight {
+    background-color: yellow;
+    /* Set your desired highlight color */
+    font-weight: bold;
+    /* Make the text bold */
+}
+
 /*Background color*/
 #grad1 {
     background-color: : #9C27B0;
@@ -25,7 +32,7 @@ html {
     border: 0 none;
     border-radius: 0px;
     box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.2);
-    padding: 20px 40px 30px 40px;
+    padding: 10px 30px 20px 30px;
     box-sizing: border-box;
     width: 94%;
     margin: 0 3% 20px 3%;
@@ -100,6 +107,24 @@ html {
 #msform .action-button:hover,
 #msform .action-button:focus {
     box-shadow: 0 0 0 2px white, 0 0 0 3px skyblue;
+}
+
+/*Purple Buttons*/
+#msform .submit-button {
+    width: 200px;
+    background: plum;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 0px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+}
+
+#msform .submit-button:hover,
+#msform .submit-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px plum;
 }
 
 /*Previous Buttons*/

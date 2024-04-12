@@ -6,9 +6,11 @@
     <p class="lead">This is a simple GUI to support Bayesian Optimization</p>
     <hr class="my-4">
     <p>web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes</p>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Explore!</a>
+    <form method="POST">
+        <button type="submit" class="btn btn-primary btn-lg" name="action" value="explore">Explore!</button>
+    </form>
 </div>
-<br />
+
 <div class="container">
     <div class="row g-5">
         <div class="col-md-6 border-right">
@@ -29,14 +31,24 @@
                     {% for data in user.datas %}
                     <a class="style-2 list-group-item list-group-item-active" type="submit"
                         value="select-dataset-{{ data.id }}">
-                        <h4>
+                        <h4 class="d-flex align-items-center">
                             <i class="bi bi-database"></i>
-                            <span style="padding-left:15px">
-                                {{ data.name }}
-                            </span>
-                            <button type="button" class="close" onClick="deleteDataset({{ data.id }})">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <form method="POST" class="d-flex align-items-center" style="width: 100%;">
+                                <div class="d-flex align-items-center" style="flex-grow: 1;">
+                                    <button type="submit" class="close" name="action" value="viewdata-{{ data.name }}"
+                                        style="padding-left: 15px;">
+                                        <span>
+                                            {{ data.name }}
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="ml-auto">
+                                    <button type="button" class="close" onClick="deleteDataset({{ data.id }})"
+                                        style="display: flex; justify-content: flex-end;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </form>
                         </h4>
                     </a>
                     {% endfor %}
@@ -45,18 +57,28 @@
         </div>
         <div class="col-md-6">
             <div class="col-md-12">
-                <ul class="list-group list-group-flush" id="datasets">
+                <ul class="list-group list-group-flush" id="experiments">
                     {% for expt in user.expts %}
                     <a class="style-2 list-group-item list-group-item-active" type="submit"
-                        value="select-dataset-{{ expt.id }}">
-                        <h4>
-                            <i class="bi bi-graph-up-arrow"></i>
-                            <span style="padding-left:15px">
-                                {{ expt.name }}
-                            </span>
-                            <button type="button" class="close" onClick="deleteExperiment({{ expt.id }})">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        value="select-experiment-{{ expt.id }}">
+                        <h4 class="d-flex align-items-center">
+                            <i class="bi bi-clipboard-data"></i>
+                            <form method="POST" class="d-flex align-items-center" style="width: 100%;">
+                                <div class="d-flex align-items-center" style="flex-grow: 1;">
+                                    <button type="submit" class="close" name="action" value="viewexpt-{{ expt.name }}"
+                                        style="padding-left: 15px;">
+                                        <span>
+                                            {{ expt.name }}
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="ml-auto">
+                                    <button type="button" class="close" onClick="deleteExperiment({{ expt.id }})"
+                                        style="display: flex; justify-content: flex-end;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </form>
                         </h4>
                     </a>
                     {% endfor %}
@@ -64,24 +86,25 @@
             </div>
         </div>
     </div>
-    <br />
-    <form method="POST">
-        <div class="row g-5">
-            <div class="col-md-6">
-                <div class="col-md-12" align="center">
-                    <button type="submit" class="btn btn-secondary" name="action" value="add-dataset">Add
-                        Dataset</button>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="col-md-12" align="center">
-                    <button type="submit" class="btn btn-secondary" name="action" value="add-experiment">Add
-                        Experiment</button>
-                </div>
-            </div>
-
-        </div>
-    </form>
 </div>
+
+<br />
+<form method="POST">
+    <div class="row g-5">
+        <div class="col-md-6">
+            <div class="col-md-12" align="center">
+                <button type="submit" class="btn btn-secondary" name="action" value="add-dataset">Add
+                    Dataset</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-12" align="center">
+                <button type="submit" class="btn btn-secondary" name="action" value="add-experiment">Add
+                    Experiment</button>
+            </div>
+        </div>
+
+    </div>
+</form>
 
 {% endblock %}

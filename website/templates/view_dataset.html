@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+
+{% block content %}
+<br />
+<div class="jumbotron" style="background-color:#E6E6FA;">
+    <h1 class="display-4">Your {{name}} dataset</h1>
+    <p class="lead">This is the information present in the {{name}} dataset.</p>
+</div>
+<hr class="my-4">
+<div class="row">
+    <div class="col container">
+        <h2>The dataset</h2>
+        </br>
+        {% for table in tables %}
+        {{ table|safe }}
+        {% endfor %}
+    </div>
+
+    <div class="col container">
+        <h2>Dataset summary statistics</h2>
+        </br>
+        {% for summary in summaries %}
+        {{ summary|safe }}
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}

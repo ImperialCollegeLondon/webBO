@@ -71,13 +71,15 @@
             });
         }
     </script>
+
     <script type="text/javascript">
         $(document).ready(function () {
 
             var current_fs, next_fs, previous_fs; //fieldsets
             var opacity;
 
-            $(".next").click(function () {
+            $(".next").click(function (event) {
+                event.preventDefault();
 
                 current_fs = $(this).parent();
                 next_fs = $(this).parent().next();
@@ -86,30 +88,28 @@
                 $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
                 //Pass info to backend
-                var form_info = document.getElementById("datahead");
+                //Build an object with the form data
+                var formData = {};
+                $('#msform').serializeArray().forEach(function (field) {
+                    formData[field.name] = field.value;
+                })
+                console.log(formData)
 
-                fetch("/setup", {
-                    method: "POST",
-                    body: JSON.stringify({ dataset_name: form_info }),
+                //Pass info to backend
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('experiment_forms._get_expt_info') }}", // replace with your endpoint
+                    data: JSON.stringify(formData), // form data as JSON
+                    contentType: "application/JSON",
+                    success: function (response) {
+                    },
                 });
 
                 //show the next fieldset
                 next_fs.show();
                 current_fs.hide();
                 //hide the current fieldset with style
-                current_fs.animate({ opacity: 0 }, {
-                    step: function (now) {
-                        // for making fielset appear animation
-                        opacity = 1 - now;
 
-                        current_fs.css({
-                            'display': 'none',
-                            'position': 'relative'
-                        });
-                        next_fs.css({ 'opacity': opacity });
-                    },
-                    duration: 600
-                });
             });
 
             $(".previous").click(function () {
@@ -147,9 +147,9 @@
 
             $(".submit").click(function () {
                 return false;
-            })
-
+            });
         });
+
     </script>
     <script charset="utf-8" type="text/javascript">
 
@@ -191,6 +191,72 @@
 
         });
 
+    </script>
+    <script type="text/javascript">
+        function addParameterElement(val, row) {
+            console.log(val)
+            console.log(row)
+            var formData = {};
+            $('#msform').serializeArray().forEach(function (field) {
+                formData[field.name] = field.value;
+            })
+            console.log(JSON.stringify(formData))
+
+            if (val == "cat") {
+                var element = document.createElement("i");
+                element.className = "bi-arrow-right-circle";
+                document.getElementById('new-elements-'.concat(row)).appendChild(element);
+                var element2 = document.createElement("input");
+                element2.className = "form-control";
+                element2.id = "formFile";
+                element2.name = "formFile-".concat(row);
+                element2.type = "file";
+                element2.placeholder = "upload list of options";
+                document.getElementById("new-elements-min-".concat(row)).appendChild(element2);
+                document.getElementById("new-elements-min-".concat(row)).setAttribute("aria-label", "Example input");
+                document.getElementById("new-elements-min-".concat(row)).setAttribute("aria-describedby", "button-addon");
+            }
+            else if (val == "subs") {
+                var element = document.createElement("i");
+                element.className = "bi-arrow-right-circle";
+                document.getElementById('new-elements-'.concat(row)).appendChild(element);
+                var element2 = document.createElement("input");
+                element2.className = "form-control";
+                element2.id = "formFile";
+                element2.name = "formFile-".concat(row);
+                element2.type = "file";
+                element2.placeholder = "upload list of options";
+                document.getElementById("new-elements-min-".concat(row)).appendChild(element2);
+                document.getElementById("new-elements-min-".concat(row)).setAttribute("aria-label", "Example input");
+                document.getElementById("new-elements-min-".concat(row)).setAttribute("aria-describedby", "button-addon");
+                options = `
+                    <select class="selectpicker" name="new-elements-subs">
+                        <option selected>Open this select menu</option>
+                        <option value="MORDRED">Mordred</option>
+                        <option value="RDKIT">rdkit</option>
+                        <option value="MORGAN_FP">Morgan FP</option>
+                        <option value="OHE">One-Hot Encoding</option>
+                    </select>
+                    `;
+                document.getElementById("new-elements-to-".concat(row)).insertAdjacentHTML('beforeend', options);
+            }
+            else {
+                var element1 = document.createElement("i");
+                element1.className = "bi-arrow-right-circle";
+                document.getElementById('new-elements-'.concat(row)).appendChild(element1);
+                var element2 = document.createElement("textarea");
+                element2.name = "new-elements-min-".concat(row);
+                element2.rows = "1";
+                element2.cols = "3";
+                document.getElementById('new-elements-min-'.concat(row)).appendChild(element2);
+                document.getElementById('new-elements-to-'.concat(row)).insertAdjacentHTML('beforeend', '<p>to</p>');
+                var element3 = document.createElement("textarea");
+                element3.name = "new-elements-max-".concat(row);
+                element3.rows = "1";
+                element3.cols = "3";
+                document.getElementById('new-elements-max-'.concat(row)).appendChild(element3);
+            }
+        }
     </script>
     {% endblock %}
 </body>
