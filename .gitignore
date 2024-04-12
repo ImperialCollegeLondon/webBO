@@ -1,4 +1,5 @@
 .venv/
+.vis-db/
 __pycache__
 *.egg-info
 **/*.db
