@@ -53,10 +53,8 @@ def setup():
     data_form.dataset.choices = [(row.id, row.name) for row in Data.query.all()]
     data_form.target.choices = [(row.id, row.variables) for row in Data.query.all()]
     expt_names = [row.name for row in Experiment.query.all()]
-    print(expt_names)
     if data_form.name.data in expt_names:
         flash("That name already exists!", category="error")
-    print(data_form.name.data)
 
     hyp_form = HyperparameterForm()
     hyp_form.kernel.choices = ['Matern', 'Tanimoto']
@@ -64,16 +62,14 @@ def setup():
     hyp_form.opt_type.choices = ['maximize', 'minimize']
 
     if request.method == "POST":
-        if data_form.name.data == str:
-            print('OMGGGGGG')
-        if request.form.get('expt_btn') == "run-expt":
+        if request.form.get('expt_btn') == "check-params":
+            print('WORKSDLKJFSLDKFJSDLKFJSDLKFJDSLFKJ')
+        elif request.form.get('expt_btn') == "run-expt":
             dataset_info = [row for row in Data.query.filter_by(id=data_form.dataset.data).all()]
             variable_types = {}
             for index, variable in pd.read_json(dataset_info[0].variables).iterrows():
                 col = variable['variables']
-                print(col)
-                print(request.form.get(f"parameterspace-{col}"))
-                
+
                 if request.form.get(f"parameterspace-{col}") == "cat":
                     datafile = request.files[f"formFile-{col}"]
                     if datafile:
@@ -96,17 +92,23 @@ def setup():
                         "encoding": request.form.get(f"new-elements-subs-{col}"),
                     }
                 elif request.form.get(f"parameterspace-{col}") == "int":
-                    variable_types[f"{col}"] = {
-                        "parameter-type": request.form.get(f"parameterspace-{col}"),
-                        "min": int(request.form.get(f'min-vals-{col}')),
-                        "max": int(request.form.get(f"max-vals-{col}")),
-                    }
+                    if int(request.form.get(f"min-vals-{col}")) < int(request.form.get(f"max-vals-{col}")):
+                        variable_types[f"{col}"] = {
+                            "parameter-type": request.form.get(f"parameterspace-{col}"),
+                            "min": int(request.form.get(f'min-vals-{col}')),
+                            "max": int(request.form.get(f"max-vals-{col}")),
+                        }
+                    else:
+                        flash('Min values MUST be less than max values.', category="error")
                 elif request.form.get(f"parameterspace-{col}") == "cont":
-                    variable_types[f"{col}"] = {
-                        "parameter-type": request.form.get(f"parameterspace-{col}"),
-                        "min": float(request.form.get(f'min-vals-{col}')),
-                        "max": float(request.form.get(f"max-vals-{col}")),
-                    }
+                    if float(request.form.get(f"min-vals-{col}")) < float(request.form.get(f"max-vals-{col}")):
+                        variable_types[f"{col}"] = {
+                            "parameter-type": request.form.get(f"parameterspace-{col}"),
+                            "min": float(request.form.get(f'min-vals-{col}')),
+                            "max": float(request.form.get(f"max-vals-{col}")),
+                        }
+                    else:
+                        flash('Min values MUST be less than max values.', category="error")
             expt_info = Experiment(
                 name=data_form.name.data,
                 dataset_name=dataset_info[0].name,

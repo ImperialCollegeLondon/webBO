@@ -84,6 +84,17 @@
     </script>
 
     <script type="text/javascript">
+        document.getElementById('expt_btn').addEventListener('submit', function (event) {
+            console.log('got the element id?')
+            if (document.activeElement('name') == 'expt_btn' &&
+                document.activeElement.getAttribute('value') == 'check-params') {
+                event.preventDefault();
+                console.log('in the if statement....')
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
         $(document).ready(function () {
 
             var current_fs, next_fs, previous_fs; //fieldsets
