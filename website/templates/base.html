@@ -84,14 +84,56 @@
     </script>
 
     <script type="text/javascript">
-        document.getElementById('expt_btn').addEventListener('submit', function (event) {
-            console.log('got the element id?')
-            if (document.activeElement('name') == 'expt_btn' &&
-                document.activeElement.getAttribute('value') == 'check-params') {
-                event.preventDefault();
-                console.log('in the if statement....')
+        function checkParameters() {
+            // Get all the select elements
+            var selects = document.getElementsByTagName('select');
+            var vars = [];
+            for (var i = 0; i < selects.length; i++) {
+                var select = selects[i];
+                // Check if the select element is part of the parameter space
+                if (select.name.startsWith('parameterspace-')) {
+                    // Check if a valid option is selected
+                    vars.push(select.name.replace('parameterspace-', ''))
+                    if (select.value == 'Open this select menu') {
+                        alert('Please select a valid option for ' + select.name);
+                        return;
+                    }
+                }
             }
-        });
+            // console.log(vars)
+            // If all inputs are valid, you can proceed with the form submission or the next step
+            alert('All inputs are valid');
+            var textareas = document.getElementsByTagName('textarea')
+            var textareasArray = Array.from(textareas);
+            console.log(textareas);
+            for (var i = 0; i < vars.length; i++) {
+                var variable = vars[i];
+                var checkMax = 'max-vals-'.concat(variable)
+                console.log(checkMax)
+                if (textareasArray.includes(checkMax)) {
+                    console.log('works?')
+                    console.log('---------------')
+                }
+            }
+            for (var i = 0; i < textareas.length; i++) {
+                var textarea = textareas[i];
+                // Check if the textarea element is a min or max value
+                if (textarea.name.startsWith('min-vals-') || textarea.name.startsWith('max-vals-')) {
+                    // Check if the value is a number
+                    if (isNaN(textarea.value)) {
+                        alert('Please enter a number for ' + textarea.name);
+                        return;
+                    }
+                    // Check if the value is within an acceptable range
+                    if (textarea.value < 0 || textarea.value > 100) {
+                        alert('Please enter a number between 0 and 100 for ' + textarea.name);
+                        return;
+                    }
+                }
+            }
+            // If all inputs are valid, you can proceed with the form submission or the next step
+            alert('All inputs are valid');
+        }
     </script>
 
     <script type="text/javascript">
@@ -216,8 +258,8 @@
     </script>
     <script type="text/javascript">
         function addParameterElement(val, row) {
-            console.log(val)
-            console.log(row)
+            // console.log(val)
+            // console.log(row)
             var formData = {};
             $('#msform').serializeArray().forEach(function (field) {
                 formData[field.name] = field.value;
