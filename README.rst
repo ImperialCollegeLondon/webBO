@@ -14,24 +14,17 @@ Installation
 
 Installation instructions:: bash
 
-  $ conda create -p ./.venv python=3.11
+.. code-block:: bash
 
+  $ conda create -p ./.venv python=3.11
   $ conda activate ./.venv
-  
   $ pip install baybe
-  
   $ pip install Flask
-  
   $ pip install sqlalchemy
-  
   $ pip install Flask-SQLAlchemy
-  
   $ pip install flask-login
-  
   $ pip install dash
-  
   $ pip install 'baybe[chem]'
-  
   $ pip install flask-wtf
 
 Acknowledgements
