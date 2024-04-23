@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - APP_NAME="webBO"
+    ports:
+      - 127.0.0.1:8050:8050
