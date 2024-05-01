@@ -1,3 +1,4 @@
+from .datalab_data import DatalabData
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
 from .models import Data #, Experiment
@@ -28,11 +29,29 @@ def connect():
     if request.method == "POST":
         if request.form['action'] == "submit":
             # check the dataset name
-            name = request.form.get('dataName')
+            name = request.form.get('dataset_name')
             if db.session.query(Data.id).filter_by(name=name).scalar() is not None:
                 flash("Dataset names must be unique.", category="error")
-
-            
+            else:
+                api_key = request.form.get('api_key')
+                domain = request.form.get('domain')
+                collection_id = request.form.get('collection_id')
+                blocktype = request.form.get('block_id')
+                features = request.form.get('parameter_names').split(',')
+                variable_df = pd.DataFrame([features])
+                df = DatalabData(api_key, domain, collection_id, blocktype, features)
+                
+                input_data = Data(
+                    name=f"{name}",
+                    data=df.to_json(orient='records'),
+                    variables=variable_df.to_json(orient='records'),
+                    user_id=current_user.id
+                )
+                db.session.add(input_data)
+                db.session.flush()
+                db.session.commit()
+                flash("Upload successful!", category="success")
+                return redirect(url_for("home_dash.home"))
     return render_template("connect_datalab.html", user=current_user)
 
 
