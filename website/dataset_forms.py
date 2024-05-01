@@ -1,3 +1,4 @@
+from .datalab_data import DatalabData
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
 from .models import Data #, Experiment
@@ -31,7 +32,12 @@ def connect():
             name = request.form.get('dataName')
             if db.session.query(Data.id).filter_by(name=name).scalar() is not None:
                 flash("Dataset names must be unique.", category="error")
-
+            api_key = request.form.get('api_key')
+            domain = request.form.get('domain')
+            collection_id = request.form.get('collection_id')
+            blocktype = request.form.get('block_id')
+            features = request.form.get('parameter_names')
+            retrieve_data = DatalabData(api_key, domain, collection_id, blocktype, features)
             
     return render_template("connect_datalab.html", user=current_user)
 

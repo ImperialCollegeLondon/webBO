@@ -24,7 +24,7 @@ def login():
                 else:
                     flash("Incorrect password", category="error")
             else:
-                flash("Email does not exist", category="error")
+                flash("Username does not exist", category="error")
         elif request.form['action'] == 'signup':
             return redirect(url_for("auth.sign_up"))
         elif request.form['action'] == 'explore':
