@@ -30,8 +30,6 @@ def connect():
         if request.form['action'] == "submit":
             # check the dataset name
             name = request.form.get('dataset_name')
-            print(name)
-            print('OMGGGGGGGG')
             if db.session.query(Data.id).filter_by(name=name).scalar() is not None:
                 flash("Dataset names must be unique.", category="error")
             else:
