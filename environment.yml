@@ -1,0 +1,14 @@
+name: suprashare
+dependencies:
+  - python==3.11
+  - Flask
+  - sqlalchemy
+  - Flask-SQLAlchemy
+  - flask-login
+  - dash
+  - flask-wtf
+  - pip
+  - pip:
+      - baybe
+      - "baybe[chem]"
+      - gunicorn

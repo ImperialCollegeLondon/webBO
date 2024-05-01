@@ -1,0 +1,73 @@
+name: CI SupraShare
+
+on: [push, pull_request]
+
+jobs:
+  ## No pre-commit hooks in the repo, so this can be skipped
+#   qa:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: pre-commit/action@v2.0.2
+
+  ## No tests, either, so this can also be skipped
+#   test:
+#     needs: qa
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v2
+
+#       - name: Conda setup
+#         uses: s-weigand/setup-conda@v1
+#         with:
+#           update-conda: true
+
+#       # cache the conda installation to speedup CI runs
+#       - uses: actions/cache@v2
+#         id: cache
+#         with:
+#           path: /usr/share/miniconda/envs/suprashare
+#           key: ${{ runner.os }}-conda-cache-${{ hashFiles('environment.yml') }}
+
+#       - name: Conda environment creation
+#         if: steps.cache.outputs.cache-hit != 'true'
+#         run: |
+#           conda env create -f environment.yml
+#           source activate suprashare
+#       - name: Run tests
+#         run: |
+#           source activate suprashare
+#           pytest -v
+
+  publish:
+    ## Only run this job on the main branch
+    if: github.ref == 'refs/heads/main'
+
+    ## This job depends on the test job, which is commented out
+    # needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get image metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
