@@ -26,6 +26,7 @@ Installation instructions:: bash
   $ pip install dash
   $ pip install 'baybe[chem]'
   $ pip install flask-wtf
+  $ pip install datalab-api
 
 Acknowledgements
 ================
