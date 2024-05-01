@@ -2,13 +2,20 @@
 
 {% block content %}
 <div class="jumbotron">
-    <h1 class="display-4">web-BO</h1>
-    <p class="lead">This is a simple GUI to support Bayesian Optimization</p>
-    <hr class="my-4">
-    <p>web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes</p>
-    <form method="POST">
-        <button type="submit" class="btn btn-primary btn-lg" name="action" value="explore">Explore!</button>
-    </form>
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="display-4">web-BO</h1>
+            <p class="lead">This is a simple GUI to support Bayesian Optimization</p>
+            <hr class="my-4">
+            <p>web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes</p>
+            <form method="POST">
+                <button type="submit" class="btn btn-primary btn-lg" name="action" value="explore">Explore!</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="img-thumbnail">
+        </div>
+    </div>
 </div>
 
 <div class="container">
