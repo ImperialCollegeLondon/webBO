@@ -17,7 +17,7 @@ def home():
     if request.method == "POST":
         print(type(request.form['action']))
         if request.form['action'] == "add-dataset":
-            return redirect(url_for("dataset_forms.upload"))
+            return redirect(url_for("dataset_forms.select_upload_method"))
         elif request.form['action'] == "add-experiment":
             return redirect(url_for("experiment_forms.setup"))
         elif "viewdata-" in request.form['action']:

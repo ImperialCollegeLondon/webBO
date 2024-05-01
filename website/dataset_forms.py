@@ -11,6 +11,31 @@ from werkzeug.utils import secure_filename
 data_views = Blueprint("dataset_forms", __name__)
 
 
+@data_views.route("/select-method", methods=["GET", "POST"])
+@login_required
+def select_upload_method():
+    if request.method == "POST":
+        if request.form['action'] == "csv":
+            return redirect(url_for("dataset_forms.upload"))
+        elif request.form['action'] == "datalab":
+            return redirect(url_for("dataset_forms.connect"))
+    return render_template("select_dataset_upload_method.html", user=current_user)
+
+
+@data_views.route("/connect", methods=["GET", "POST"])
+@login_required
+def connect():
+    if request.method == "POST":
+        if request.form['action'] == "submit":
+            # check the dataset name
+            name = request.form.get('dataName')
+            if db.session.query(Data.id).filter_by(name=name).scalar() is not None:
+                flash("Dataset names must be unique.", category="error")
+
+            
+    return render_template("connect_datalab.html", user=current_user)
+
+
 @data_views.route("/upload", methods=["GET", "POST"])
 @login_required
 def upload():

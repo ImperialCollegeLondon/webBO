@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block title %}Upload{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Uploading your data!</h1>
+    <hr class="my-4">
+    <h2 class="lead">Which method would you like to use?</h2>
+    </br>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="d-flex justify-content-center">
+            <div class="input-group w-auto">
+                <div class="col">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" id="button-csv"
+                        data-mdb-ripple-color="dark" value="csv" name="action">
+                        csv file
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" id="button-datalab"
+                        data-mdb-ripple-color="dark" value="datalab" name="action">
+                        Datalab
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

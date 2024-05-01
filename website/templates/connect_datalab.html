@@ -1,0 +1,50 @@
+{% extends "base.html" %} {% block title %}Upload{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1 class="display-4">Connect your Datalab blocks!</h1>
+    <hr class="my-4">
+    <h2 class="lead">we need a little bit of information from you...</h2>
+</div>
+</br>
+<form method="POST">
+    <h3>What should we call your dataset on Web-BO?</h3>
+    <div class="form-group">
+        <label for="dataset_name">Dataset name</label>
+        <input type="text" id="dataset_name" class="form-control mx-sm-3" aria-describedby="nameHelpInline">
+        <small id="nameHelpInline" class="text-muted">
+            Name cannot have been used before.
+        </small>
+    </div>
+    </br>
+    <h3>Please give us a little information about your Datalab account</h3>
+    <div class="form-group">
+        <label for="api_key">API key</label>
+        <input type="text" , class="form-control" id="api_key" name="api_key" />
+    </div>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <label for="collection_id">Collection ID</label>
+            <input type="text" , class="form-control" id="collection_id" name="collection_id" />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="block_id">Block ID</label>
+            <input type="text" , class="form-control" id="block_id" name="block_id" />
+        </div>
+    </div>
+    </br>
+    <h3>Now, tell us a little bit about the parameters!</h3>
+    <div class="form-group">
+        <label for="parameter_names">variable names</label>
+        <input type="text" id="parameter_names" class="form-control mx-sm-3" aria-describedby="parameterHelpInline">
+        <small id="parameterHelpInline" class="text-muted">
+            Please separate variable names with a comma -- these must correspond to the variables in your Datalab
+            collection.
+        </small>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary" name="action" value="submit">Submit</button>
+</form>
+
+{% endblock %}
