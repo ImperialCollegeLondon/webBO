@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
-from .models import Data, Experiment
+from .models import Data, Experiment, Campaign
 from . import db 
 import json
 import pandas as pd
@@ -10,6 +10,11 @@ import werkzeug
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, FormField, HiddenField, SubmitField
 from wtforms.validators import DataRequired, InputRequired
+from .bo_integration import run_bo, rerun_bo
+
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly
 
 
 expt_views = Blueprint("experiment_forms", __name__)
@@ -62,10 +67,10 @@ def setup():
     hyp_form.opt_type.choices = ['maximize', 'minimize']
 
     if request.method == "POST":
-        if request.form.get('expt_btn') == "check-params":
-            print('WORKSDLKJFSLDKFJSDLKFJSDLKFJDSLFKJ')
-        elif request.form.get('expt_btn') == "run-expt":
+        # if request.form.get('expt_btn') == "run-expt":
+        if 'expt_btn' in request.form:
             dataset_info = [row for row in Data.query.filter_by(id=data_form.dataset.data).all()]
+            target = data_form.target.data
             variable_types = {}
             for index, variable in pd.read_json(dataset_info[0].variables).iterrows():
                 col = variable['variables']
@@ -109,10 +114,12 @@ def setup():
                         }
                     else:
                         flash('Min values MUST be less than max values.', category="error")
+
             expt_info = Experiment(
                 name=data_form.name.data,
                 dataset_name=dataset_info[0].name,
                 data=dataset_info[0].data,
+                target=target,
                 variables=json.dumps(variable_types),
                 kernel=hyp_form.kernel.data,
                 acqFunc=hyp_form.acqFunc.data,
@@ -123,7 +130,7 @@ def setup():
             db.session.flush()
             db.session.commit()
             flash("Upload successful!", category="success")
-            return redirect(url_for('home_dash.home'))
+            return redirect(url_for('experiment_forms.run_expt', expt_name=expt_info.name))
 
     return render_template(
         "setup_experiment.html",
@@ -134,10 +141,99 @@ def setup():
     )
 
 
-@expt_views.route("/run_expt", methods=["GET", "POST"])
+@expt_views.route("/add_measurements/<string:expt_name>", methods=["GET", "POST"])
 @login_required
-def run_expt():
-    pass
+def add_measurements(expt_name):
+    # Load your DataFrame (df) and other relevant data
+    df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
+    expt = [row for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
+    data_info = Data.query.filter_by(name=expt.dataset_name).first()
+    campaign = [row for row in Campaign.query.filter_by(expt_name=session['viewexpt']).all()][0]
+    recs = [pd.read_json(row.recs) for row in Campaign.query.filter_by(expt_name=session['viewexpt']).all()][0]
+    variable_list = list(df.columns)
+    target_column_name = variable_list[int(expt.target)]
+
+    if request.method == "POST":
+        if request.form['action'] == 'add':
+            flash("Button pressed!", category="success")
+            new_measurement = {}
+            # concatenate df with the input values from the form
+            for column in recs.columns:
+                new_measurement[column] = request.form.get(f"{column}")
+
+            # updte the data entry in the Data DB
+            ndf = pd.DataFrame([new_measurement])
+            df = pd.concat([df, ndf])
+
+            data_info.data = df.to_json(orient='records')
+            db.session.add(data_info)
+            db.session.flush()
+            db.session.commit()
+
+            return redirect(url_for('home_dash.view_experiment', expt_name=expt.name))
+
+    return render_template(
+        "add_measurements.html",
+        user=current_user,
+        df=df,
+        titles=df.columns.values,
+        target_name=target_column_name,
+        recs=recs,
+    )
+
+
+@expt_views.route("/run_expt/<string:expt_name>", methods=["GET", "POST"])
+@login_required
+def run_expt(expt_name):
+    expt_info = Experiment.query.filter_by(name=expt_name).first()
+    data_info = Data.query.filter_by(name=expt_info.dataset_name).first()
+    data = [pd.read_json(row.data) for row in Data.query.filter_by(name=expt_info.dataset_name).all()][0]
+
+    campaign = Campaign.query.filter_by(expt_name=expt_name).first()
+    recs, campaign = run_bo(expt_info, data, expt_info.target)
+    
+    data_info.data = data.to_json(orient='records')
+
+    variable_list = list(data.columns)
+    target_column_name = variable_list[int(expt_info.target)]
+
+    fig = go.Figure([
+        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
+        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), name='predicted measurements'),
+    ])
+    fig.update_layout(
+        xaxis_title="iteration",
+        yaxis_title=f"{target_column_name}",
+        legend_title="Legend Title",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="RebeccaPurple"
+        )
+    )
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    campaign_info = Campaign(
+        expt_name=expt_info.name,
+        campaign_info=campaign.to_json(),
+        recs=recs.to_json(),
+        user_id=current_user.id,
+    )
+    db.session.add(campaign_info)
+    db.session.add(data_info)
+    db.session.flush()
+    db.session.commit()
+
+    return render_template(
+        "run_expt.html",
+        user=current_user,
+        df=recs,
+        titles=recs.columns.values,
+        campaign=campaign.to_dict(),
+        graphJSON=graphJSON,
+        target=list(data.columns)[int(expt_info.target)],   
+    )
 
 
 def _get_variable_names():

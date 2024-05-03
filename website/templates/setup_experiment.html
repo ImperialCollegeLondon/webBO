@@ -42,10 +42,6 @@
                                             {{ data_form.dataset.label }}
                                             {{ data_form.dataset() }}
                                         </div>
-                                        <div class="col">
-                                            {{ data_form.target.label }}
-                                            {{ data_form.target() }}
-                                        </div>
                                         <div class="col" align="center">
                                             {{ data_form.submit(class="submit-button") }}
                                         </div>
@@ -116,6 +112,10 @@
                                         <div class="col">
                                             {{ hyp_form.opt_type.label }}
                                             {{ hyp_form.opt_type() }}
+                                        </div>
+                                        <div class="col">
+                                            {{ data_form.target.label }}
+                                            {{ data_form.target() }}
                                         </div>
                                     </div>
                                     <input type="button" name="previous" class="previous action-button-previous"

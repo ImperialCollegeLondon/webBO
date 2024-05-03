@@ -65,6 +65,7 @@ def upload():
             datafile.save(filename)
             df = pd.read_csv(filename)
             variable_df = pd.DataFrame(df.columns, columns=["variables"])
+            df['iteration'] = 0
             name = request.form.get('dataName')
             if db.session.query(Data.id).filter_by(name=name).scalar() is not None:
                 flash("Dataset names must be unique.", category="error")

@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from . import db 
 import json
-from .models import Data, Experiment
+from .models import Data, Experiment, Campaign
 import pandas as pd
 from dash import Dash, html, dcc
 
@@ -25,7 +25,7 @@ def home():
             return redirect(url_for("home_dash.view_dataset"))
         elif "viewexpt-" in request.form['action']:
             session['viewexpt'] = request.form['action'].removeprefix('viewexpt-')
-            return redirect(url_for("home_dash.view_experiment"))
+            return redirect(url_for("home_dash.view_experiment", expt_name=request.form['action'].removeprefix('viewexpt-')))
         elif request.form['action'] == "explore":
             print(request.form['action'])
             print('working?')
@@ -33,22 +33,31 @@ def home():
     return render_template("home.html", user=current_user)
 
 
-@home_dash.route("/view_experiment", methods=["POST", "GET"])
+@home_dash.route("/view_experiment/<string:expt_name>", methods=["POST", "GET"])
 @login_required
-def view_experiment():
+def view_experiment(expt_name):
     # Load your DataFrame (df) and other relevant data
-    df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
-    expt = [row for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
-    print(expt.variables)
+    # df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=expt_name).all()][0]
+    expt = [row for row in Experiment.query.filter_by(name=expt_name).all()][0]
+    data_info = Data.query.filter_by(name=expt.dataset_name).first()
+    df = pd.read_json(data_info.data)
+    variable_list = list(df.columns)
+    target_column_name = variable_list[int(expt.target)]
     # Highlight the desired column (e.g., "MyColumn")
-    df['target'] = df['target'].apply(lambda x: f'{x}')
+    df[target_column_name] = df[target_column_name].apply(lambda x: f'{x}')
+
+    if request.method == "POST":
+        if request.form['action'] == 'run':
+            return redirect(url_for('experiment_forms.run_expt', expt_name=expt.name))
+        elif request.form['action'] == 'add':
+            return redirect(url_for('experiment_forms.add_measurements', expt_name=expt.name))
 
     return render_template(
         'view_experiment.html',
         user=current_user,
         expt_name=session['viewexpt'],
         dataset_name=expt.dataset_name,
-        target_name='target',
+        target_name=target_column_name,
         df=df,  # Pass the modified DataFrame directly
         titles=df.columns.values,
     )

@@ -17,10 +17,19 @@ class Experiment(db.Model):
     name = db.Column(db.String(150), unique=True)
     dataset_name = db.Column(db.String(150))
     data = db.Column(db.Text)
+    target = db.Column(db.String(150))
     variables = db.Column(db.Text)
     kernel = db.Column(db.String(150))
     acqFunc = db.Column(db.String(150))
     opt_type = db.Column(db.String(150))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+
+class Campaign(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    expt_name = db.Column(db.String(150))
+    campaign_info = db.Column(db.Text)
+    recs = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 

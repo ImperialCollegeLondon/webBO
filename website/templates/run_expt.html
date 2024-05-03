@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block title %}Upload{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Check out the new recs!</h1>
+    <hr class="my-4">
+    <h2 class="lead">Which method would you like to use?</h2>
+    </br>
+    <div class="row">
+        {{ campaign }}
+    </div>
+    <div class="row">
+        <table class="data" style="border-collapse: collapse; width: 100%;">
+            <thead>
+                <tr>
+                    {% for title in titles %}
+                    <th style="border: 1px solid black; padding: 10px;">{{ title }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in df.iterrows() %}
+                <tr>
+                    {% for column in df.columns %}
+                    <td style="border: 1px solid black;">{% if column == target %} <div
+                            style="background-color: rgb(142, 142, 226);">
+                            {{ row[column] }}</div> {% else %}{{ row[column] }}{% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="plot"></div>
+    <script>
+        var graphs = {{ graphJSON | safe }};
+        Plotly.newPlot('plot', graphs);
+    </script>
+</div>
+
+{% endblock %}
