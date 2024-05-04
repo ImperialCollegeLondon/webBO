@@ -42,6 +42,11 @@
         </tbody>
     </table>
 </div>
+<div id="plot"></div>
+<script>
+    var graphs = {{ graphJSON | safe }};
+    Plotly.newPlot('plot', graphs);
+</script>
 </br>
 <div class="container">
     <h1>Search space</h1>

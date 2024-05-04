@@ -6,9 +6,7 @@
     <hr class="my-4">
     <h2 class="lead">Which method would you like to use?</h2>
     </br>
-    <div class="row">
-        {{ campaign }}
-    </div>
+
     <div class="row">
         <table class="data" style="border-collapse: collapse; width: 100%;">
             <thead>
@@ -32,11 +30,17 @@
             </tbody>
         </table>
     </div>
+    </br>
     <div id="plot"></div>
     <script>
         var graphs = {{ graphJSON | safe }};
         Plotly.newPlot('plot', graphs);
     </script>
+    <form method="POST">
+        <div class="row">
+            <button type="submit" class="btn btn-primary btn-lg" name="action" value="add">Add measurements!</button>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

@@ -22,14 +22,9 @@ class Experiment(db.Model):
     kernel = db.Column(db.String(150))
     acqFunc = db.Column(db.String(150))
     opt_type = db.Column(db.String(150))
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-
-
-class Campaign(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    expt_name = db.Column(db.String(150))
-    campaign_info = db.Column(db.Text)
-    recs = db.Column(db.Text)
+    batch_size = db.Column(db.Integer)
+    next_recs = db.Column(db.Text)
+    iterations_completed = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 

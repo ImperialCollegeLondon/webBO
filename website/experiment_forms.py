@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
-from .models import Data, Experiment, Campaign
+from .models import Data, Experiment
 from . import db 
 import json
 import pandas as pd
@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 import werkzeug
 # from . import bo_integration
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, FormField, HiddenField, SubmitField
+from wtforms import StringField, SelectField, FormField, HiddenField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, InputRequired
 from .bo_integration import run_bo, rerun_bo
 
@@ -35,6 +35,7 @@ class DatasetSelectionForm(FlaskForm):
 class HyperparameterForm(FlaskForm):
     kernel = SelectField('GP kernel type', id='kernel')
     acqFunc = SelectField('Acquisition Function type', id='acqFunc')
+    batch_size = IntegerField('Batch size', id='batch_size')
     opt_type = SelectField('Optimization type')
     submit = SubmitField('Submit hyperparameters')
 
@@ -124,13 +125,16 @@ def setup():
                 kernel=hyp_form.kernel.data,
                 acqFunc=hyp_form.acqFunc.data,
                 opt_type=hyp_form.opt_type.data,
+                batch_size=hyp_form.batch_size.data,
+                next_recs=pd.DataFrame().to_json(orient='records'),
+                iterations_completed=0,
                 user_id=current_user.id,
             )
             db.session.add(expt_info)
             db.session.flush()
             db.session.commit()
             flash("Upload successful!", category="success")
-            return redirect(url_for('experiment_forms.run_expt', expt_name=expt_info.name))
+            return redirect(url_for('home_dash.view_experiment', expt_name=expt_info.name)) # redirect(url_for('experiment_forms.run_expt', expt_name=expt_info.name))
 
     return render_template(
         "setup_experiment.html",
@@ -146,31 +150,34 @@ def setup():
 def add_measurements(expt_name):
     # Load your DataFrame (df) and other relevant data
     df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
-    expt = [row for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
-    data_info = Data.query.filter_by(name=expt.dataset_name).first()
-    campaign = [row for row in Campaign.query.filter_by(expt_name=session['viewexpt']).all()][0]
-    recs = [pd.read_json(row.recs) for row in Campaign.query.filter_by(expt_name=session['viewexpt']).all()][0]
+    expt_info = [row for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
+    data_info = Data.query.filter_by(name=expt_info.dataset_name).first()
     variable_list = list(df.columns)
-    target_column_name = variable_list[int(expt.target)]
+    target_column_name = variable_list[int(expt_info.target)]
+    recs = pd.read_json(expt_info.next_recs)
+
+    if len(recs.columns) < 1:
+        recs = pd.DataFrame(columns=df.columns)
+        recs.loc[0] = 'insert'
 
     if request.method == "POST":
         if request.form['action'] == 'add':
-            flash("Button pressed!", category="success")
-            new_measurement = {}
-            # concatenate df with the input values from the form
-            for column in recs.columns:
-                new_measurement[column] = request.form.get(f"{column}")
+            for index, row in recs.iterrows():
+                new_measurement = {}
+                # concatenate df with the input values from the form
+                for column in recs.columns:
+                    new_measurement[column] = request.form.get(f"{column}")
 
-            # updte the data entry in the Data DB
-            ndf = pd.DataFrame([new_measurement])
-            df = pd.concat([df, ndf])
+                # updte the data entry in the Data DB
+                ndf = pd.DataFrame([new_measurement])
+                df = pd.concat([df, ndf])
 
-            data_info.data = df.to_json(orient='records')
-            db.session.add(data_info)
+            expt_info.data = df.to_json(orient='records')
+            db.session.add(expt_info)
             db.session.flush()
             db.session.commit()
 
-            return redirect(url_for('home_dash.view_experiment', expt_name=expt.name))
+            return redirect(url_for('home_dash.view_experiment', expt_name=expt_info.name))
 
     return render_template(
         "add_measurements.html",
@@ -189,10 +196,8 @@ def run_expt(expt_name):
     data_info = Data.query.filter_by(name=expt_info.dataset_name).first()
     data = [pd.read_json(row.data) for row in Data.query.filter_by(name=expt_info.dataset_name).all()][0]
 
-    campaign = Campaign.query.filter_by(expt_name=expt_name).first()
-    recs, campaign = run_bo(expt_info, data, expt_info.target)
-    
-    data_info.data = data.to_json(orient='records')
+    recs, campaign = run_bo(expt_info, data, expt_info.target, batch_size=expt_info.batch_size)
+    recs['iteration'] = data['iteration'].max() + 1
 
     variable_list = list(data.columns)
     target_column_name = variable_list[int(expt_info.target)]
@@ -214,23 +219,22 @@ def run_expt(expt_name):
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    campaign_info = Campaign(
-        expt_name=expt_info.name,
-        campaign_info=campaign.to_json(),
-        recs=recs.to_json(),
-        user_id=current_user.id,
-    )
-    db.session.add(campaign_info)
-    db.session.add(data_info)
+    expt_info.next_recs = recs.to_json()
+    expt_info.iterations_completed = expt_info.iterations_completed + 1
+    expt_info.data = data.to_json(orient='records')
+    db.session.add(expt_info)
     db.session.flush()
     db.session.commit()
+
+    if request.method == "POST":
+        if request.form['action'] == 'add':
+            return redirect(url_for("experiment_forms.add_measurements", expt_name=expt_info.name))
 
     return render_template(
         "run_expt.html",
         user=current_user,
         df=recs,
         titles=recs.columns.values,
-        campaign=campaign.to_dict(),
         graphJSON=graphJSON,
         target=list(data.columns)[int(expt_info.target)],   
     )

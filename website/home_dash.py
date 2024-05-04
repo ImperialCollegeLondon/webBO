@@ -1,11 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from . import db 
 import json
-from .models import Data, Experiment, Campaign
+from .models import Data, Experiment
 import pandas as pd
-from dash import Dash, html, dcc
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly
 
 
 home_dash = Blueprint("home_dash", __name__)
@@ -19,7 +21,10 @@ def home():
         if request.form['action'] == "add-dataset":
             return redirect(url_for("dataset_forms.select_upload_method"))
         elif request.form['action'] == "add-experiment":
-            return redirect(url_for("experiment_forms.setup"))
+            if not db.session.query(Data).all():
+                flash("Whoops! You need to upload a dataset first!", category="error")
+            else:
+                return redirect(url_for("experiment_forms.setup"))
         elif "viewdata-" in request.form['action']:
             session['viewdata'] = request.form['action'].removeprefix('viewdata-')
             return redirect(url_for("home_dash.view_dataset"))
@@ -40,11 +45,40 @@ def view_experiment(expt_name):
     # df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=expt_name).all()][0]
     expt = [row for row in Experiment.query.filter_by(name=expt_name).all()][0]
     data_info = Data.query.filter_by(name=expt.dataset_name).first()
-    df = pd.read_json(data_info.data)
+    df = pd.read_json(expt.data) # pd.read_json(data_info.data)
     variable_list = list(df.columns)
     target_column_name = variable_list[int(expt.target)]
     # Highlight the desired column (e.g., "MyColumn")
     df[target_column_name] = df[target_column_name].apply(lambda x: f'{x}')
+
+    expt_info = expt
+    recs = pd.read_json(expt.next_recs)
+    data = df
+
+    variable_list = list(data.columns)
+    target_column_name = variable_list[int(expt_info.target)]
+
+    if len(recs.columns) < 1:
+        fig = go.Figure([
+            go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
+            ])
+    else:
+        fig = go.Figure([
+            go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
+            go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), name='predicted measurements'),
+        ])
+    fig.update_layout(
+        xaxis_title="iteration",
+        yaxis_title=f"{target_column_name}",
+        legend_title="Legend Title",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="RebeccaPurple"
+        )
+    )
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     if request.method == "POST":
         if request.form['action'] == 'run':
@@ -60,6 +94,7 @@ def view_experiment(expt_name):
         target_name=target_column_name,
         df=df,  # Pass the modified DataFrame directly
         titles=df.columns.values,
+        graphJSON=graphJSON,
     )
 
 
