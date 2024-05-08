@@ -42,10 +42,6 @@
                                             {{ data_form.dataset.label }}
                                             {{ data_form.dataset() }}
                                         </div>
-                                        <div class="col">
-                                            {{ data_form.target.label }}
-                                            {{ data_form.target() }}
-                                        </div>
                                         <div class="col" align="center">
                                             {{ data_form.submit(class="submit-button") }}
                                         </div>
@@ -117,6 +113,14 @@
                                             {{ hyp_form.opt_type.label }}
                                             {{ hyp_form.opt_type() }}
                                         </div>
+                                        <div class="col">
+                                            {{ hyp_form.batch_size.label }}
+                                            {{ hyp_form.batch_size() }}
+                                        </div>
+                                        <div class="col">
+                                            {{ data_form.target.label }}
+                                            {{ data_form.target() }}
+                                        </div>
                                     </div>
                                     <input type="button" name="previous" class="previous action-button-previous"
                                         value="Previous" />
@@ -131,8 +135,8 @@
                                             <div class="row">
                                                 <div class="col text-center">
                                                     <form method="POST">
-                                                        <button type="submit" class="btn btn-success" id="expt_btn"
-                                                            name="expt_btn" value="run-expt">Run experiment</button>
+                                                        <button type="submit" class="btn btn-primary" id="expt_btn"
+                                                            name="expt_btn" value="run-expt">view experiment</button>
                                                     </form>
                                                 </div>
                                             </div>

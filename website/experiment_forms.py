@@ -8,8 +8,13 @@ from werkzeug.utils import secure_filename
 import werkzeug
 # from . import bo_integration
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, FormField, HiddenField, SubmitField
+from wtforms import StringField, SelectField, FormField, HiddenField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, InputRequired
+from .bo_integration import run_bo, rerun_bo
+
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly
 
 
 expt_views = Blueprint("experiment_forms", __name__)
@@ -30,6 +35,7 @@ class DatasetSelectionForm(FlaskForm):
 class HyperparameterForm(FlaskForm):
     kernel = SelectField('GP kernel type', id='kernel')
     acqFunc = SelectField('Acquisition Function type', id='acqFunc')
+    batch_size = IntegerField('Batch size', id='batch_size')
     opt_type = SelectField('Optimization type')
     submit = SubmitField('Submit hyperparameters')
 
@@ -62,10 +68,10 @@ def setup():
     hyp_form.opt_type.choices = ['maximize', 'minimize']
 
     if request.method == "POST":
-        if request.form.get('expt_btn') == "check-params":
-            print('WORKSDLKJFSLDKFJSDLKFJSDLKFJDSLFKJ')
-        elif request.form.get('expt_btn') == "run-expt":
+        # if request.form.get('expt_btn') == "run-expt":
+        if 'expt_btn' in request.form:
             dataset_info = [row for row in Data.query.filter_by(id=data_form.dataset.data).all()]
+            target = data_form.target.data
             variable_types = {}
             for index, variable in pd.read_json(dataset_info[0].variables).iterrows():
                 col = variable['variables']
@@ -109,21 +115,26 @@ def setup():
                         }
                     else:
                         flash('Min values MUST be less than max values.', category="error")
+
             expt_info = Experiment(
                 name=data_form.name.data,
                 dataset_name=dataset_info[0].name,
                 data=dataset_info[0].data,
+                target=target,
                 variables=json.dumps(variable_types),
                 kernel=hyp_form.kernel.data,
                 acqFunc=hyp_form.acqFunc.data,
                 opt_type=hyp_form.opt_type.data,
+                batch_size=hyp_form.batch_size.data,
+                next_recs=pd.DataFrame().to_json(orient='records'),
+                iterations_completed=0,
                 user_id=current_user.id,
             )
             db.session.add(expt_info)
             db.session.flush()
             db.session.commit()
             flash("Upload successful!", category="success")
-            return redirect(url_for('home_dash.home'))
+            return redirect(url_for('home_dash.view_experiment', expt_name=expt_info.name)) # redirect(url_for('experiment_forms.run_expt', expt_name=expt_info.name))
 
     return render_template(
         "setup_experiment.html",
@@ -134,10 +145,99 @@ def setup():
     )
 
 
-@expt_views.route("/run_expt", methods=["GET", "POST"])
+@expt_views.route("/add_measurements/<string:expt_name>", methods=["GET", "POST"])
 @login_required
-def run_expt():
-    pass
+def add_measurements(expt_name):
+    # Load your DataFrame (df) and other relevant data
+    df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
+    expt_info = [row for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
+    data_info = Data.query.filter_by(name=expt_info.dataset_name).first()
+    variable_list = list(df.columns)
+    target_column_name = variable_list[int(expt_info.target)]
+    recs = pd.read_json(expt_info.next_recs)
+
+    if len(recs.columns) < 1:
+        recs = pd.DataFrame(columns=df.columns)
+        recs.loc[0] = 'insert'
+
+    if request.method == "POST":
+        if request.form['action'] == 'add':
+            for index, row in recs.iterrows():
+                new_measurement = {}
+                # concatenate df with the input values from the form
+                for column in recs.columns:
+                    new_measurement[column] = request.form.get(f"{column}")
+
+                # updte the data entry in the Data DB
+                ndf = pd.DataFrame([new_measurement])
+                df = pd.concat([df, ndf])
+
+            expt_info.data = df.to_json(orient='records')
+            db.session.add(expt_info)
+            db.session.flush()
+            db.session.commit()
+
+            return redirect(url_for('home_dash.view_experiment', expt_name=expt_info.name))
+
+    return render_template(
+        "add_measurements.html",
+        user=current_user,
+        df=df,
+        titles=df.columns.values,
+        target_name=target_column_name,
+        recs=recs,
+    )
+
+
+@expt_views.route("/run_expt/<string:expt_name>", methods=["GET", "POST"])
+@login_required
+def run_expt(expt_name):
+    expt_info = Experiment.query.filter_by(name=expt_name).first()
+    data_info = Data.query.filter_by(name=expt_info.dataset_name).first()
+    data = [pd.read_json(row.data) for row in Data.query.filter_by(name=expt_info.dataset_name).all()][0]
+
+    recs, campaign = run_bo(expt_info, data, expt_info.target, batch_size=expt_info.batch_size)
+    recs['iteration'] = data['iteration'].max() + 1
+
+    variable_list = list(data.columns)
+    target_column_name = variable_list[int(expt_info.target)]
+
+    fig = go.Figure([
+        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
+        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), name='predicted measurements'),
+    ])
+    fig.update_layout(
+        xaxis_title="iteration",
+        yaxis_title=f"{target_column_name}",
+        legend_title="Legend Title",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="RebeccaPurple"
+        )
+    )
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    expt_info.next_recs = recs.to_json()
+    expt_info.iterations_completed = expt_info.iterations_completed + 1
+    expt_info.data = data.to_json(orient='records')
+    db.session.add(expt_info)
+    db.session.flush()
+    db.session.commit()
+
+    if request.method == "POST":
+        if request.form['action'] == 'add':
+            return redirect(url_for("experiment_forms.add_measurements", expt_name=expt_info.name))
+
+    return render_template(
+        "run_expt.html",
+        user=current_user,
+        df=recs,
+        titles=recs.columns.values,
+        graphJSON=graphJSON,
+        target=list(data.columns)[int(expt_info.target)],   
+    )
 
 
 def _get_variable_names():

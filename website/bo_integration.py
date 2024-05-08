@@ -10,8 +10,14 @@ import pandas as pd
 import numpy as np
 
 
-def run_bo(expt_info, data, target, opt_type="MAX", batch_size=2):
-    variable_type_dict = pd.read_json(expt_info.variable_dict)
+def rerun_bo(campaign_db_entry, new_measurements, batch_size=1):
+    campaign = Campaign.from_json(campaign_db_entry.campaign_info)
+    campaign.add_measurements(new_measurements)
+    return campaign.recommend(batch_size=batch_size)
+
+
+def run_bo(expt_info, data, target, opt_type="MAX", batch_size=1):
+    variable_type_dict = pd.read_json(expt_info.variables)
     baybe_paramter_list = []
     for col in variable_type_dict.columns:
         df = variable_type_dict[col].T
@@ -39,7 +45,7 @@ def run_bo(expt_info, data, target, opt_type="MAX", batch_size=2):
         initial_recommender=RandomRecommender(),
         recommender=SequentialGreedyRecommender(
             surrogate_model=GaussianProcessSurrogate(),
-            acquisition_function_cls=f"{expt_info.acqFuncType}",
+            acquisition_function_cls=f"{expt_info.acqFunc}",
             allow_repeated_recommendations=False,
             allow_recommending_already_measured=False,
         )

@@ -17,10 +17,14 @@ class Experiment(db.Model):
     name = db.Column(db.String(150), unique=True)
     dataset_name = db.Column(db.String(150))
     data = db.Column(db.Text)
+    target = db.Column(db.String(150))
     variables = db.Column(db.Text)
     kernel = db.Column(db.String(150))
     acqFunc = db.Column(db.String(150))
     opt_type = db.Column(db.String(150))
+    batch_size = db.Column(db.Integer)
+    next_recs = db.Column(db.Text)
+    iterations_completed = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 
