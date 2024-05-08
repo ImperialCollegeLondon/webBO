@@ -9,9 +9,48 @@
             <hr class="my-4">
             <p>web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes!</p>
             <p>To do this, press the button below!</p>
-            <form method="POST">
-                <button type="submit" class="btn btn-primary btn-lg" name="action" value="explore">Explore!</button>
-            </form>
+
+            <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal"
+                data-target="#exampleModalCenter">Explore!</button>
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title" id="exampleModalLongTitle">Welcome to Web-BO!</h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5>To help you get familiar with all that Web-BO has to offer, we will populate your first
+                                Dataset and Experiment.</h5>
+                            </br>
+                            <p>
+                                The Dataset is loaded from the <a href="https://github.com/aspuru-guzik-group/olympus"
+                                    class="tooltip-test" title="Tooltip">Olympus package</a>.
+                            </p>
+                            <table class="table">
+                                <tbody>
+                                    <tr class="table-primary">
+                                        <td>Dataset</td>
+                                        <td>datset link</td>
+                                    </tr>
+                                    <tr class="table-info">
+                                        <td>Experiment</td>
+                                        <td>experiment link</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p><a href="#" class="tooltip-test" title="Tooltip">This link</a> and <a href="#"
+                                    class="tooltip-test" title="Tooltip">that link</a> have tooltips on hover.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-4">
             <img src="{{ url_for('static', filename='logo.png') }}" class="img-thumbnail">
