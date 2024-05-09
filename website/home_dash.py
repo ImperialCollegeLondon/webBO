@@ -111,7 +111,7 @@ def view_dataset():
                 "catalyst": {"parameter-type":"cat",
                             "json": '[{"catalyst":"P1-L1"},{"catalyst":"P2-L1"},{"catalyst":"P1-L2"},{"catalyst":"P1-L3"}, {"catalyst":"P1-L4"},{"catalyst":"P1-L5"},{"catalyst":"P1-L6"},{"catalyst":"P1-L7"}]',
                 },
-                "t_res": {"parameter-type": "cont", "min": 1.0, "max": 10.0},
+                "t_res": {"parameter-type": "cont", "min": 60.0, "max": 600.0},
                 "temperature": {"parameter-type": "cont", "min": 30.0, "max": 110.0},
                 "catalyst_loading": {"parameter-type": "cont", "min": 0.5, "max": 2.5},
                 "yield": {"parameter-type": "cont", "min": 0.0, "max": 100.0},
