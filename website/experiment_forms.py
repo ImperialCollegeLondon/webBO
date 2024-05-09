@@ -194,7 +194,7 @@ def add_measurements(expt_name):
 def run_expt(expt_name):
     expt_info = Experiment.query.filter_by(name=expt_name).first()
     data_info = Data.query.filter_by(name=expt_info.dataset_name).first()
-    data = [pd.read_json(row.data) for row in Data.query.filter_by(name=expt_info.dataset_name).all()][0]
+    data = pd.read_json(expt_info.data) # [pd.read_json(row.data) for row in Data.query.filter_by(name=expt_info.dataset_name).all()][0]
 
     recs, campaign = run_bo(expt_info, data, expt_info.target, batch_size=expt_info.batch_size)
     recs['iteration'] = data['iteration'].max() + 1
