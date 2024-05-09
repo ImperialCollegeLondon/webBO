@@ -22,7 +22,7 @@ expt_views = Blueprint("experiment_forms", __name__)
 
 class DatasetSelectionForm(FlaskForm):
     form_name = HiddenField("form_name")
-    name = StringField('experiment name', validators=[DataRequired()], id='experiment_name')
+    name = StringField('experiment name', validators=[DataRequired()], id='experiment_name', render_kw={"placeholder": "Enter your experiment name here"})
     dataset = SelectField('dataset', coerce=str, validators=[DataRequired()], id='dataset_name')
     target = SelectField('target', coerce=str, validators=[DataRequired()], id='target_name')
     submit = SubmitField('Submit dataset')
@@ -115,7 +115,7 @@ def setup():
                         }
                     else:
                         flash('Min values MUST be less than max values.', category="error")
-
+            print(variable_types)
             expt_info = Experiment(
                 name=data_form.name.data,
                 dataset_name=dataset_info[0].name,
@@ -149,8 +149,8 @@ def setup():
 @login_required
 def add_measurements(expt_name):
     # Load your DataFrame (df) and other relevant data
-    df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
-    expt_info = [row for row in Experiment.query.filter_by(name=session['viewexpt']).all()][0]
+    df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=expt_name).all()][0]
+    expt_info = [row for row in Experiment.query.filter_by(name=expt_name).all()][0]
     data_info = Data.query.filter_by(name=expt_info.dataset_name).first()
     variable_list = list(df.columns)
     target_column_name = variable_list[int(expt_info.target)]
