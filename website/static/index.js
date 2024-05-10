@@ -10,6 +10,12 @@ function deleteExperiment(nodeId) {
     });
 }
 
+function addSampleDataset() {
+    fetch('/add-sample-dataset', { method: 'POST' }).then((_res) => {
+        WebTransportBidirectionalStream.location.href = "/";
+    });
+}
+
 function addParameterElement(nodeId) {
     fetch('/add-parameter-element', { method: 'POST', body: JSON.stringify({ noteId: noteId }) }).then((_res) => {
         WebTransportBidirectionalStream.location.href = "/";

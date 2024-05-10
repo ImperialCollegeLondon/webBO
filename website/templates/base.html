@@ -82,6 +82,15 @@
             });
         }
     </script>
+    <script type="text/javascript">
+        function addSampleDataset() {
+            fetch("/add-sample-dataset", {
+                method: "POST",
+            }).then((_res) => {
+                window.location.href = "/";
+            });
+        }
+    </script>
 
     <script type="text/javascript">
         function checkParameters() {
