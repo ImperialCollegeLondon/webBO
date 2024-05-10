@@ -8,7 +8,6 @@ import pandas as pd
 from werkzeug.utils import secure_filename
 # from . import bo_integration
 
-
 data_views = Blueprint("dataset_forms", __name__)
 
 
@@ -38,8 +37,12 @@ def connect():
                 collection_id = request.form.get('collection_id')
                 blocktype = request.form.get('block_id')
                 features = request.form.get('parameter_names').split(',')
-                variable_df = pd.DataFrame([features])
-                df = DatalabData(api_key, domain, collection_id, blocktype, features)
+                features = [feature.strip() for feature in features]
+
+                data = DatalabData(api_key, domain, collection_id, blocktype, features)
+                df = data.get_data()
+                variable_df = pd.DataFrame(df.columns, columns=["variables"])
+                df['iteration'] = 0
                 
                 input_data = Data(
                     name=f"{name}",

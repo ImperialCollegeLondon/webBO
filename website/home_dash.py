@@ -91,7 +91,7 @@ def view_experiment(expt_name):
     return render_template(
         'view_experiment.html',
         user=current_user,
-        expt_name=session['viewexpt'],
+        expt_name=expt.name, # session['viewexpt'],
         dataset_name=expt.dataset_name,
         target_name=target_column_name,
         df=df,  # Pass the modified DataFrame directly
