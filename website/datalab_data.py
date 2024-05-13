@@ -4,7 +4,8 @@ from datalab_api import DatalabClient
 from io import StringIO
 import re
 import lxml  # lxml has to be installed to process tables, this is just to check if it is installed
-
+import random, string
+from datetime import datetime
 
 class DatalabData:
     """Class to retrieve and handle data from Datalab
@@ -12,21 +13,27 @@ class DatalabData:
     Parameters:
         api_key (str): the api key for the Datalab API
         domain (str): the domain of the Datalab instance
-        collection_id (str): the collection id of the data to be retrieved
+        collection_id (str): the collection id of the data to be retrieved or uploaded
         blocktype (str): the blocktype of the data to be retrieved
         features (list): the features of the data to create csv table for BO
 
     Example usage:
+    >>> # retrieve data from Datalab
     >>> retrieve_data = DatalabData(api_key, domain, collection_id, blocktype, features)
     >>> data_dataframe = retrieve_data.get_data()
+    >>> # upload data to Datalab
+    >>> upload_data = DatalabData(api_key, domain, collection_id)
+    >>> upload_data.create_new_samples(data_dataframe)
     """
 
-    def __init__(self, api_key, domain, collection_id, blocktype, features):
+    def __init__(self, api_key, domain, collection_id, blocktype=None, features=None):
         self.api_key = api_key
         self.domain = domain
         self.collection_id = collection_id
-        self.blocktype = blocktype
-        self.features = features
+        if blocktype is not None:
+            self.blocktype = blocktype
+        if features is not None:    
+            self.features = features
         os.environ["DATALAB_API_KEY"] = api_key
         self.client = DatalabClient(domain)
 
@@ -133,3 +140,36 @@ class DatalabData:
                 "Error in creating dataframe from tables, check if parameter names are correct or missing"
             )
         return data
+    
+    def make_param_val_table(self, df):
+        df = df.transpose().reset_index()
+        new_iterations = df.columns[1:]
+        html_tables = []
+        for iteration in new_iterations:
+            if iteration is int:
+                new_df = pd.DataFrame(columns=['Parameter', 'Value'])
+                new_df['Parameter'] = df['index']
+                new_df['Value'] = df[iteration]
+                html_tables.append(new_df.to_html(border=1, index=False))
+        return html_tables
+    
+    def randomword(self, length):
+        letters = string.ascii_uppercase
+        return ''.join(random.choice(letters) for i in range(length))
+    
+    def create_new_samples(self, df):
+        # creates new samples in the Datalab instance from a dataframe
+        # the collection where data is uploaded needs to be made in datalab beforehand
+        html_tables = self.make_param_val_table(df)
+        for i, tab in enumerate(html_tables):
+            new_data = {'collections': [{'collection_id': self.collection_id}],
+                        'synthesis_description': tab,
+                        'description': 'Experimental suggestion from webBO',
+                        'name': f'WebBO suggestion {i+1}',  # change name to something more descriptive
+                        "date": datetime.now().strftime("%Y-%m-%dT%H:%M:00")
+                        }
+            sample_id = self.randomword(4)+'_webBO'
+            try:
+                self.client.create_item(sample_id, 'samples', new_data)   
+            except RuntimeError:
+                raise RuntimeError('Error in creating new samples, check if collection exists on Datalab instance or data is correct')

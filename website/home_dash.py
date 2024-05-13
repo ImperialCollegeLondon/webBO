@@ -87,6 +87,8 @@ def view_experiment(expt_name):
             return redirect(url_for('experiment_forms.run_expt', expt_name=expt.name))
         elif request.form['action'] == 'add':
             return redirect(url_for('experiment_forms.add_measurements', expt_name=expt.name))
+        elif request.form['action'] == 'send':
+            return redirect(url_for('dataset_forms.send', expt_name=expt.name))
 
     return render_template(
         'view_experiment.html',

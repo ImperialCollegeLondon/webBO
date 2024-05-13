@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %}Upload{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1 class="display-4">Connect your Datalab blocks!</h1>
+    <hr class="my-4">
+    <h2 class="lead">we need a little bit of information from you...</h2>
+</div>
+</br>
+<form method="POST">
+    <h3>Please give us a little information about your Datalab account</h3>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <label for="api_key">API key</label>
+            <input type="text" class="form-control" id="api_key" name="api_key" />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="domain">Domain</label>
+            <input type="text" class="form-control" id="domain" name="domain" />
+        </div>
+    </div>
+    <h3>Which collection does your data belong to?</h3>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <label for="collection_id">Collection ID</label>
+            <input type="text" , class="form-control" id="collection_id" name="collection_id" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary" name="action" value="submit">Submit</button>
+</form>
+
+{% endblock %}

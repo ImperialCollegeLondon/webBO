@@ -48,12 +48,11 @@
     Plotly.newPlot('plot', graphs);
 </script>
 </br>
-<div class="container">
-    <h1>Search space</h1>
-</div>
-</br>
-<div class="container">
-    <h1>Hyperparameters</h1>
-</div>
+{% if "datalab" in dataset_name and df['iteration'].max() > 0 %}
+<form method="POST">
+    <button type="submit" class="btn btn-primary btn-lg" name="action" value="send" style="margin-right: 20px;">Send
+        measurements to datalab!</button>
+</form>
+{% endif %}
 
 {% endblock %}
