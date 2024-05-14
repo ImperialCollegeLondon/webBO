@@ -160,7 +160,7 @@ def add_sample_dataset():
     emulator_output = emulator.run_experiments(conditions, rtn_std=True)
     rxn_yield = emulator_output.to_numpy()[0, 5]
     
-    dataset_df['yield'] = rxn_yield
+    dataset_df['yield'] = rxn_yield*100
     dataset_df['iteration'] = 0
     print(dataset_df)
     variable_df = pd.DataFrame(dataset_df.columns, columns=["variables"])
