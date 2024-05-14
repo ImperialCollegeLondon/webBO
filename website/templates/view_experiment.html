@@ -6,11 +6,24 @@
     <h1 class="display-4">The {{expt_name}} experiment</h1>
     <p class="lead">Here, the parameters and search space of the {{expt_name}} is described.</p>
     <hr class="my-4">
-    <form method="POST">
-        <button type="submit" class="btn btn-primary btn-lg" name="action" value="run" style="margin-right: 20px;">Get
-            next recommendations!</button>
-        <button type="submit" class="btn btn-primary btn-lg" name="action" value="add">Add measurements!</button>
-    </form>
+    {% if expt_name == "sample-reizman-suzuki" and df['iteration'].max() < 1 %} <div class="container">
+        <h3>Start by getting the next recommendation!</h3>
+        </br>
+        <form method="POST">
+            <button type="submit" class="btn btn-primary btn-lg" name="action" value="run"
+                style="margin-right: 20px;">Get
+                next recommendations!</button>
+            <button type="submit" class="btn btn-secondary btn-lg" name="action" value="add">Add measurements!</button>
+        </form>
+</div>
+{% else %}
+<form method="POST">
+    <button type="submit" class="btn btn-primary btn-lg" name="action" value="run" style="margin-right: 20px;">Get
+        next recommendations!</button>
+    <button type="submit" class="btn btn-primary btn-lg" name="action" value="add">Add measurements!</button>
+</form>
+{% endif %}
+
 </div>
 <div class="container">
     <h1>Dataset description</h1>
@@ -47,12 +60,21 @@
     var graphs = {{ graphJSON | safe }};
     Plotly.newPlot('plot', graphs);
 </script>
-</br>
+
 {% if "datalab" in dataset_name and df['iteration'].max() > 0 %}
+</br>
 <form method="POST">
     <button type="submit" class="btn btn-primary btn-lg" name="action" value="send" style="margin-right: 20px;">Send
         measurements to datalab!</button>
 </form>
 {% endif %}
+</br>
+<form method="POST">
+    <button type="submit" class="btn btn-primary btn-lg" name="action" value="download"
+        style="margin-right: 20px;">Download
+        dataset!</button>
+</form>
 
+</br>
+</br>
 {% endblock %}

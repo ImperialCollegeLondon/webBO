@@ -20,10 +20,12 @@
                 {% for index, row in df.iterrows() %}
                 <tr>
                     {% for column in df.columns %}
+                    {% if column != target_name %}
                     <td style="border: 1px solid black;">{% if column == target %} <div
                             style="background-color: rgb(142, 142, 226);">
                             {{ row[column] }}</div> {% else %}{{ row[column] }}{% endif %}
                     </td>
+                    {% endif %}
                     {% endfor %}
                 </tr>
                 {% endfor %}

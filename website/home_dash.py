@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, flash, make_response
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from . import db 
@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 import plotly
 from summit.benchmarks import get_pretrained_reizman_suzuki_emulator
 from summit.utils.dataset import DataSet
+from .bo_integration import run_bo, rerun_bo
 
 
 home_dash = Blueprint("home_dash", __name__)
@@ -59,10 +60,6 @@ def view_experiment(expt_name):
 
     variable_list = list(data.columns)
     target_column_name = variable_list[int(expt_info.target)]
-    print(df)
-    print(type(df['iteration']))
-    for row in df['iteration']:
-        print(type(row))
 
     if len(recs.columns) < 1:
         fig = go.Figure([
@@ -95,11 +92,29 @@ def view_experiment(expt_name):
 
     if request.method == "POST":
         if request.form['action'] == 'run':
+            recs, campaign = run_bo(expt, expt.target, batch_size=expt.batch_size)
+            recs['iteration'] = df['iteration'].max() + 1
+            expt.next_recs = recs.to_json()
+            expt.iterations_completed = expt.iterations_completed + 1
+            expt.data = df.to_json(orient='records')
+            db.session.add(expt)
+            db.session.flush()
+            db.session.commit()
             return redirect(url_for('experiment_forms.run_expt', expt_name=expt.name))
         elif request.form['action'] == 'add':
             return redirect(url_for('experiment_forms.add_measurements', expt_name=expt.name))
         elif request.form['action'] == 'send':
             return redirect(url_for('dataset_forms.send', expt_name=expt.name))
+        elif request.form['action'] == 'download':
+            print('hello')
+            csv = df.to_csv(index=False)
+
+            # Create response
+            response = make_response(csv)
+            response.headers['Content-Disposition'] = f'attachment; filename={expt_name}.csv'
+            response.headers['Content-Type'] = 'text/csv'
+
+            return response
 
     return render_template(
         'view_experiment.html',

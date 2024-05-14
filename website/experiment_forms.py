@@ -11,6 +11,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, FormField, HiddenField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, InputRequired
 from .bo_integration import run_bo, rerun_bo
+from summit.benchmarks import get_pretrained_reizman_suzuki_emulator
+from summit.utils.dataset import DataSet
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -160,13 +162,29 @@ def add_measurements(expt_name):
         recs = pd.DataFrame(columns=df.columns)
         recs.loc[0] = 'insert'
 
+    if expt_info.name == "sample-reizman-suzuki":
+        emulator_status = True
+        df4em = recs
+        data = df4em.drop(['yield', 'iteration'], axis=1)
+        emulator = get_pretrained_reizman_suzuki_emulator(case=1)
+        conditions = DataSet.from_df(data)
+        emulator_output = emulator.run_experiments(conditions, rtn_std=True)
+        emulator_value = emulator_output.to_numpy()[0, 5]
+
+    else:
+        emulator_status = False
+        emulator_value = None
+
     if request.method == "POST":
-        if request.form['action'] == 'add':
+        if request.form['action'] == 'submit_measurements':
             for index, row in recs.iterrows():
                 new_measurement = {}
                 # concatenate df with the input values from the form
                 for column in recs.columns:
-                    new_measurement[column] = request.form.get(f"{column}")
+                    if column == 'iteration':
+                        new_measurement[column] = recs['iteration'].max()
+                    else:
+                        new_measurement[column] = request.form.get(f"{column}")
 
                 # updte the data entry in the Data DB
                 ndf = pd.DataFrame([new_measurement])
@@ -186,6 +204,8 @@ def add_measurements(expt_name):
         titles=df.columns.values,
         target_name=target_column_name,
         recs=recs,
+        emulator=emulator_status,
+        emulator_value=emulator_value,
     )
 
 
@@ -195,9 +215,8 @@ def run_expt(expt_name):
     expt_info = Experiment.query.filter_by(name=expt_name).first()
     data = pd.read_json(expt_info.data)
 
-    recs, campaign = run_bo(expt_info, expt_info.target, batch_size=expt_info.batch_size)
-    recs['iteration'] = data['iteration'].max() + 1
-
+    recs = pd.read_json(expt_info.next_recs)
+    print(recs)
     variable_list = list(data.columns)
     target_column_name = variable_list[int(expt_info.target)]
 
@@ -218,13 +237,6 @@ def run_expt(expt_name):
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    expt_info.next_recs = recs.to_json()
-    expt_info.iterations_completed = expt_info.iterations_completed + 1
-    expt_info.data = data.to_json(orient='records')
-    db.session.add(expt_info)
-    db.session.flush()
-    db.session.commit()
-
     if request.method == "POST":
         if request.form['action'] == 'add':
             return redirect(url_for("experiment_forms.add_measurements", expt_name=expt_info.name))
@@ -232,8 +244,8 @@ def run_expt(expt_name):
     return render_template(
         "run_expt.html",
         user=current_user,
-        df=recs,
-        titles=recs.columns.values,
+        df=recs.drop(target_column_name, axis=1),
+        titles=recs.drop(target_column_name, axis=1).columns.values,
         graphJSON=graphJSON,
         target=list(data.columns)[int(expt_info.target)],   
     )
