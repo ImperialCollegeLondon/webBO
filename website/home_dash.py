@@ -59,16 +59,26 @@ def view_experiment(expt_name):
 
     variable_list = list(data.columns)
     target_column_name = variable_list[int(expt_info.target)]
+    print(df)
+    print(type(df['iteration']))
+    for row in df['iteration']:
+        print(type(row))
 
     if len(recs.columns) < 1:
         fig = go.Figure([
             go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
             ])
-    else:
+    
+    elif False:
         fig = go.Figure([
             go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
             go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), name='predicted measurements'),
         ])
+    else:
+        fig = go.Figure([
+            go.Scatter(x=df['iteration'], y=df[list(data.columns)[int(expt_info.target)]]),
+        ])
+
     fig.update_layout(
         xaxis_title="iteration",
         yaxis_title=f"{target_column_name}",
@@ -77,7 +87,8 @@ def view_experiment(expt_name):
             family="Courier New, monospace",
             size=18,
             color="RebeccaPurple"
-        )
+        ),
+        autotypenumbers='convert types'
     )
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

@@ -17,17 +17,35 @@
     <h5>Recall, this case study concerns optimizing the coupling of 3-bromoquinoline with
         3,5-dimethylisoxazole-4-boronic acid pinacol ester in the presence of
         1,8-diazobicyclo[5.4.0]undec-7-ene (DBU) and THF/water, Figure 1. </h5>
+    </br>
     <div class="container">
-        <div class="col">
-            <figure class="figure">
-                <img src="{{ url_for('static', filename='reizman_suzuki_image.png') }}" class="img-fluid">
-                <figcaption class="figure-caption">Figure 1. Suzuki-Miyaura cross-coupling
-                    reaction
-                    optimization scheme. Figure adapted from <a
-                        href="https://pubs.rsc.org/en/content/articlelanding/2016/re/c6re00153j" class="tooltip-test"
-                        title="Tooltip">Reizman, et al. 2016 </a>
-                </figcaption>
-            </figure>
+        <div class="row">
+            <div class="col">
+                <figure class="figure">
+                    <h3>Optimisation reaction</h3>
+                    <img src="{{ url_for('static', filename='reizman_reaction.png') }}" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 1. The Suzuki-Miyaura cross-coupling
+                        reaction of this case study.
+                    </figcaption>
+                    </br>
+                    <h3>Parameter space</h3>
+                    <img src="{{ url_for('static', filename='parameter_space.png') }}" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 2. The parameter space spanned by this
+                        case study includes 3 continuous variables (catalyst loading, temperature,
+                        and residence time) and 1 categorical variable (catalyst).
+                    </figcaption>
+                    </br>
+                </figure>
+            </div>
+            <div class="col">
+                <figure class="figure">
+                    <h3>Catalyst options</h3>
+                    <img src="{{ url_for('static', filename='catalyst_options.png') }}" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3. The catalyst options included in
+                        this study.
+                    </figcaption>
+                </figure>
+            </div>
         </div>
     </div>
     </br>

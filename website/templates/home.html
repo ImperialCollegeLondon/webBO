@@ -33,53 +33,34 @@
                             <div class="container">
                                 <div class="col">
                                     <figure class="figure">
-                                        <img src="{{ url_for('static', filename='reizman_suzuki_image.png') }}"
-                                            class="img-fluid">
+                                        <img src="{{ url_for('static', filename='reizman_reaction.png') }}"
+                                            class="img-fluid" style="height: 75%">
                                         <figcaption class="figure-caption">Figure 1. Suzuki-Miyaura cross-coupling
-                                            reaction
-                                            optimization scheme. Figure adapted from <a
-                                                href="https://pubs.rsc.org/en/content/articlelanding/2016/re/c6re00153j"
-                                                class="tooltip-test" title="Tooltip">Reizman, et al. 2016 </a>
+                                            reaction involved in this case study.
+                                        </figcaption>
+                                    </figure>
+                                    </br>
+                                    <p>The parameter space involved in this optimisation task is detailed in Figure 2.
+                                    </p>
+                                    <figure class="figure">
+                                        <img src="{{ url_for('static', filename='parameter_space.png') }}"
+                                            class="img-fluid" style="height: 75%">
+                                        <figcaption class="figure-caption">Figure 2. Parameter space spanned by this
+                                            case study includes 3 continuous variables (catalyst loading, temperature,
+                                            and residence time) and 1 categorical variable (catalyst).
+                                        </figcaption>
+                                    </figure>
+                                    </br>
+                                    <p>The catalyst options are presented in Figure 3.</p>
+                                    <figure class="figure">
+                                        <img src="{{ url_for('static', filename='catalyst_options.png') }}"
+                                            class="img-fluid" style="height: 75%">
+                                        <figcaption class="figure-caption">Figure 3. The catalyst options included in
+                                            this study.
                                         </figcaption>
                                     </figure>
                                 </div>
                             </div>
-                            <p>The parameter space is
-                                comprised of:</p>
-                            <table class="table">
-                                <tbody>
-                                    <tr class="table-primary">
-                                        <td>variable</td>
-                                        <td>variable type</td>
-                                        <td>parameter space</td>
-                                    </tr>
-                                    <tr>
-                                        <td>precatalyst scaffold (P)</td>
-                                        <td>categorical</td>
-                                        <td>[shown in Figure 1]</td>
-                                    </tr>
-                                    <tr>
-                                        <td>ligand (L)</td>
-                                        <td>categorial</td>
-                                        <td>[shown in Figure 1]</td>
-                                    </tr>
-                                    <tr>
-                                        <td>catalyst loading</td>
-                                        <td>continuous</td>
-                                        <td>0.5 - 2.5 %</td>
-                                    </tr>
-                                    <tr>
-                                        <td>T (temperature)</td>
-                                        <td>continuous</td>
-                                        <td>30 - 110 <sup>o</sup>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>t<sub>res</sub> (reaction time)</td>
-                                        <td>continuous</td>
-                                        <td>1 - 10 min.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                             <p>
                                 This case study takes advantage of the experiment emulators offered by the <a
                                     href="https://github.com/sustainable-processes/summit" class="tooltip-test"
@@ -92,8 +73,9 @@
                                 Dataset features!</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                onClick="addSampleDataset()">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-info" data-dismiss="modal"
+                                onClick="addSampleDataset()">Add dataset!</button>
                         </div>
                     </div>
                 </div>
