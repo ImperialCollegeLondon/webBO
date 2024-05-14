@@ -16,18 +16,18 @@ def rerun_bo(campaign_db_entry, new_measurements, batch_size=1):
     return campaign.recommend(batch_size=batch_size)
 
 
-def run_bo(expt_info, data, target, opt_type="MAX", batch_size=1):
+def run_bo(expt_info, target, opt_type="MAX", batch_size=1):
     variable_type_dict = pd.read_json(expt_info.variables)
     baybe_paramter_list = []
     for col in variable_type_dict.columns:
         df = variable_type_dict[col].T
         if df['parameter-type'] == 'subs':
             baybe_paramter_list.append(
-                SubstanceParameter(f"{col}", data=data, encoding=f"{df['encoding'].upper()}")
+                SubstanceParameter(f"{col}", data=pd.read_json(df['json'])[f'{col}'], encoding=f"{df['encoding'].upper()}")
             )
         elif df['parameter-type'] == "cat":
             baybe_paramter_list.append(
-                CategoricalParameter(f"{col}", values=data, encoding="OHE")
+                CategoricalParameter(f"{col}", values=pd.read_json(df['json'])[f'{col}'], encoding="OHE")
             )
         elif df['parameter-type'] == 'int':
             baybe_paramter_list.append(
