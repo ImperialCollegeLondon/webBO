@@ -96,7 +96,7 @@ dependencies:
       - networkx==3.3
       - ngboost==0.5.1
       - numba==0.55.2
-      - numpy
+      - numpy==1.26.4
       - nvidia-cublas-cu11==11.10.3.66
       - nvidia-cuda-nvrtc-cu11==11.7.99
       - nvidia-cuda-runtime-cu11==11.7.99
@@ -160,4 +160,3 @@ dependencies:
       - wrapt==1.16.0
       - wtforms==3.1.2
       - zipp==3.18.1
-prefix: /home/bogosort/work/webBO/implement-case-study/.summit
