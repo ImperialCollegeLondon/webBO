@@ -1,29 +1,29 @@
-name: webbo
+name: /home/bogosort/work/webBO/implement-case-study/.summit
 channels:
   - defaults
 dependencies:
-  - _libgcc_mutex=0.1=main
-  - _openmp_mutex=5.1=1_gnu
-  - bzip2=1.0.8=h5eee18b_6
-  - ca-certificates=2024.3.11=h06a4308_0
-  - ld_impl_linux-64=2.38=h1181459_1
-  - libffi=3.4.4=h6a678d5_1
-  - libgcc-ng=11.2.0=h1234567_1
-  - libgomp=11.2.0=h1234567_1
-  - libstdcxx-ng=11.2.0=h1234567_1
-  - libuuid=1.41.5=h5eee18b_0
-  - ncurses=6.4=h6a678d5_0
-  - openssl=3.0.13=h7f8727e_1
-  - pip=24.0=py310h06a4308_0
-  - python=3.10.14=h955ad1f_1
-  - readline=8.2=h5eee18b_0
-  - setuptools=69.5.1=py310h06a4308_0
-  - sqlite=3.45.3=h5eee18b_0
-  - tk=8.6.14=h39e8969_0
-  - tzdata=2024a=h04d1e81_0
-  - wheel=0.43.0=py310h06a4308_0
-  - xz=5.4.6=h5eee18b_1
-  - zlib=1.2.13=h5eee18b_1
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=5.1
+  - bzip2=1.0.8
+  - ca-certificates=2024.3.11
+  - ld_impl_linux-64=2.38
+  - libffi=3.4.4
+  - libgcc-ng=11.2.0
+  - libgomp=11.2.0
+  - libstdcxx-ng=11.2.0
+  - libuuid=1.41.5
+  - ncurses=6.4
+  - openssl=3.0.13
+  - pip=24.0
+  - python=3.10.14
+  - readline=8.2
+  - setuptools=69.5.1
+  - sqlite=3.45.3
+  - tk=8.6.14
+  - tzdata=2024a
+  - wheel=0.43.0
+  - xz=5.4.6
+  - zlib=1.2.13
   - pip:
       - about-time==4.2.1
       - alive-progress==3.1.5
@@ -96,7 +96,7 @@ dependencies:
       - networkx==3.3
       - ngboost==0.5.1
       - numba==0.55.2
-      - numpy==1.26.4
+      - numpy
       - nvidia-cublas-cu11==11.10.3.66
       - nvidia-cuda-nvrtc-cu11==11.7.99
       - nvidia-cuda-runtime-cu11==11.7.99
