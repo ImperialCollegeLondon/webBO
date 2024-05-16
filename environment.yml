@@ -1,4 +1,4 @@
-name: /home/bogosort/work/.tester2
+name: webbo
 channels:
   - defaults
 dependencies:
