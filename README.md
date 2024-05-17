@@ -88,13 +88,13 @@ This case study concerns optimizing the coupling of 3-bromoquinoline with
                                     </br>
                                     <p>The catalyst options are presented in Figure 3.</p>
                                     <h5 align="center">
-                                    <figure class="figure">
-                                        <img src="./website/static/catalyst_options.png"
-                                            class="img-fluid" width="300">
-                                        <figcaption class="figure-caption">Figure 3. The catalyst options included in
-                                            this study.
-                                        </figcaption>
-                                    </figure>
+                                    
+<img src="./website/static/catalyst_options.png" class="img-fluid" width="300">
+
+Figure 3. The catalyst options included in
+this study.
+
+
                                     </h5>
                                 </div>
                             </div>
