@@ -21,7 +21,7 @@
 
 ## key features
 
-`Web-BO` is a web application offering a graphical user interface (GUI) to facilitate the application of BO to a wide array of chemical problems and offers several key features:
+<a href="https://suprashare.rcs.ic.ac.uk/web-bo/">`Web-BO`</a> is a web application offering a graphical user interface (GUI) to facilitate the application of BO to a wide array of chemical problems and offers several key features:
 * **modular platform** that is easily integrated into existing ELN frameworks
 * can be used as a **standalone database and optimiser for chemical tasks**. All of the data is stored in a searchable SQL database in an intuitive and future-proof form, enabling efficient benchmarking of varying data-driven optimisation algorithms.
 * **no coding experience is necessary** to interface with and apply BO algorithms to chemical optimisation applications.
@@ -33,8 +33,6 @@
 `Web-BO` possesses 2 examples and 1 walk-through; one example demonstrates a sample optimisation task (described in the manuscript and below), one example provides sample input *csv* files, and the walk-through demonstrates the integration with <a href="https://github.com/the-grey-group/datalab">`datalab`</a>.
 
 ### optimisation task demonstration
-
-
 
 ### toy dataset demonstration
 
