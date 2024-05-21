@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
+from os import path, getenv
 from flask_login import LoginManager
 
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
+URL_PREFIX = os.getenv("URL_PREFIX", "") + "/"
 
 
 def create_app():
@@ -19,10 +20,10 @@ def create_app():
     from .home_dash import home_dash
     from .auth import auth
 
-    app.register_blueprint(home_dash, url_prefix="/")
-    app.register_blueprint(data_views, url_prefix="/")
-    app.register_blueprint(expt_views, url_prefix="/")
-    app.register_blueprint(auth, url_prefix="/")
+    app.register_blueprint(home_dash, url_prefix=URL_PREFIX)
+    app.register_blueprint(data_views, url_prefix=URL_PREFIX)
+    app.register_blueprint(expt_views, url_prefix=URL_PREFIX)
+    app.register_blueprint(auth, url_prefix=URL_PREFIX)
 
     from .models import User
 
