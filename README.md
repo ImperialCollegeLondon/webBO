@@ -117,8 +117,6 @@ The solvents are a categorical variable. Thus, we need to define all of the opti
 | y |
 | z |
 
-### integrating ELNs
-
 ## citation
 
 A. M. Mroz, P. N. Toka, E. A. del Rio Chanona, K. E. Jelfs, *submitted*.
