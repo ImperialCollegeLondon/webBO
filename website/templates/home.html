@@ -165,22 +165,39 @@
 </div>
 
 <br />
-<form method="POST">
-    <div class="row g-5">
-        <div class="col-md-6">
-            <div class="col-md-12" align="center">
-                <button type="submit" class="btn btn-secondary" name="action" value="add-dataset">Add
-                    Dataset</button>
+
+<div class="container mb-5">
+    <form method="POST">
+        <div class="row g-5">
+            <div class="col-md-6">
+                <div class="col-md-12" align="center">
+                    <button type="submit" class="btn btn-secondary" name="action" value="add-dataset">Add
+                        Dataset</button>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="col-md-12" align="center">
-                <button type="submit" class="btn btn-secondary" name="action" value="add-experiment">Add
-                    Experiment</button>
+            <div class="col-md-6">
+                <div class="col-md-12" align="center">
+                    <button type="submit" class="btn btn-secondary" name="action" value="add-experiment">Add
+                        Experiment</button>
+                </div>
             </div>
+
         </div>
+    </form>
+</div>
+
+<hr />
+<div class="container mt-5">
+    <div class="alert alert-warning">
+
+        <h2 align="left">disclaimer</h2>
+
+        <p>Web-BO is NOT a data storage solution; it is a data optimisation tool. For best practice, it is
+            suggested
+            to download your dataset after each iteration.</p>
 
     </div>
-</form>
+</div>
+</span>
 
 {% endblock %}

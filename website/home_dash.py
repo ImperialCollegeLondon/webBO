@@ -22,7 +22,10 @@ def home():
     if request.method == "POST":
         print(type(request.form['action']))
         if request.form['action'] == "add-dataset":
-            return redirect(url_for("dataset_forms.select_upload_method"))
+            if Data.query.count() == 3:
+                flash("Whoops! You cannot have more than 3 datasets uploaded. Please export and delete at least one dataset in your repository.", category="error")
+            else:
+                return redirect(url_for("dataset_forms.select_upload_method"))
         elif request.form['action'] == "add-experiment":
             if not db.session.query(Data).all():
                 flash("Whoops! You need to upload a dataset first!", category="error")
