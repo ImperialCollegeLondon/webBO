@@ -1,4 +1,8 @@
+import os
+
 from website import create_app
+
+os.environ["BAYBE_TELEMETRY_ENABLED"] = "false"
 
 app = create_app()
 
