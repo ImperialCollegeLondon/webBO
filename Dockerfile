@@ -8,5 +8,5 @@ COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
-CMD /opt/conda/envs/suprashare/bin/gunicorn main:app -b :8050
+CMD /opt/conda/envs/webbo/bin/gunicorn main:app -b :8050
 EXPOSE 8050
