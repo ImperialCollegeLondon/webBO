@@ -127,3 +127,5 @@ A. M. Mroz, P. N. Toka, E. A. del Rio Chanona, K. E. Jelfs, *submitted*.
 The authors thank Dr. Matthew Evans, one of the developers of <a href="https://github.com/the-grey-group/datalab">`datalab`</a> for insightful discussions and assistance in working with <a href="https://github.com/the-grey-group/datalab">`datalab`</a>'s API. The authors would also like to thank Dr. Diego Alonso Alvarez for his technical assistance in making `Web-BO` publically available. A.M.M. is supported by the Eric and Wendy Schmidt AI in Science Postdoctoral Fellowship, a Schmidt Futures program. K.E.J acknowledges the European Research Council through Agreement No. 758370 (ERC-StG-PE5-CoMMaD) and the Royal Society for a University Research Fellowship.
 
 ## license
+
+We release this software under the conditions of the MIT license.
