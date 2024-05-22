@@ -6,7 +6,7 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-URL_PREFIX = getenv("URL_PREFIX", "") + "/"
+URL_PREFIX = getenv("URL_PREFIX", "")
 
 
 def create_app():
