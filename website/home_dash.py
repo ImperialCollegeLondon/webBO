@@ -40,6 +40,8 @@ def home():
         elif request.form['action'] == "explore":
             print(request.form['action'])
             print('working?')
+        elif request.form['action'] == "logout":
+            return redirect(url_for("auth.logout"))
 
     return render_template("home.html", user=current_user)
 
