@@ -10,7 +10,7 @@ URL_PREFIX = getenv("URL_PREFIX", "")
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path=f"{URL_PREFIX}/static")
     app.config['SECRET_KEY'] = 'woof!'
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_NAME}"
     db.init_app(app)
