@@ -1,10 +1,10 @@
-function deleteDataset(nodeId) {
+function deleteDataset(noteId) {
     fetch(process.env.URL_PREFIX + '/delete-dataset', { method: 'POST', body: JSON.stringify({ noteId: noteId }) }).then((_res) => {
         WebTransportBidirectionalStream.location.href = "/";
     });
 }
 
-function deleteExperiment(nodeId) {
+function deleteExperiment(noteId) {
     fetch(process.env.URL_PREFIX + '/delete-experiment', { method: 'POST', body: JSON.stringify({ noteId: noteId }) }).then((_res) => {
         WebTransportBidirectionalStream.location.href = "/";
     });
@@ -16,7 +16,7 @@ function addSampleDataset() {
     });
 }
 
-function addParameterElement(nodeId) {
+function addParameterElement(noteId) {
     fetch(process.env.URL_PREFIX + '/add-parameter-element', { method: 'POST', body: JSON.stringify({ noteId: noteId }) }).then((_res) => {
         WebTransportBidirectionalStream.location.href = "/";
     });
