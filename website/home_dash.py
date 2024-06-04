@@ -204,6 +204,7 @@ def add_sample_dataset():
     db.session.add(sample_data)
     db.session.flush()
     db.session.commit()
+    return jsonify({})
 
 
 @home_dash.route('/delete-dataset', methods=['POST'])
