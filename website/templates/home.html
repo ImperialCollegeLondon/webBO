@@ -119,7 +119,8 @@
                                     </button>
                                 </div>
                                 <div class="ml-auto">
-                                    <button type="button" class="close" onClick="deleteDataset({{ data.id }})"
+                                    <button type="button" class="close"
+                                        onClick="deleteDataset({{ data.id, url_prefix }})"
                                         style="display: flex; justify-content: flex-end;">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
