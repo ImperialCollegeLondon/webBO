@@ -76,6 +76,8 @@
                 body: JSON.stringify({ noteId: noteId }),
             }).then((_res) => {
                 window.location.href = "/";
+            }).catch(error => {
+                console.error('Error:', error);
             });
         }
     </script>
