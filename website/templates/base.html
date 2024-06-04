@@ -60,7 +60,7 @@
     {% block javascript %}
     <script type="text/javascript">
         function deleteDataset(noteId) {
-            fetch("/delete-dataset", {
+            fetch(process.env.URL_PREFIX + "/delete-dataset", {
                 method: "POST",
                 body: JSON.stringify({ noteId: noteId }),
             }).then((_res) => {
@@ -71,7 +71,7 @@
 
     <script type="text/javascript">
         function deleteExperiment(noteId) {
-            fetch("/delete-experiment", {
+            fetch(process.env.URL_PREFIX + "/delete-experiment", {
                 method: "POST",
                 body: JSON.stringify({ noteId: noteId }),
             }).then((_res) => {
@@ -81,7 +81,7 @@
     </script>
     <script type="text/javascript">
         function addSampleDataset() {
-            fetch("/add-sample-dataset", {
+            fetch(process.env.URL_PREFIX + "/add-sample-dataset", {
                 method: "POST",
             }).then((_res) => {
                 window.location.href = "/";
