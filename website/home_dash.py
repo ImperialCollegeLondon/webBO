@@ -20,7 +20,6 @@ home_dash = Blueprint("home_dash", __name__)
 @login_required
 def home():
     if request.method == "POST":
-        print(type(request.form['action']))
         if request.form['action'] == "add-dataset":
             if Data.query.count() == 3:
                 flash("Whoops! You cannot have more than 3 datasets uploaded. Please export and delete at least one dataset in your repository.", category="error")
@@ -37,11 +36,22 @@ def home():
         elif "viewexpt-" in request.form['action']:
             session['viewexpt'] = request.form['action'].removeprefix('viewexpt-')
             return redirect(url_for("home_dash.view_experiment", expt_name=request.form['action'].removeprefix('viewexpt-')))
-        elif request.form['action'] == "explore":
-            print(request.form['action'])
-            print('working?')
         elif request.form['action'] == "add-sample-dataset":
             please_add_sample_dataset()
+            return redirect(url_for("home_dash.home"))
+        elif "remove-dataset-" in request.form['action']:
+            note = Data.query.get(int(request.form['action'].removeprefix("remove-dataset-")))
+            if note:
+                if note.user_id == current_user.id:
+                    db.session.delete(note)
+                    db.session.commit()
+            return redirect(url_for("home_dash.home"))
+        elif "remove-experiment-" in request.form['action']:
+            note = Experiment.query.get(int(request.form['action'].removeprefix("remove-experiment-")))
+            if note:
+                if note.user_id == current_user.id:
+                    db.session.delete(note)
+                    db.session.commit()
             return redirect(url_for("home_dash.home"))
         elif request.form['action'] == "logout":
             return redirect(url_for("auth.logout"))
@@ -208,6 +218,7 @@ def add_sample_dataset():
     db.session.flush()
     db.session.commit()
     return jsonify({})
+
 
 def please_add_sample_dataset():
     sample_dataset = {

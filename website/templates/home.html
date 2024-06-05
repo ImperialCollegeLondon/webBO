@@ -122,10 +122,10 @@
                                     </button>
                                 </div>
                                 <div class="ml-auto">
-                                    <button type="button" class="close" onClick="deleteDataset({{data.id}})"
-                                        style="display: flex; justify-content: flex-end;">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <button type="submit" class="close" name="action"
+                                        value="remove-dataset-{{ data.id }}"
+                                        style="display: flex; justify-content: flex-end;"><span
+                                            aria-hidden="true">&times;</span></button>
                                 </div>
                             </form>
                         </h4>
