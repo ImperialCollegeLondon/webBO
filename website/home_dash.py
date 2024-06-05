@@ -45,14 +45,12 @@ def home():
                 if note.user_id == current_user.id:
                     db.session.delete(note)
                     db.session.commit()
-            return redirect(url_for("home_dash.home"))
         elif "remove-experiment-" in request.form['action']:
             note = Experiment.query.get(int(request.form['action'].removeprefix("remove-experiment-")))
             if note:
                 if note.user_id == current_user.id:
                     db.session.delete(note)
                     db.session.commit()
-            return redirect(url_for("home_dash.home"))
         elif request.form['action'] == "logout":
             return redirect(url_for("auth.logout"))
 
