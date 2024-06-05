@@ -73,9 +73,12 @@
                                 Dataset features!</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-info" data-dismiss="modal"
-                                onClick="addSampleDataset()">Add dataset!</button>
+                            <form method="POST">
+                                <button type="submit" class="btn btn-secondary" name="action"
+                                    value="add-sample-dataset">Add
+                                    Dataset!</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>

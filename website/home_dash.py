@@ -40,6 +40,9 @@ def home():
         elif request.form['action'] == "explore":
             print(request.form['action'])
             print('working?')
+        elif request.form['action'] == "add-sample-dataset":
+            please_add_sample_dataset()
+            return redirect(url_for("home_dash.home"))
         elif request.form['action'] == "logout":
             return redirect(url_for("auth.logout"))
 
@@ -205,6 +208,32 @@ def add_sample_dataset():
     db.session.flush()
     db.session.commit()
     return jsonify({})
+
+def please_add_sample_dataset():
+    sample_dataset = {
+        "catalyst": ["P1-L3"], "t_res": [600], "temperature": [30],"catalyst_loading": [0.498],
+    }
+    
+    dataset_df = pd.DataFrame(sample_dataset)
+
+    emulator = get_pretrained_reizman_suzuki_emulator(case=1)
+    conditions = DataSet.from_df(dataset_df)
+    emulator_output = emulator.run_experiments(conditions, rtn_std=True)
+    rxn_yield = emulator_output.to_numpy()[0, 5]
+    
+    dataset_df['yield'] = rxn_yield*100
+    dataset_df['iteration'] = 0
+    print(dataset_df)
+    variable_df = pd.DataFrame(dataset_df.columns, columns=["variables"])
+    sample_data = Data(
+        name="sample-reizman-suzuki",
+        data=dataset_df.to_json(orient="records"),
+        variables=variable_df.to_json(orient="records"),
+        user_id=current_user.id,
+    )
+    db.session.add(sample_data)
+    db.session.flush()
+    db.session.commit()
 
 
 @home_dash.route('/delete-dataset', methods=['POST'])
