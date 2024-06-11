@@ -23,7 +23,7 @@ def run_bo(expt_info, target, opt_type="MAX", batch_size=1):
         df = variable_type_dict[col].T
         if df['parameter-type'] == 'subs':
             baybe_paramter_list.append(
-                SubstanceParameter(f"{col}", data=pd.read_json(df['json'])[f'{col}'], encoding=f"{df['encoding'].upper()}")
+                SubstanceParameter(f"{col}", data=df['json'], encoding=f"{df['encoding']}")
             )
         elif df['parameter-type'] == "cat":
             baybe_paramter_list.append(
