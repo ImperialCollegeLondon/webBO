@@ -287,20 +287,37 @@
             }
             else if (val == "subs") {
                 var newContent = `
-                    <div class="row">
-                        <div class="col">
-                            <input class="form-control" id="formFile-${row}" name="formFile-${row}" type="file" placeholder="upload list of options" />
+                <div class="row">
+                    <div class="col">
+                        <p>Upload list of SMILES options</p>
+                        <input class="form-control" id="formFile-${row}" name="formFile-${row}"
+                            type="file" placeholder="upload list of options" />
+                    </div>
+                    <div class="col">
+                        <p>Select your encoding type</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios-${row}"
+                                id="exampleRadios1-${row}" value="RDKIT" checked>
+                            <label class="form-check-label" for="exampleRadios1-${row}">
+                                RDKit chemical descriptors
+                            </label>
                         </div>
-                        <div class="col">
-                            <select class="selectpicker" name="new-elements-subs-${col}" id="new-elements-subs-${col}">
-                                <option selected>Select encoding</option>
-                                <option value="MORDRED">Mordred</option>
-                                <option value="RDKIT">rdkit</option>
-                                <option value="MORGAN_FP">Morgan FP</option>
-                                <option value="OHE">One-Hot Encoding</option>
-                            </select>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios-${row}"
+                                id="exampleRadios2-${row}" value="MORGAN_FP">
+                            <label class="form-check-label" for="exampleRadios2-${row}">
+                                Morgan
+                            </label>
+                        </div>
+                        <div class="form-check disabled">
+                            <input class="form-check-input" type="radio" name="exampleRadios-${row}"
+                                id="exampleRadios3-${row}" value="MORDRED">
+                            <label class="form-check-label" for="exampleRadios3-${row}">
+                                MORDRED
+                            </label>
                         </div>
                     </div>
+                </div>
                 `
                 document.getElementById("new-elements-".concat(row)).insertAdjacentHTML('beforeend', newContent);
 

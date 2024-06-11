@@ -93,11 +93,13 @@ def setup():
                     if datafile:
                         filename = secure_filename(datafile.filename)
                         datafile.save(filename)
-                        df = pd.read_csv(filename)
+                        df = pd.read_csv(filename, index_col=0)
+                    print(request.form.get(f"exampleRadios-{col}"))
+                    print(df.to_dict())
                     variable_types[f"{col}"] = {
                         "parameter-type": request.form.get(f"parameterspace-{col}"),
-                        "json": df.to_json(orient="records"),
-                        "encoding": request.form.get(f"new-elements-subs-{col}"),
+                        "json": df.to_dict()['smiles'],
+                        "encoding": request.form.get(f"exampleRadios-{col}"),
                     }
                 elif request.form.get(f"parameterspace-{col}") == "int":
                     if int(request.form.get(f"min-vals-{col}")) < int(request.form.get(f"max-vals-{col}")):
