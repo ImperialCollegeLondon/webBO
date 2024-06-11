@@ -18,7 +18,7 @@ def login():
             user = User.query.filter_by(email=email).first()
             if user:
                 if check_password_hash(user.password, password):
-                    flash("logged in subbessfully!", category="success")
+                    flash("logged in successfully!", category="success")
                     login_user(user, remember=True)
                     return redirect(url_for("home_dash.home"))
                 else:
