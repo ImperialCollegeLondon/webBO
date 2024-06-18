@@ -107,6 +107,8 @@ def view_experiment(expt_name):
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     if request.method == "POST":
+        if request.form['action'] == "view-my-stuff":
+            return redirect(url_for('home_dash.home'))
         if request.form['action'] == 'run':
             recs, campaign = run_bo(expt, expt.target, batch_size=expt.batch_size)
             recs['iteration'] = df['iteration'].max() + 1
@@ -150,6 +152,8 @@ def view_dataset():
     df = [pd.read_json(row.data) for row in Data.query.filter_by(name=session['viewdata']).all()][0]
     print(df.describe())
     if request.method == "POST":
+        if request.form['action'] == "view-my-stuff":
+            return redirect(url_for('home_dash.home'))
         if request.form['action'] == 'setup-experiment':
             variable_types={
                 "catalyst": {"parameter-type":"cat",
