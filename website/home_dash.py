@@ -41,16 +41,12 @@ def home():
             return redirect(url_for("home_dash.home"))
         elif "remove-dataset-" in request.form['action']:
             note = Data.query.get(int(request.form['action'].removeprefix("remove-dataset-")))
-            if note:
-                if note.user_id == current_user.id:
-                    db.session.delete(note)
-                    db.session.commit()
+            db.session.delete(note)
+            db.session.commit()
         elif "remove-experiment-" in request.form['action']:
             note = Experiment.query.get(int(request.form['action'].removeprefix("remove-experiment-")))
-            if note:
-                if note.user_id == current_user.id:
-                    db.session.delete(note)
-                    db.session.commit()
+            db.session.delete(note)
+            db.session.commit()
         elif request.form['action'] == "logout":
             return redirect(url_for("auth.logout"))
 
