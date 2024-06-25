@@ -49,6 +49,9 @@ def home():
             db.session.commit()
         elif request.form['action'] == "logout":
             return redirect(url_for("auth.logout"))
+        elif request.form['action'] == "reset-user":
+            Data.query.filter_by(user_id=current_user.id).delete()
+            Experiment.query.filter_by(user_id=current_user.id).delete()
 
     return render_template("home.html", user=current_user)
 

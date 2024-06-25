@@ -88,6 +88,33 @@
             <img src="{{ url_for('static', filename='web-BO_logo.png') }}" class="img-thumbnail">
         </div>
     </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col-md-8">
+            <p>The web-BO database requires each Dataset and Experiment entry possesses a unique name.</p>
+            <p>If you wish to reset the database associated with your user, please select the button below. <font
+                    color="#f57ab6"> (WARNING:
+                    this cannot be undone) </font>
+            </p>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".bd-example-modal-sm">Reset
+                User</button>
+        </div>
+
+        <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <h5>Are you sure you want to do this?</h5>
+                    <font color="#f57ab6"> You cannot undo this action. </font>
+                    <form method="POST">
+                        <button type="submit" class="btn btn-primary" name="action" value="reset-user">Yes. I am
+                            sure.</button>
+                        <button type="submit" class="btn btn-secondary" name="action" value="take-me-home">No.</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="container">
