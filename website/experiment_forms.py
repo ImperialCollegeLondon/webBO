@@ -58,9 +58,9 @@ def setup():
         measurement_choices[data.name] = list(pd.read_json(data.variables)['variables'])
 
     data_form = DatasetSelectionForm(form_name="data_select")
-    data_form.dataset.choices = [(row.id, row.name) for row in Data.query.all()]
-    data_form.target.choices = [(row.id, row.variables) for row in Data.query.all()]
-    expt_names = [row.name for row in Experiment.query.all()]
+    data_form.dataset.choices = [(row.id, row.name) for row in Data.query.filter_by(user_id=current_user.id)]
+    data_form.target.choices = [(row.id, row.variables) for row in Data.query.filter_by(user_id=current_user.id)]
+    expt_names = [row.name for row in Experiment.query.filter_by(user_id=current_user.id)]
     if data_form.name.data in expt_names:
         flash("That name already exists!", category="error")
 

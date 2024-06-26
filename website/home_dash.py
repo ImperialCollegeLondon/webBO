@@ -123,7 +123,6 @@ def view_experiment(expt_name):
         elif request.form['action'] == 'send':
             return redirect(url_for('dataset_forms.send', expt_name=expt.name))
         elif request.form['action'] == 'download':
-            print('hello')
             csv = df.to_csv(index=False)
 
             # Create response
@@ -225,14 +224,14 @@ def please_add_sample_dataset():
     sample_dataset = {
         "catalyst": ["P1-L3"], "t_res": [600], "temperature": [30],"catalyst_loading": [0.498],
     }
-    
+
     dataset_df = pd.DataFrame(sample_dataset)
 
     emulator = get_pretrained_reizman_suzuki_emulator(case=1)
     conditions = DataSet.from_df(dataset_df)
     emulator_output = emulator.run_experiments(conditions, rtn_std=True)
     rxn_yield = emulator_output.to_numpy()[0, 5]
-    
+
     dataset_df['yield'] = rxn_yield*100
     dataset_df['iteration'] = 0
     print(dataset_df)

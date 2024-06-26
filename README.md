@@ -12,12 +12,18 @@
 <p align="center">
     <a href="#key-features">key features</a> •
     <a href="#examples">examples</a> •
-    <a href="citation">citation</a> •
+    <a href="#running-locally">run locally</a> •
+    <a href="#citation">citation</a> •
     <a href="#acknowledgements">acknowledgements</a> •
     <a href="#license">license</a>
 </p>
 
 <br>
+
+## video demonstration
+
+![](https://github.com/austin-mroz/webBO/blob/main/webbo_video_demo.gif)
+
 
 ## key features
 <table>
@@ -117,12 +123,28 @@ The solvents are a categorical variable. Thus, we need to define all of the opti
 | y |
 | z |
 
+In order to use the toy dataset, these must first be downloaded locally and then uploaded using the csv upload feature in `Web-BO`.
+
+## run locally
+
+To deploy `Web-BO` locally, follow the below steps:
+
+```console
+foo@bar:~$ git clone https://github.com/austin-mroz/webBO
+foo@bar:~$ cd webBO
+foo@bar:~/webBO$ conda env create -p ./.venv -f environment.yml
+foo@bar:~/webBO$ conda activate ./.venv
+foo@bar:~/webBO$ python main.py
+```
+
+`Web-BO` will be hosted on your localhost using its default port (`8050`); `http://localhost:8050/`
+
 ## citation
 
-A. M. Mroz, P. N. Toka, E. A. del Rio Chanona, K. E. Jelfs, *submitted*
+A. M. Mroz, P. N. Toka, E. A. del Rio Chanona, K. E. Jelfs, *submitted*.
 
 ## acknowledgements
-The authors thank Dr. Matthew Evans, one of the developers of <a href="https://github.com/the-grey-group/datalab">`datalab`</a> for insightful discussions and assistance in working with <a href="https://github.com/the-grey-group/datalab">`datalab`</a>'s API. The authors would also like to thank Dr. Diego Alonso Alvarez for his technical assistance in making `Web-BO` publically available. A.M.M. is supported by the Eric and Wendy Schmidt AI in Science Postdoctoral Fellowship, a Schmidt Futures program. K.E.J acknowledges the European Research Council through Agreement No. 758370 (ERC-StG-PE5-CoMMaD) and the Royal Society for a University Research Fellowship.
+The authors thank **Dr. Matthew Evans**, one of the developers of <a href="https://github.com/the-grey-group/datalab">`datalab`</a> for insightful discussions and assistance in working with <a href="https://github.com/the-grey-group/datalab">`datalab`</a>'s API. The authors would also like to thank **Dr. Diego Alonso Alvarez** and **Dr. Lukas Turcani** for their technical assistance in making `Web-BO` publically available. A.M.M. is supported by the Eric and Wendy Schmidt AI in Science Postdoctoral Fellowship, a Schmidt Futures program. K.E.J acknowledges the European Research Council through Agreement No. 758370 (ERC-StG-PE5-CoMMaD) and the Royal Society for a University Research Fellowship.
 
 ## license
 
