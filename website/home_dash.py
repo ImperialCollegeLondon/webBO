@@ -78,7 +78,7 @@ def view_experiment(expt_name):
 
     if len(recs.columns) < 1:
         fig = go.Figure([
-            go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
+            go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]]), mode = 'markers'), # EM: adding -- mode = 'markers' -- means only the data points are shown, no lines connecting them
             ])
     
     elif False:

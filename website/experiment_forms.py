@@ -223,8 +223,8 @@ def run_expt(expt_name):
     target_column_name = variable_list[int(expt_info.target)]
 
     fig = go.Figure([
-        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
-        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), name='predicted measurements'),
+        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]]), mode = 'markers'), # EM: adding -- mode = 'markers' -- means only the data points are shown, no lines connecting them
+        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), mode = 'markers', name='predicted measurements'),
     ])
     fig.update_layout(
         xaxis_title="iteration",
@@ -244,7 +244,7 @@ def run_expt(expt_name):
             return redirect(url_for("experiment_forms.add_measurements", expt_name=expt_info.name))
 
     return render_template(
-        "run_expt.html",
+        "run_expt.html", # beneath this is everyting we need to add to html to make it run properly
         user=current_user,
         df=recs.drop(target_column_name, axis=1),
         titles=recs.drop(target_column_name, axis=1).columns.values,
