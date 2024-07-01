@@ -26,7 +26,7 @@ class DatasetSelectionForm(FlaskForm):
     form_name = HiddenField("form_name")
     name = StringField('experiment name', validators=[DataRequired()], id='experiment_name', render_kw={"placeholder": "Enter your experiment name here"})
     dataset = SelectField('dataset', coerce=str, validators=[DataRequired()], id='dataset_name')
-    target = SelectField('target', coerce=str, validators=[DataRequired()], id='target_name')
+    target = SelectField('Target (what you want to optimize)', coerce=str, validators=[DataRequired()], id='target_name')
     submit = SubmitField('Submit dataset')
 
 
@@ -37,7 +37,7 @@ class DatasetSelectionForm(FlaskForm):
 class HyperparameterForm(FlaskForm):
     kernel = SelectField('GP kernel type', id='kernel')
     acqFunc = SelectField('Acquisition Function type', id='acqFunc')
-    batch_size = IntegerField('Batch size', id='batch_size')
+    batch_size = IntegerField('Batch size. This determines the number of experiments it suggests you to run before coming back to web-BO. E.g. if you set batch size equal to 2, it will tell you to go to the lab and perform your experiment with 2 different sets of initial conditions and input, before it gives you the next 2 sets of initial conditions.', id='batch_size')
     opt_type = SelectField('Optimization type')
     submit = SubmitField('Submit hyperparameters')
 
