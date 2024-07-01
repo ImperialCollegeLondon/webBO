@@ -58,6 +58,12 @@
 <div id="plot"></div>
 <script>
     var graphs = {{ graphJSON | safe }};
+
+    // Ensure mode: 'markers' is set for each trace
+    for (var i = 0; i < graphs.data.length; i++) {
+        graphs.data[i].mode = 'markers';
+    }
+    
     Plotly.newPlot('plot', graphs);
 </script>
 
