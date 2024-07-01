@@ -26,7 +26,7 @@ class DatasetSelectionForm(FlaskForm):
     form_name = HiddenField("form_name")
     name = StringField('experiment name', validators=[DataRequired()], id='experiment_name', render_kw={"placeholder": "Enter your experiment name here"})
     dataset = SelectField('dataset', coerce=str, validators=[DataRequired()], id='dataset_name')
-    target = SelectField('Target (what you want to optimize)', coerce=str, validators=[DataRequired()], id='target_name')
+    target = SelectField('Target (what you want to optimize). (N.B. in the dropdown menu "target" means percentage yield)', coerce=str, validators=[DataRequired()], id='target_name')
     submit = SubmitField('Submit dataset')
 
 
