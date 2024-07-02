@@ -109,7 +109,7 @@
             }
             // console.log(vars)
             // If all inputs are valid, you can proceed with the form submission or the next step
-            alert('All inputs are valid');
+            // alert('All inputs are valid'); // EM: I have commented out this line as a) it is repeated in line 142, and b) line 142 actually correctly tells you whether there has been a mistake - this line always says all inputs are valid, even when they're not
             var textareas = document.getElementsByTagName('textarea')
             var textareasArray = Array.from(textareas);
             console.log(textareas);
