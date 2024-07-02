@@ -114,6 +114,18 @@
                 </div>
             </div>
         </div>
+        <!--<div class="row">-->
+            <div class="col-md-12">
+                <hr class="my-4">
+                <p>It might be a bit daunting to just dive. We have provided a tutorial video for you to follow in order to get started.</p>
+                <p>To watch it, select the button below!</p>
+            </div>
+            <div class="col-md-6">
+                <div>
+                    <a href="{{ url_for('home_dash.video_tutorial') }}" class="btn btn-danger">Video tutorial</a>
+                    <!--<button type="submit" class="btn btn-danger" name="action" value="video-tutorial">Video tutorial</button>-->
+                </div>
+            </div>
     </div>
 </div>
 
@@ -236,8 +248,12 @@
 </div>
 </span>
 
+</br>
+
 <form method="POST">
     <button type="submit" class="btn btn-primary" name="action" value="logout">Logout</button>
 </form>
+</br>
+</br>
 
 {% endblock %}
