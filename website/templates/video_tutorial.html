@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Video Tutorial{% endblock %}
+{% block content %}
+
+<style>
+    .jumbotron {
+        background-color: #e9ecef; /* Light grey background color similar to jumbotron */
+        padding: 1rem 3rem; /* Adjust padding as needed */
+        margin-bottom: 3rem; /* Optional margin for spacing */
+        border-radius: 0.5rem; /* Optional border radius */
+    }
+
+    .video-content {
+        width: 100%; /* Ensure video fills its container */
+        height: auto; /* Maintain aspect ratio */
+        max-width: 100%; /* Limit maximum width of the video */
+        max-height: 450px; /* Set maximum height of the video */
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-16">
+            <div class="jumbotron">
+                <h1 class="display-4 text-center">Here's the video tutorial, enjoy!</h1>
+            </br>
+                <video controls class="video-content">
+                    <source src="{{ url_for('static', filename='web-BO_video_tutorial_v01.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
