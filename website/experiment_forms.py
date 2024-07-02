@@ -223,13 +223,13 @@ def run_expt(expt_name):
     target_column_name = variable_list[int(expt_info.target)]
 
     fig = go.Figure([
-        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]]), mode = 'markers'), # EM: adding -- mode = 'markers' -- means only the data points are shown, no lines connecting them
-        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), mode = 'markers', name='predicted measurements'),
+        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]]), mode = 'markers', name='Experiment(s) run by user'), # EM: adding -- mode = 'markers' -- means only the data points are shown, no lines connecting them
+        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), mode = 'markers', name='Expected outcome of recommended experiment(s)'),
     ])
     fig.update_layout(
         xaxis_title="iteration",
         yaxis_title=f"{target_column_name}",
-        legend_title="Legend Title",
+        legend_title="Key",
         font=dict(
             family="Courier New, monospace",
             size=18,
