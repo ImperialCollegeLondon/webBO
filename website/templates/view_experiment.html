@@ -45,9 +45,18 @@
             {% for index, row in df.iterrows() %}
             <tr>
                 {% for column in df.columns %}
-                <td style="border: 1px solid black;">{% if column == target_name %} <div
-                        style="background-color: rgb(142, 142, 226);">
-                        {{ row[column] }}</div> {% else %}{{ row[column] }}{% endif %}
+                <td style="border: 1px solid black;">
+                    {% if column == target_name %}
+                    <div style="background-color: rgb(142, 142, 226);">
+                        {{ row[column] }}
+                    </div>
+                    {% else %}
+                        {% if row[column] is number %}
+                            {{ "%.3g" | format(row[column]) }} <!--the %.3g here should round numbers that are shown to MORE than 3sf, to 3sf (1 should stay 1, not be turned into 1.00)-->
+                        {% else %}
+                            {{ row[column] }}
+                        {% endif %}
+                    {% endif %}
                 </td>
                 {% endfor %}
             </tr>
