@@ -126,7 +126,18 @@
                     <!--<button type="submit" class="btn btn-danger" name="action" value="video-tutorial">Video tutorial</button>-->
                 </div>
             </div>
-    </div>
+            <div class="col-md-12">
+                <hr class="my-4">
+                <p>If you are looking for further explanations, the page below has got you covered!</p>
+                <!--<p>To watch it, select the button below</p>-->
+            </div>
+            <div class="col-md-6">
+                <div>
+                    <a href="{{ url_for('home_dash.explanations') }}" class="btn btn-success">Explanations</a>
+                    <!--<button type="submit" class="btn btn-danger" name="action" value="video-tutorial">Video tutorial</button>-->
+                </div>
+            </div>
+        </div>
 </div>
 
 <div style="text-align: center;">
@@ -251,7 +262,9 @@
 </br>
 
 <form method="POST">
-    <button type="submit" class="btn btn-primary" name="action" value="logout">Logout</button>
+    <div style="text-align: right;">
+        <button type="submit" class="btn btn-primary" name="action" value="logout">Logout</button>
+    </div>
 </form>
 </br>
 </br>
