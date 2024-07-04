@@ -20,6 +20,11 @@ home_dash = Blueprint("home_dash", __name__)
 def video_tutorial():
     return render_template('video_tutorial.html', user=current_user)
 
+@home_dash.route('/explanations', methods=['GET'])
+@login_required
+def explanations():
+    return render_template('explanations.html', user=current_user)
+
 
 @home_dash.route("/", methods=["GET", "POST"])
 @login_required
