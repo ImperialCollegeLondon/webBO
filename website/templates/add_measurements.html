@@ -44,11 +44,15 @@
                     {% for column in recs.columns %}
                     <td style="border: 1px solid black; background-color: rgb(226, 142, 205);">
                         {% if column != 'iteration' and column != target_name %}
-                        <input type="text" name={{ column }} id={{ column }} placeholder={{ row[column] }} />
+                            {% if row[column] is number %}
+                                <input type="text" name={{ column }} id={{ column }} placeholder={{ "%.3g" | format(row[column]) }} />
+                            {% else %}
+                                <input type="text" name={{ column }} id={{ column }} placeholder={{ (row[column]) }} />
+                            {% endif %}
                         {% elif column == target_name %}
-                        <input type="text" name={{ column }} id={{ column }} />
+                            <input type="text" name={{ column }} id={{ column }} />
                         {% else %}
-                        {{ row[column] }}
+                            {{ row[column] }}
                         {% endif %}
                     </td>
                     {% endfor %}
