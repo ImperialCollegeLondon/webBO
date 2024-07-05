@@ -82,13 +82,14 @@
         <a class="nav-link" href="#Examples">Examples</a>
         <a class="nav-link" href="#Input_Data_Required_Format">Input Data: Required Format</a>
         <a class="nav-link" href="#How_To_Run_Locally">How To Run Locally</a>
+        <a class="nav-link" href="#What_Does_This_Term_Mean?">What Does This Term Mean?</a>
     </nav>
 </div>
 
 <div class="content">
     <div class="container">
         <div class="jumbotron">
-            <h1 class="display-4 text-center">Some explanations</h1>
+            <h1 class="display-4 text-center">Explanations</h1>
             <hr>
 
 
@@ -127,7 +128,7 @@
                 input <i>csv</i> files, and the walk-through demonstrates the integration with datalab.</p>
 
             </br>
-            <p>We also offer an example of the <i>csv</i> format expected by Web-BO. This is comprised of a dataset and a list of categories for the categorica
+            <p>We also offer an example of the <i>csv</i> format expected by Web-BO. This is comprised of a dataset and a list of categories for the categorical
                 variable. See below to learn how to format the <i>csv</i> files correctly.</p>
 
 
@@ -141,7 +142,7 @@
                         An example input file (for a <b>dataset</b>) is shown on the right. There are three things to note:</p>
                         <ul>
                             <li>The file starts in cell A1, with no empty rows or columns above/next it. This ensures that when your data is tabulated there are no empty cells</li>
-                            <li>Row 1 will be your column headers in web-BO, the rows after that your experiments, and the columns your variables</li>
+                            <li>Row 1 will be your column headers in web-BO, the rows after that your data entries, and each columns is a different variables</li>
                             <li>Row 9 in the image should <b><i>not</i></b> be part of your <i>csv</i> file, it is there to show the type of each variable</li>
                         </ul>
                 </div>
@@ -151,9 +152,6 @@
             </div>
             <p>When adding an experiment, if a categorical variable needs to be added while defining your parameter space it will ask for a <i>csv</i> file. An
                 example input file (for this <b>variable</b>) would be column one of the image on the right (not including row 9).</p>
-            <!--<svg class="custom-svg-line" viewBox="0 0 100 10">
-                <path fill="none" stroke="#ccc" stroke-width="2" d="M0,5 Q10,0 20,5 T40,5 Q50,0 60,5 T80,5 Q90,0 100,5"></path>
-            </svg>-->
             <hr>
 
 
@@ -169,6 +167,18 @@
                     <img id="copyImg" src="{{ url_for('static', filename='clipboard_icon_v01.png') }}" alt="Copy icon">
                 </div>
             </div>
+
+            <h2 id="What Does This Term Mean?" class="text-left"><u>What Does This Term Mean?</u></h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        <b>Batch size</b> - this determines the number of experiments it suggests you to run before coming back to web-BO.
+                        E.g. if you set batch size equal to 2, it will tell you to go to the lab and perform your experiment with 2 different
+                        sets of initial conditions and input them, before it gives you the next 2 sets of initial conditions based on your results
+                    </p>
+                </div>
+            <hr>
+
         </div>
     </div>
 </div>
