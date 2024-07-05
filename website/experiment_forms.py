@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session, Flask
 from flask_login import login_required, current_user
 from .models import Data, Experiment
 from . import db 
@@ -37,7 +37,7 @@ class DatasetSelectionForm(FlaskForm):
 class HyperparameterForm(FlaskForm):
     kernel = SelectField('GP kernel type', id='kernel')
     acqFunc = SelectField('Acquisition Function type', id='acqFunc')
-    batch_size = IntegerField('Batch size. This determines the number of experiments it suggests you to run before coming back to web-BO. E.g. if you set batch size equal to 2, it will tell you to go to the lab and perform your experiment with 2 different sets of initial conditions and input them, before it gives you the next 2 sets of initial conditions based on your results', id='batch_size')
+    batch_size = IntegerField('Batch size')
     opt_type = SelectField('Optimization type')
     submit = SubmitField('Submit hyperparameters')
 
