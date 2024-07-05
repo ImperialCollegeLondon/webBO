@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html>
 
+<style>
+
+    /*EM: NOTE: All of this styling is just for the inputs required when 'chemical' is from the 'define your parameter space' dropdown menu*/
+    .form-check-label {
+        margin-right: 100px; /* EM: this allows you to adjust the distance between the chemical variable descriptors (e.g. "RDKit chemical descriptors"/"MORDRED") and their selection circles*/
+    }
+    .form-check {
+        position: relative; /* Ensure relative positioning for label */
+        line-height: 1.5; /* Reset line-height for label */
+    }
+    .form-check-input {
+        position: absolute; /* Position checkbox absolutely */
+        top: 45%; /* Move checkbox 50% down */
+        transform: translateY(-50%); /* Adjust back up by 50% of its height */
+        margin-right: 10px; /* Adjust as needed */
+    }
+</style>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,7 +47,7 @@
     </nav>
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %} {% if category ==
+    messages %} <ul class = flashes> {% for category, message in messages %} {% if category ==
     'error' %}
     <div class="alert alert-danger alter-dismissable fade show" role="alert">
         {{ message }}
@@ -44,7 +62,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    {% endif %} {% endfor %} </ul> {% endif %} {% endwith %}
 
     <div class="container">{% block content %} {% endblock %}</div>
     <script src="https://code.jquery.com/jquery-3.3.1.js"
@@ -136,6 +154,16 @@
                         alert('Please enter a number between 0 and 100 for ' + textarea.name);
                         return;
                     }
+
+                    //let col = textarea.name.split('-').pop(); // get the column identifier
+                    //let minVal = document.querySelector(`textarea[name='min-vals-${col}']`).value;
+                    //let maxVal = document.querySelector(`textarea[name='max-vals-${col}']`).value;
+                    //
+                    // Check if the min value is < max value
+                    //if (parseFloat(minVal) >= parseFloat(maxVal)) {
+                    //    alert('Please ensure that the minimum value is less than the maximum value for ' + col);
+                    //    return;
+                    //}
                 }
             }
             // If all inputs are valid, you can proceed with the form submission or the next step
@@ -274,6 +302,12 @@
             console.log(JSON.stringify(formData))
 
             if (val == "cat") {
+                var container = document.getElementById(`new-elements-${row}`);
+    
+                // Delete old content
+                container.innerHTML = '';
+
+                // Now add new content
                 var element2 = document.createElement("input");
                 element2.className = "form-control";
                 element2.id = "formFile-".concat(row);
@@ -285,6 +319,12 @@
                 document.getElementById("new-elements-".concat(row)).setAttribute("aria-describedby", "button-addon");
             }
             else if (val == "subs") {
+                var container = document.getElementById(`new-elements-${row}`);
+    
+                // Delete old content
+                container.innerHTML = '';
+
+                // Now add new content
                 var newContent = `
                 <div class="row">
                     <div class="col">
@@ -322,6 +362,12 @@
 
             }
             else {
+                var container = document.getElementById(`new-elements-${row}`);
+    
+                // Delete old content
+                container.innerHTML = '';
+
+                // Now add new content
                 var newContent = `
                     <div class="row">
                             <div class="col">
