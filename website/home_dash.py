@@ -15,6 +15,16 @@ from .bo_integration import run_bo, rerun_bo
 
 home_dash = Blueprint("home_dash", __name__)
 
+@home_dash.route('/video_tutorial', methods=['GET'])
+@login_required
+def video_tutorial():
+    return render_template('video_tutorial.html', user=current_user)
+
+@home_dash.route('/explanations', methods=['GET'])
+@login_required
+def explanations():
+    return render_template('explanations.html', user=current_user)
+
 
 @home_dash.route("/", methods=["GET", "POST"])
 @login_required
@@ -78,7 +88,7 @@ def view_experiment(expt_name):
 
     if len(recs.columns) < 1:
         fig = go.Figure([
-            go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
+            go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]]), mode = 'markers'), # EM: adding -- mode = 'markers' -- means only the data points are shown, no lines connecting them
             ])
     
     elif False:

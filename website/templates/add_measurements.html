@@ -4,6 +4,7 @@
 <div class="jumbotron">
     <h1 class="display-4">Add measurements!</h1>
     <hr class="my-4">
+    <p class="display-6">In the table below, fill in the conditions and outcome of the experiment(s) you just ran in the lab. web-BO will use these results to make the predictions for the next iteration of the experiment!</p>
     {% if emulator %}
     <div class="row">
         <div class="col">
@@ -43,11 +44,15 @@
                     {% for column in recs.columns %}
                     <td style="border: 1px solid black; background-color: rgb(226, 142, 205);">
                         {% if column != 'iteration' and column != target_name %}
-                        <input type="text" name={{ column }} id={{ column }} placeholder={{ row[column] }} />
+                            {% if row[column] is number %}
+                                <input type="text" name={{ column }} id={{ column }} placeholder={{ "%.3g" | format(row[column]) }} />
+                            {% else %}
+                                <input type="text" name={{ column }} id={{ column }} placeholder={{ (row[column]) }} />
+                            {% endif %}
                         {% elif column == target_name %}
-                        <input type="text" name={{ column }} id={{ column }} />
+                            <input type="text" name={{ column }} id={{ column }} />
                         {% else %}
-                        {{ row[column] }}
+                            {{ row[column] }}
                         {% endif %}
                     </td>
                     {% endfor %}

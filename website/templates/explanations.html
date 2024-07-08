@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block title %}Explanations{% endblock %}
+{% block content %}
+
+<style>
+    /* Custom CSS for layout */
+    .sidebar {
+        position: fixed;
+        top: 76px; /* Adjust top position as needed */
+        left: 0;
+        width: 150px; /* Adjust as needed */
+        background-color: #c1c5c9; /* Example background color */
+        overflow-x: hidden;
+        padding-top: 0px;
+        color: black;
+        border-top-right-radius: 12px; /* Rounded corners top left */
+        border-bottom-right-radius: 12px; /* Rounded corners bottom left */
+    }
+
+    .sidebar .nav-link {
+        color: black; /* Set text color of links to black */
+    }
+
+    .content {
+        margin-left: 50px; /* Adjust to accommodate sidebar width and spacing */
+        margin-right: 50px; /* Add margin on the right for spacing */
+        padding: 20px; /* Adjust as needed */
+    }
+
+    .jumbotron {
+        padding-top: 20px; /* Adjust the top padding of the jumbotron */
+        padding-bottom: 20px; /* Optional: Adjust the bottom padding of the jumbotron */
+        border-radius: 12px; /* Rounded corners for the jumbotron */
+        /*background-color: #f8f9fa; /* Example background color */
+    }
+
+    .custom-svg-line {
+        width: 100%;
+        height: 20px; /* Adjust line thickness */
+    }
+
+    .code-box {
+        background-color: #ffffff; /* White background */
+        padding: 10px; /* Padding inside the code box */
+        border-radius: 8px; /* Rounded corners */
+        display: inline-block; /* Display as inline block to wrap content */
+        cursor: pointer; /* Pointer cursor */
+        width: 100%; /* Auto width */
+        max-width: 100%; /* Max width */
+        box-sizing: border-box; /* Include padding and border in width calculation */
+        position: relative; /* Ensure relative positioning for child elements */
+        margin-bottom: 20px; /* Add margin to the bottom for spacing */
+    }
+
+    .copy-icon {
+        position: absolute;
+        left: 830px; /* Distance from the left edge of code-box */
+        top: 8px; /* Distance from the top edge of code-box */
+        display: inline-block;
+        background-color: #dddddd;
+        border-radius: 6px;
+        padding: 3px;
+        cursor: pointer;
+        color: #555555;
+        width: 35px;
+        height: 30px;
+        text-align: center;
+    }
+
+    .copy-icon img {
+        width: 20px; /* Adjust icon width */
+        height: 20px; /* Adjust icon height */
+        vertical-align: middle; /* Align icon vertically */
+        margin-right: 0px; /* Add some margin to the right of the icon */
+    }
+</style>
+
+<div class="sidebar">
+    <nav class="nav flex-column">
+        <a class="nav-link" href="#Overview">Overview</a>
+        <a class="nav-link" href="#Key_Features">Key Features</a>
+        <a class="nav-link" href="#Examples">Examples</a>
+        <a class="nav-link" href="#Input_Data_Required_Format">Input Data: Required Format</a>
+        <a class="nav-link" href="#How_To_Run_Locally">How To Run Locally</a>
+        <a class="nav-link" href="#What_Does_This_Term_Mean?">What Does This Term Mean?</a>
+    </nav>
+</div>
+
+<div class="content">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4 text-center">Explanations</h1>
+            <hr>
+
+
+            <h2 id="Overview" class="text-left"><u>Overview</u></h2>
+            <div class="row">
+                <div class="col-md-6">
+                </br>
+                    <p>Web-BO is a web application offering a graphical user interface (GUI) to facilitate the application of BO to a wide array of chemical problems.</p>
+                </br>
+                    <p>Users define the optimisation task and perform the measurements, and Web-BO takes care of the rest!</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='fig1_overview_t8.png') }}" class="img-fluid" alt="Description of the image" style="max-width: 100%; height: auto;
+                    float: right; margin-top: -55px;">
+                </div>
+            </div>
+            <hr>
+            
+            
+            <h2 id="Key_Features" class="text-left"><u>Key Features</u></h2>
+            <p>Web-BO offers several key features:</p>
+            <ul>
+                <li>It is a <b>modular platform</b> that is easily integrated into existing ELN frameworks</li>
+                <li>It can be used as a <b>standalone database and optimiser for chemical tasks.</b> All of the data is stored in a searchable SQL
+                    database in an intuitive and future-proof form, enabling efficient benchmarking of varying data-driven optimisation algorithms.</li>
+                <li><b>No coding experience is necessary</b> to interface with and apply BO algorithms to chemical optimisation applications.3</li>
+                <li>You can integrate <b>bespoke BO solvers</b></li>
+                <li>There is optimisation space <b>validation</b> to ensure seamless integration</li>
+            </ul>
+            <hr>
+
+
+            <h2 id="Examples" class="text-left"><u>Examples</u></h2>
+            <p>Web-BO possesses 2 examples and 1 walk-through; one example demonstrates a sample optimisation task
+                (which you can go over by clicking the 'Explore' button on the home page), one example provides sample
+                input <i>csv</i> files, and the walk-through demonstrates the integration with datalab.</p>
+
+            </br>
+            <p>We also offer an example of the <i>csv</i> format expected by Web-BO. This is comprised of a dataset and a list of categories for the categorical
+                variable. See below to learn how to format the <i>csv</i> files correctly.</p>
+
+
+            <hr>
+
+
+            <h2 id="Input_Data_Required_Format" class="text-left"><u>Input Data: Required Format</u></h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>To get the correct file format it is easiest to write your data in an excel spreadsheet, and then save it as a <i>".csv"</i> file.
+                        An example input file (for a <b>dataset</b>) is shown on the right. There are three things to note:</p>
+                        <ul>
+                            <li>The file starts in cell A1, with no empty rows or columns above/next it. This ensures that when your data is tabulated there are no empty cells</li>
+                            <li>Row 1 will be your column headers in web-BO, the rows after that your data entries, and each columns is a different variables</li>
+                            <li>Row 9 in the image should <b><i>not</i></b> be part of your <i>csv</i> file, it is there to show the type of each variable</li>
+                        </ul>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='test_dataset_v01.png') }}" class="img-fluid" alt="Description of the image" style="max-width: 100%; height: auto; float: right;">
+                </div>
+            </div>
+            <p>When adding an experiment, if a categorical variable needs to be added while defining your parameter space it will ask for a <i>csv</i> file. An
+                example input file (for this <b>variable</b>) would be column one of the image on the right (not including row 9).</p>
+            <hr>
+
+
+            <h2 id="How_To_Run_Locally" class="text-left"><u>How To Run Locally</u></h2>
+            <p> In order to run the web-BO locally, open up your preferred command-line interface and enter the following commands: </p>
+            <div class="code-box" id="codeBox" onclick="copyCode()">
+                <div>foo@bar:~$ <b>git clone https://github.com/austin-mroz/webBO</b></div>
+                <div>foo@bar:~$ <b>cd webBO</b></div>
+                <div>foo@bar:~/webBO$ <b>conda env create -p ./.venv -f environment.yml</b></div>
+                <div>foo@bar:~/webBO$ <b>conda activate ./.venv</b></div>
+                <div>foo@bar:~/webBO$ <b>python main.py</b></div>
+                <div class="copy-icon" id="copyIcon">
+                    <img id="copyImg" src="{{ url_for('static', filename='clipboard_icon_v01.png') }}" alt="Copy icon">
+                </div>
+            </div>
+
+            <h2 id="What_Does_This_Term_Mean?" class="text-left"><u>What Does This Term Mean?</u></h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        <b>Batch size</b> - this determines the number of experiments it suggests you to run before coming back to web-BO.
+                        E.g. if you set batch size equal to 2, it will tell you to go to the lab and perform your experiment with 2 different
+                        sets of initial conditions and input them, before it gives you the next 2 sets of initial conditions based on your results
+                    </p>
+                </div>
+            <hr>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Adjust sidebar height dynamically based on number of nav links
+    document.addEventListener("DOMContentLoaded", function() {
+        var sidebar = document.getElementById('sidebar');
+        var navLinks = sidebar.querySelectorAll('.nav-link');
+        var lastNavLink = navLinks[navLinks.length - 1];
+        var sidebarHeight = lastNavLink.offsetTop + lastNavLink.offsetHeight + 10; // Add additional space
+
+        sidebar.style.height = sidebarHeight + 'px';
+    });
+
+    // Function to copy code to clipboard
+    function copyCode() {
+        var codeText = "git clone https://github.com/austin-mroz/webBO\n" +
+                        "cd webBO\n" +
+                        "conda env create -p ./.venv -f environment.yml\n" +
+                        "conda activate ./.venv\n" +
+                        "python main.py" ; // Text to copy
+        navigator.clipboard.writeText(codeText).then(function() {
+            var copyIcon = document.getElementById('copyIcon');
+            var copyImg = document.getElementById('copyImg');
+            copyImg.src = "{{ url_for('static', filename='checkmark_v01.png') }}"; // Change icon to checkmark
+            setTimeout(function() {
+                copyImg.src = "{{ url_for('static', filename='clipboard_icon_v01.png') }}"; // Reset icon to clipboard
+            }, 3000); // Reset copy text after 3 seconds
+        }, function(err) {
+            console.error('Failed to copy: ', err);
+        });
+    }
+
+    
+
+
+</script>
+
+{% endblock %}

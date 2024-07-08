@@ -30,7 +30,7 @@
     <hr class="my-4">
     <h2>The {{dataset_name}} dataset is used in this experiment.</h2>
     </br>
-    <h5>The objective variable is highlighted in <span style="color: rgb(142, 142, 226);">purple</span>.
+    <h5>The objective variable is highlighted in <span style="color: rgb(142, 142, 226);">purple</span>. The 'iteration' column indicates how many times web-BO has given you recommendations on which experiment(s) to try next. When the iteration is 0 it means that you have not been recommended any additional experiment(s) yet.
     </h5>
     </br>
     <table class="data" style="border-collapse: collapse; width: 100%;">
@@ -45,9 +45,18 @@
             {% for index, row in df.iterrows() %}
             <tr>
                 {% for column in df.columns %}
-                <td style="border: 1px solid black;">{% if column == target_name %} <div
-                        style="background-color: rgb(142, 142, 226);">
-                        {{ row[column] }}</div> {% else %}{{ row[column] }}{% endif %}
+                <td style="border: 1px solid black;">
+                    {% if column == target_name %}
+                    <div style="background-color: rgb(142, 142, 226);">
+                        {{ row[column] }}
+                    </div>
+                    {% else %}
+                        {% if row[column] is number %}
+                            {{ "%.3g" | format(row[column]) }} <!--the %.3g here should round numbers that are shown to MORE than 3sf, to 3sf (1 should stay 1, not be turned into 1.00)-->
+                        {% else %}
+                            {{ row[column] }}
+                        {% endif %}
+                    {% endif %}
                 </td>
                 {% endfor %}
             </tr>
@@ -58,6 +67,12 @@
 <div id="plot"></div>
 <script>
     var graphs = {{ graphJSON | safe }};
+
+    // Ensure mode: 'markers' is set for each trace
+    for (var i = 0; i < graphs.data.length; i++) {
+        graphs.data[i].mode = 'markers';
+    }
+    
     Plotly.newPlot('plot', graphs);
 </script>
 

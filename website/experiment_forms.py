@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session, Flask
 from flask_login import login_required, current_user
 from .models import Data, Experiment
 from . import db 
@@ -26,7 +26,7 @@ class DatasetSelectionForm(FlaskForm):
     form_name = HiddenField("form_name")
     name = StringField('experiment name', validators=[DataRequired()], id='experiment_name', render_kw={"placeholder": "Enter your experiment name here"})
     dataset = SelectField('dataset', coerce=str, validators=[DataRequired()], id='dataset_name')
-    target = SelectField('target', coerce=str, validators=[DataRequired()], id='target_name')
+    target = SelectField('Target (i.e. what you want to optimize)', coerce=str, validators=[DataRequired()], id='target_name')
     submit = SubmitField('Submit dataset')
 
 
@@ -37,7 +37,7 @@ class DatasetSelectionForm(FlaskForm):
 class HyperparameterForm(FlaskForm):
     kernel = SelectField('GP kernel type', id='kernel')
     acqFunc = SelectField('Acquisition Function type', id='acqFunc')
-    batch_size = IntegerField('Batch size', id='batch_size')
+    batch_size = IntegerField('Batch size')
     opt_type = SelectField('Optimization type')
     submit = SubmitField('Submit hyperparameters')
 
@@ -223,13 +223,13 @@ def run_expt(expt_name):
     target_column_name = variable_list[int(expt_info.target)]
 
     fig = go.Figure([
-        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]])),
-        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), name='predicted measurements'),
+        go.Scatter(x=list(data['iteration']), y=list(data[list(data.columns)[int(expt_info.target)]]), mode = 'markers', name='Experiment(s) run by user'), # EM: adding -- mode = 'markers' -- means only the data points are shown, no lines connecting them
+        go.Scatter(x=list(recs['iteration']), y=list(recs[list(recs.columns)[int(expt_info.target)]]), mode = 'markers', name='Expected outcome of recommended experiment(s)'),
     ])
     fig.update_layout(
         xaxis_title="iteration",
         yaxis_title=f"{target_column_name}",
-        legend_title="Legend Title",
+        legend_title="Key",
         font=dict(
             family="Courier New, monospace",
             size=18,
@@ -244,7 +244,7 @@ def run_expt(expt_name):
             return redirect(url_for("experiment_forms.add_measurements", expt_name=expt_info.name))
 
     return render_template(
-        "run_expt.html",
+        "run_expt.html", # beneath this is everyting we need to add to html to make it run properly
         user=current_user,
         df=recs.drop(target_column_name, axis=1),
         titles=recs.drop(target_column_name, axis=1).columns.values,
