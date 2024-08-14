@@ -177,8 +177,8 @@ def view_dataset():
                 "yield": {"parameter-type": "cont", "min": 0.0, "max": 100.0},
             }
             sample_experiment = Experiment(
-                name="sample-reizman-suzuki",
-                dataset_name="sample-reizman-suzuki",
+                name=f"{session['viewdata']}",
+                dataset_name=f"{session['viewdata']}",
                 data=df.to_json(orient="records"),
                 target=4,
                 variables=json.dumps(variable_types),
@@ -193,7 +193,7 @@ def view_dataset():
             db.session.add(sample_experiment)
             db.session.flush()
             db.session.commit()
-            return redirect(url_for('home_dash.view_experiment', expt_name="sample-reizman-suzuki"))
+            return redirect(url_for('home_dash.view_experiment', expt_name=f"{session['viewdata']}"))
     return render_template(
         'view_dataset.html',
         user=current_user,
@@ -251,7 +251,7 @@ def please_add_sample_dataset(name):
     print(dataset_df)
     variable_df = pd.DataFrame(dataset_df.columns, columns=["variables"])
     sample_data = Data(
-        name=name, #"sample-reizman-suzuki",
+        name=f"{name}-sample-reizman", #"sample-reizman-suzuki",
         data=dataset_df.to_json(orient="records"),
         variables=variable_df.to_json(orient="records"),
         user_id=current_user.id,
