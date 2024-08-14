@@ -47,7 +47,11 @@ def home():
             session['viewexpt'] = request.form['action'].removeprefix('viewexpt-')
             return redirect(url_for("home_dash.view_experiment", expt_name=request.form['action'].removeprefix('viewexpt-')))
         elif request.form['action'] == "add-sample-dataset":
-            please_add_sample_dataset()
+            sample_dataset_name = request.form.get('sample-dataset-name')
+            if sample_dataset_name == "sample-reizman-suzuki":
+                flash("Please select another name and try again.", category="error")
+            else:
+                please_add_sample_dataset(sample_dataset_name)
             return redirect(url_for("home_dash.home"))
         elif "remove-dataset-" in request.form['action']:
             note = Data.query.get(int(request.form['action'].removeprefix("remove-dataset-")))
@@ -230,7 +234,7 @@ def add_sample_dataset():
     return jsonify({})
 
 
-def please_add_sample_dataset():
+def please_add_sample_dataset(name):
     sample_dataset = {
         "catalyst": ["P1-L3"], "t_res": [600], "temperature": [30],"catalyst_loading": [0.498],
     }
@@ -247,7 +251,7 @@ def please_add_sample_dataset():
     print(dataset_df)
     variable_df = pd.DataFrame(dataset_df.columns, columns=["variables"])
     sample_data = Data(
-        name="sample-reizman-suzuki",
+        name=name, #"sample-reizman-suzuki",
         data=dataset_df.to_json(orient="records"),
         variables=variable_df.to_json(orient="records"),
         user_id=current_user.id,
