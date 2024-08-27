@@ -164,7 +164,7 @@ def add_measurements(expt_name):
         recs = pd.DataFrame(columns=df.columns)
         recs.loc[0] = 'insert'
 
-    if expt_info.name == "sample-reizman-suzuki":
+    if "sample-reizman" in expt_info.name:
         emulator_status = True
         df4em = recs
         data = df4em.drop(['yield', 'iteration'], axis=1)
