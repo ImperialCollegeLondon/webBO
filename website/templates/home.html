@@ -1,13 +1,63 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
 
 {% block content %}
+<!-- added by me - navigation bar code-->
+
+<nav class="navbar navbar-expand-lg" style="background-color: grey;">
+    <div class="container-fluid">
+        <button class="navbar-toggler" style="border: none;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" style="background-color: white;"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav me-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home_dash.explanations') }}" style="color: white;">Explanations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home_dash.tutorial') }}" style="color: white;">Tutorial</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <!-- Hidden buttons -->
+                <form method="POST" style="display: none;" id="hidden-form">
+                    <button type="submit" class="btn btn-secondary" name="action" value="add-dataset">Add Dataset</button>
+                    <button type="submit" class="btn btn-secondary" name="action" value="add-experiment">Add Experiment</button>
+                </form>
+                
+                <!-- Visible buttons that trigger the hidden form submission -->
+                <a href="#" onclick="document.getElementById('hidden-form').querySelector('[value=add-dataset]').click(); return false;" class="btn" style="color: white; background-color: transparent; border: none; margin-right: 10px;">Add Dataset</a>
+                <a href="#" onclick="document.getElementById('hidden-form').querySelector('[value=add-experiment]').click(); return false;" class="btn" style="color: white; background-color: transparent; border: none; margin-right: 10px;">Add Experiment</a>
+
+                <!-- Logout form -->
+                <form method="POST" id="logout-form" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary" name="action" value="logout" style="display: none;">Logout</button>
+                </form>
+                <a href="#" onclick="document.getElementById('logout-form').querySelector('[value=logout]').click(); return false;" class="nav-item nav-link" style="color: white; margin-left: 10px;">Logout</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+
+
+
+
+
+<!-- navigation bar code finishes-->
+
+
+
+
+
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-8">
-            <h1 class="display-4">web-BO</h1>
-            <p class="lead">This is a simple GUI to support Bayesian Optimization</p>
+            <h1 class="display-4">Web-BO</h1>
+            <p class="lead">This is a simple GUI to support Bayesian Optimisation</p>
             <hr class="my-4">
-            <p>web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes!</p>
+            <p>Web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes!</p>
             <p>To do this, press the button below!</p>
 
             <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal"
@@ -23,7 +73,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <h5>To help you get familiar with all that Web-BO has to offer, we provide an optimization
+                            <h5>To help you get familiar with all that Web-BO has to offer, we provide an optimisation
                                 case study that takes advantage of existing reaction emulators to acquire the
                                 experimental measurements.</h5>
                             </br>
@@ -97,16 +147,12 @@
             <hr class="my-4">
             <div class="row">
                 <div class="col-md-12">
-                    <p>It might be a bit daunting to just dive in. We have provided a tutorial video for you to follow
-                        in
-                        order
-                        to
-                        get started.</p>
+                    <p>If you are looking for further explanations, the page below has got you covered!</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{{ url_for('home_dash.video_tutorial') }}" class="btn btn-info">Video tutorial</a>
+                    <a href="{{ url_for('home_dash.explanations') }}" class="btn btn-info">Explanations</a>
                     <!--<button type="submit" class="btn btn-danger" name="action" value="video-tutorial">Video tutorial</button>-->
                 </div>
             </div>
@@ -115,13 +161,20 @@
             <hr class="my-4">
             <div class="row">
                 <div class="col-md-12">
-                    <p>If you are looking for further explanations, the page below has got you covered!</p>
+                    <p>
+                        It might be a bit daunting to just dive in. We have provided a tutorial for you to follow
+                        in
+                        order
+                        to
+                        get started.
+                    </p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <!--<p>To watch it, select the button below</p>-->
-                    <a href="{{ url_for('home_dash.explanations') }}" class="btn btn-info">Explanations</a>
+                    
+                    <a href="{{ url_for('home_dash.tutorial') }}" class="btn btn-info">Tutorial</a>
                     <!--<button type="submit" class="btn btn-danger" name="action" value="video-tutorial">Video tutorial</button>-->
                 </div>
             </div>
@@ -130,7 +183,7 @@
 </div>
 
 <div style="text-align: center;">
-    <p>Like any predictive or suggestive tool, web-BO needs data to function. In order for web-BO to be able to provide
+    <p>Like any predictive or suggestive tool, Web-BO needs data to function. In order for Web-BO to be able to provide
         suggestions for which conditions a researcher
         should try next (Experiments, below), it must first receive some prior data (Datasets, below). Please add a
         dataset for which you would like suggestions
@@ -253,7 +306,7 @@
 <div class="container mt-5">
     <div class="alert alert-info">
         <h2 align="left">Reset User</h2>
-        <p>The web-BO database requires each Dataset and Experiment entry possesses a unique name.</p>
+        <p>The Web-BO database requires each Dataset and Experiment entry possesses a unique name.</p>
         <p>If you wish to reset the database associated with your user, please select the button below. <font
                 color="#f57ab6"> (WARNING:
                 this cannot be undone) </font>
