@@ -15,6 +15,14 @@ from .bo_integration import run_bo, rerun_bo
 
 home_dash = Blueprint("home_dash", __name__)
 
+
+
+
+@home_dash.route('/tutorial', methods=['GET'])
+@login_required
+def tutorial():
+    return render_template('tutorial.html', user=current_user)
+
 @home_dash.route('/video_tutorial', methods=['GET'])
 @login_required
 def video_tutorial():
