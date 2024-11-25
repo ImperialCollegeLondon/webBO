@@ -80,9 +80,8 @@
         <a class="nav-link" href="#Overview">Overview</a>
         <a class="nav-link" href="#Key_Features">Key Features</a>
         <a class="nav-link" href="#Examples">Examples</a>
-        <a class="nav-link" href="#Input_Data_Required_Format">Input Data: Required Format</a>
+        <!--<a class="nav-link" href="#Input_Data_Required_Format">Input Data: Required Format</a>-->
         <a class="nav-link" href="#How_To_Run_Locally">How To Run Locally</a>
-        <a class="nav-link" href="#What_Does_This_Term_Mean?">What Does This Term Mean?</a>
     </nav>
 </div>
 
@@ -115,7 +114,7 @@
                 <li>It is a <b>modular platform</b> that is easily integrated into existing ELN frameworks</li>
                 <li>It can be used as a <b>standalone database and optimiser for chemical tasks.</b> All of the data is stored in a searchable SQL
                     database in an intuitive and future-proof form, enabling efficient benchmarking of varying data-driven optimisation algorithms.</li>
-                <li><b>No coding experience is necessary</b> to interface with and apply BO algorithms to chemical optimisation applications.3</li>
+                <li><b>No coding experience is necessary</b> to interface with and apply BO algorithms to chemical optimisation applications.</li>
                 <li>You can integrate <b>bespoke BO solvers</b></li>
                 <li>There is optimisation space <b>validation</b> to ensure seamless integration</li>
             </ul>
@@ -134,7 +133,7 @@
 
             <hr>
 
-
+                <!--
             <h2 id="Input_Data_Required_Format" class="text-left"><u>Input Data: Required Format</u></h2>
             <div class="row">
                 <div class="col-md-6">
@@ -153,7 +152,7 @@
             <p>When adding an experiment, if a categorical variable needs to be added while defining your parameter space it will ask for a <i>csv</i> file. An
                 example input file (for this <b>variable</b>) would be column one of the image on the right (not including row 9).</p>
             <hr>
-
+-->
 
             <h2 id="How_To_Run_Locally" class="text-left"><u>How To Run Locally</u></h2>
             <p> In order to run the web-BO locally, open up your preferred command-line interface and enter the following commands: </p>
@@ -167,18 +166,6 @@
                     <img id="copyImg" src="{{ url_for('static', filename='clipboard_icon_v01.png') }}" alt="Copy icon">
                 </div>
             </div>
-
-            <h2 id="What_Does_This_Term_Mean?" class="text-left"><u>What Does This Term Mean?</u></h2>
-            <div class="row">
-                <div class="col-md-12">
-                    <p>
-                        <b>Batch size</b> - this determines the number of experiments it suggests you to run before coming back to web-BO.
-                        E.g. if you set batch size equal to 2, it will tell you to go to the lab and perform your experiment with 2 different
-                        sets of initial conditions and input them, before it gives you the next 2 sets of initial conditions based on your results
-                    </p>
-                </div>
-            <hr>
-
         </div>
     </div>
 </div>
