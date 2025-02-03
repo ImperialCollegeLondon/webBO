@@ -1,0 +1,237 @@
+{% extends "base.html" %} {% block title %}Upload{% endblock %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='expt.css') }}">
+</head>
+<div class="container">
+    <!-- MultiStep Form -->
+    <div class="container-fluid" id="grad1">
+        <div class="row justify-content-center mt-0">
+            <div class="col-12 col-sm-10 col-md-9 col-lg-8 text-center p-0 mt-3 mb-2">
+                <div class="card pt-4 pb-0 mt-3 mb-3">
+                    <h2><strong>Define your experiment</strong></h2>
+                    <p>fill all form fields to go to the next step</p>
+                    <div class="row">
+                        <div class="col-md-12 mx-0">
+                            <form id="msform" method="POST" enctype="multipart/form-data">
+                                <!-- progressbar -->
+                                <ul id="progressbar">
+                                    <li class="active" id="account"><strong>Dataset</strong></li>
+                                    <li id="personal"><strong>Parameter Space</strong></li>
+                                    <li id="payment"><strong>Hyperparameters</strong></li>
+                                    <li id="confirm"><strong>Finish</strong></li>
+                                </ul>
+                                <!-- fieldsets -->
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title">Select your dataset</h2>
+                                        <div class="col">
+                                            {{ data_form.name.label }}
+                                            {{ data_form.name }}
+                                            {% if data_form.name.errors %}
+                                            <ul class="errors">
+                                                {% for error in form.title.errors %}
+                                                <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col">
+                                            {{ data_form.dataset.label }}
+                                            {{ data_form.dataset() }}
+                                        </div>
+                                        <div class="col" align="center">
+                                            {{ data_form.submit(class="submit-button") }}
+                                        </div>
+                                    </div>
+                                    <h5>You must submit your dataset using the lavender button before proceeding.</h5>
+                                    <input type="button" name="next" class="next action-button" value="Next Step"
+                                        id="select_dataset_btn" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title">Define your parameter space</h2>
+                                        <br />
+                                        <h6>
+                                            For every variable defining your search space, select the variable type, and
+                                            include additional, requested information. For example, if 'Continous' is selected,
+                                            provide the range, e.g. 1.3 - 10.3.
+                                        </h6>
+                                        <br />
+                                        <hr />
+                                        <br />
+                                        {% for variable in variable_names %}
+                                        {% if variable[0]|int == data_form.dataset.data|int %}
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for={{variable[2]}}
+                                                    id="label-parameterspace-{{variable[2]}}">{{variable[2]}}</label>
+                                            </div>
+                                            <div class=" col">
+                                                <select class="selectpicker" name="parameterspace-{{variable[2]}}"
+                                                    id="parameterspace-{{variable[2]}}"
+                                                    onchange="addParameterElement(this.value, {{ variable }} )">
+                                                    <option selected>Open this select menu</option>
+                                                    <option value="int">Integer</option>
+                                                    <option value="cont">Continuous</option>
+                                                    <option value="cat">Categorical</option>
+                                                    <option value="subs">Chemical</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col" id="new-elements-{{variable[2]}}"
+                                                name="new-elements-{{variable[2]}}"></div>
+                                            </br>
+                                        </div>
+
+                                        <hr />
+                                        {% endif %}
+                                        {% endfor %}
+                                        <button type="button" class="btn btn-success" id="expt_btn" name="expt_btn"
+                                            value="check-params" onclick="checkParameters()">Check parameter
+                                            space</button>
+
+                                    </div>
+                                    <input type="button" name="previous" class="previous action-button-previous"
+                                        value="Previous" />
+                                    <input type="button" name="next" class="next action-button" value="Next Step" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title">Select your hyperparameters</h2>
+                                        <div class="col">
+                                            {{ hyp_form.kernel.label }}
+                                            {{ hyp_form.kernel() }}
+                                        </div>
+                                        <div class="col">
+                                            {{ hyp_form.acqFunc.label }}
+                                            {{ hyp_form.acqFunc() }}
+                                        </div>
+                                        
+                                            <!--{{ hyp_form.batch_size.label }}-->
+                                            <label for="{{ hyp_form.batch_size.id_for_label }}">
+                                                Batch size 
+                                                <button type="button" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" 
+                                                        title="This determines the number of experiments it suggests you to run before coming back to web-BO. E.g. if you set batch size equal to 2, it will tell you to go to the lab and perform your experiment with 2 different sets of initial conditions and input them, before it gives you the next 2 sets of initial conditions based on your results">
+                                                    ?
+                                                </button>
+                                            </label>
+                                            {{ hyp_form.batch_size() }}
+                                        
+                                        <!--Target selection-->
+                                        
+                                        <div class="row mb-4">
+                                            <!-- Target 1 -->
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="{{ data_form.target1.id_for_label }}" class="form-label fw-bold">
+                                                        Target 1 <small class="text-muted">(What do you want to optimise)</small>
+                                                    </label>
+                                                    <select name="target1" id="target1" class="form-select">
+                                                        {% for choice in data_form.target1.choices %}
+                                                            <option value="{{ choice[0] }}" {% if choice[0] == data_form.target1.data %} selected {% endif %}>
+                                                                {{ choice[1] }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        
+                                            <!-- Optimisation Type for Target 1 -->
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="target1_optimisation" class="form-label fw-bold">
+                                                        Optimisation type for Target 1
+                                                    </label>
+                                                    <select name="target1_optimisation" id="target1_optimisation" class="form-select">
+                                                        <option value="maximise" {% if hyp_form.target1_optimisation.data == "maximise" %} selected {% endif %}>
+                                                            Maximise
+                                                        </option>
+                                                        <option value="minimise" {% if hyp_form.target1_optimisation.data == "minimise" %} selected {% endif %}>
+                                                            Minimise
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <!-- Target 2 -->
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="{{ data_form.target2.id_for_label }}" class="form-label fw-bold">
+                                                        Target 2 <small class="text-muted">(What do you want to optimise)</small>
+                                                    </label>
+                                                    <select name="target2" id="target2" class="form-select">
+                                                        {% for choice in data_form.target2.choices %}
+                                                            <option value="{{ choice[0] }}" {% if choice[0] == data_form.target2.data %} selected {% endif %}>
+                                                                {{ choice[1] }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        
+                                            <!-- Optimisation Type for Target 2 -->
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="target2_optimisation" class="form-label fw-bold">
+                                                        Optimisation type for Target 2
+                                                    </label>
+                                                    <select name="target2_optimisation" id="target2_optimisation" class="form-select">
+                                                        <option value="maximise" {% if hyp_form.target2_optimisation.data == "maximise" %} selected {% endif %}>
+                                                            Maximise
+                                                        </option>
+                                                        <option value="minimise" {% if hyp_form.target2_optimisation.data == "minimise" %} selected {% endif %}>
+                                                            Minimise
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                        
+                                        <!--end target selection-->
+                                    
+                                    
+                                    <input type="button" name="previous" class="previous action-button-previous"
+                                        value="Previous" />
+                                    <input type="button" name="make_payment" class="next action-button"
+                                        value="Confirm" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title text-center">Success !</h2>
+                                        <br><br>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <form method="POST">
+                                                        <button type="submit" class="btn btn-primary" id="expt_btn"
+                                                            name="expt_btn" value="run-expt">view experiment</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                        <div class="row justify-content-center">
+                                            <div class="col-7 text-center">
+                                                <h5>Experiment created</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

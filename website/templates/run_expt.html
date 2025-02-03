@@ -4,10 +4,17 @@
 <div class="jumbotron">
     <h1 class="display-4">Check out the new recs!</h1>
     <hr class="my-4">
-    <h2 class="lead">The table below shows which conditions to use for your next experiment(s). Performing these
+    <h2 class="lead">
+        <P>The table below shows which conditions to use for your next experiment(s). Performing these
         experiments will help you to hone in on the optimized target value you inputted previously.
         Below the table is a graph. Here, the orange points are web-BO's predictions for what the target value
-        will be for the experiments suggested in the table. The next step is to go to the lab and get some results
+        will be for the experiments suggested in the table. </P> 
+        <P>
+        {% if target_2 %}
+            Since you selected multiple targets, two graphs are shown, one for each target.
+        {% endif %}
+    </P>
+        The next step is to go to the lab and get some results
         - click the button at the bottom of this page when you're ready!</h2>
     </br>
 
@@ -16,45 +23,100 @@
             <thead>
                 <tr>
                     {% for title in titles %}
-                    <th style="border: 1px solid black; padding: 10px;">{{ title }}</th>
+                        <th style="border: 1px solid black; padding: 10px;">{{ title }}</th>
                     {% endfor %}
+                    
                 </tr>
             </thead>
             <tbody>
                 {% for index, row in df.iterrows() %}
                 <tr>
                     {% for column in df.columns %}
-                    <td style="border: 1px solid black;">
-                        {% if column == target_name %}
-                        <div style="background-color: rgb(142, 142, 226);">
-                            {{ row[column] }}
-                        </div>
-                        {% else %}
-                            {% if row[column] is number %}
-                                {{ "%.3g" | format(row[column]) }}
+                        <td style="border: 1px solid black;">
+                            {% if column == target %}
+                                <div style="background-color: rgb(226, 142, 142);">
+                                    {{ row[column] }}
+                                </div>
+                            {% elif target_2 and column == target_2 %}
+                                <div style="background-color: rgb(226, 142, 142);">
+                                    {{ row[column] }}
+                                </div>
                             {% else %}
-                                {{ row[column] }}
+                                {% if row[column] is number %}
+                                    {{ "%.3g" | format(row[column]) }}
+                                {% else %}
+                                    {{ row[column] }}
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </td>
+                        </td>
                     {% endfor %}
+                    
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    
+    
+    
     </br>
+    <h3>Graph for target: {{ target }}</h3>
     <div id="plot"></div>
     <script>
         var graphs = {{ graphJSON | safe }};
         Plotly.newPlot('plot', graphs);
     </script>
     </br>
+    {% if graphJSON2 %}
+    </br>
+    <!-- Second Graph (Only if Target 2 Exists) -->
+    <h3>Graph for secondary target: {{ target_2 }}</h3>
+    <div id="plot2"></div>
+    <script>
+        var graphs2 = {{ graphJSON2 | safe }};
+        Plotly.newPlot('plot2', graphs2);
+    </script>
+    {% endif %}
+</br>
+</div>
+
     <form method="POST">
         <div class="row">
             <button type="submit" class="btn btn-primary btn-lg" name="action" value="add">Add measurements!</button>
         </div>
     </form>
 </div>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    }
 
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #B0B0B0;
+        color: white;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    td {
+        background-color: white;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}

@@ -17,11 +17,15 @@ class Experiment(db.Model):
     name = db.Column(db.String(150), unique=True)
     dataset_name = db.Column(db.String(150))
     data = db.Column(db.Text)
-    target = db.Column(db.String(150))
+    objective = db.Column(db.String(150), nullable = True) # will contain 'MULTI' or 'SINGLE'
+    fidelity = db.Column(db.String(150), nullable = True) # will contain 'MULTI' or 'SINGLE'
+    target = db.Column(db.String(150), nullable = False)
+    target_2 = db.Column(db.String(150), nullable = True) # for multi objective
     variables = db.Column(db.Text)
     kernel = db.Column(db.String(150))
     acqFunc = db.Column(db.String(150))
-    opt_type = db.Column(db.String(150))
+    opt_type = db.Column(db.String(150), nullable = False)
+    opt_type_2 = db.Column(db.String(150), nullable = True) # for multi objective
     batch_size = db.Column(db.Integer)
     next_recs = db.Column(db.Text)
     iterations_completed = db.Column(db.Integer)

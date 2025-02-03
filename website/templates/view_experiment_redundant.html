@@ -6,7 +6,7 @@
     <h1 class="display-4">The {{expt_name}} experiment</h1>
     <p class="lead">Here, the parameters and search space of the {{expt_name}} is described.</p>
     <hr class="my-4">
-    {% if expt_name.endswith("-sample-reizman-mo") and df['iteration'].max() < 1 %} <div class="container">
+    {% if expt_name == "sample-reizman-suzuki" and df['iteration'].max() < 1 %} <div class="container">
         <h3>Start by getting the next recommendation!</h3>
         </br>
         <form method="POST">
@@ -30,7 +30,7 @@
     <hr class="my-4">
     <h2>The {{dataset_name}} dataset is used in this experiment.</h2>
     </br>
-    <h5>The objective variables are highlighted in <span style="color: rgb(142, 142, 226);">purple</span>. The 'iteration' column indicates how many times web-BO has given you recommendations on which experiment(s) to try next. When the iteration is 0 it means that you have not been recommended any additional experiment(s) yet.
+    <h5>The objective variable is highlighted in <span style="color: rgb(142, 142, 226);">purple</span>. The 'iteration' column indicates how many times web-BO has given you recommendations on which experiment(s) to try next. When the iteration is 0 it means that you have not been recommended any additional experiment(s) yet.
     </h5>
     </br>
     <table class="data" style="border-collapse: collapse; width: 100%;">
@@ -46,13 +46,13 @@
             <tr>
                 {% for column in df.columns %}
                 <td style="border: 1px solid black;">
-                    {% if column == target_name or column == target_2_name %}
+                    {% if column == target_name %}
                     <div style="background-color: rgb(142, 142, 226);">
                         {{ row[column] }}
                     </div>
                     {% else %}
                         {% if row[column] is number %}
-                            {{ "%.3g" | format(row[column]) }} <!-- Ensures numbers are rounded to 3 sig figs -->
+                            {{ "%.3g" | format(row[column]) }} <!--the %.3g here should round numbers that are shown to MORE than 3sf, to 3sf (1 should stay 1, not be turned into 1.00)-->
                         {% else %}
                             {{ row[column] }}
                         {% endif %}
@@ -75,36 +75,6 @@
     
     Plotly.newPlot('plot', graphs);
 </script>
-{% if target_2_name %}
-<!-- Target 2 vs Iteration -->
-<div id="plot_2"></div>
-<script>
-    var graphs_2 = {{ graphJSON_2 | safe }};
-
-    // Ensure mode: 'markers' is set for each trace
-    for (var i = 0; i < graphs_2.data.length; i++) {
-        graphs_2.data[i].mode = 'markers';
-    }
-
-    Plotly.newPlot('plot_2', graphs_2);
-</script>
-{% endif %}
-
-{% if target_2_name %}
-<!-- Target 1 vs Target 2 -->
-<div id="plot_3"></div>
-<script>
-    var graphs_3 = {{ graphJSON_3 | safe }};
-
-    // Ensure mode: 'markers' is set for each trace
-    for (var i = 0; i < graphs_3.data.length; i++) {
-        graphs_3.data[i].mode = 'markers';
-    }
-
-    Plotly.newPlot('plot_3', graphs_3);
-</script>
-{% endif %}
-
 
 {% if "datalab" in dataset_name and df['iteration'].max() > 0 %}
 </br>
@@ -124,38 +94,4 @@
 
 </br>
 </br>
-
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-    }
-
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #B0B0B0;
-        color: white;
-        font-weight: bold;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    tr:hover {
-        background-color: #ddd;
-    }
-
-    td {
-        background-color: white;
-        font-size: 14px;
-    }
-</style>
 {% endblock %}
