@@ -107,7 +107,7 @@ def view_experiment_redundant(expt_name):
     df = pd.read_json(expt.data) # pd.read_json(data_info.data)
     variable_list = list(df.columns)
     target_column_name = variable_list[int(expt.target)]
-    # Highlight the desired column (e.g., "MyColumn")
+    
     df[target_column_name] = df[target_column_name].apply(lambda x: f'{x}')
 
     expt_info = expt
@@ -180,7 +180,7 @@ def view_experiment_redundant(expt_name):
         expt_name=expt.name, # session['viewexpt'],
         dataset_name=expt.dataset_name,
         target_name=target_column_name,
-        df=df,  # Pass the modified DataFrame directly
+        df=df, 
         titles=df.columns.values,
         graphJSON=graphJSON,
     )
@@ -190,7 +190,7 @@ def view_experiment_redundant(expt_name):
 @home_dash.route("/view_experiment/<string:expt_name>", methods=["POST", "GET"])
 @login_required
 def view_experiment(expt_name):
-    # Load your DataFrame (df) and other relevant data
+   
     # df = [pd.read_json(row.data) for row in Experiment.query.filter_by(name=expt_name).all()][0]
     expt = [row for row in Experiment.query.filter_by(name=expt_name).all()][0]
     data_info = Data.query.filter_by(name=expt.dataset_name).first()
@@ -204,7 +204,7 @@ def view_experiment(expt_name):
         target_2_column_name = None
     
     print(target_column_name, target_2_column_name)
-    # Highlight the desired column (e.g., "MyColumn")
+    
     df[target_column_name] = df[target_column_name].apply(lambda x: f'{x}')
     
     if expt_info.target_2 is not None:
@@ -279,9 +279,9 @@ def view_experiment(expt_name):
 
         graphJSON_2 = json.dumps(fig_2, cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_3 = None  # Initialize the new graph JSON variable
+    graphJSON_3 = None 
     if expt_info.target_2 is not None:
-    # Extract values for target 1 and target 2
+    
         target_1_values = list(data[list(data.columns)[int(expt_info.target)]]) 
         target_2_values = list(data[list(data.columns)[int(expt_info.target_2)]]) 
         target_1_values = [float(val) for val in target_1_values]
@@ -310,14 +310,16 @@ def view_experiment(expt_name):
             color="RebeccaPurple"
         ),
         xaxis=dict(
-            range=[0, max_target_1],  # Scale the x-axis based on the maximum value of target 1
-            tickmode='linear',  # Set ticks to be linear
-            dtick=1,  # Interval between ticks (adjust if necessary)
+            range=[0, max_target_1], 
+            tickmode='linear',  
+            nticks=5,
         ),
         yaxis=dict(
-            range=[0, max_target_2],  # Scale the y-axis based on the maximum value of target 2
-            tickmode='linear',  # Set ticks to be linear
-            dtick=1,  # Interval between ticks (adjust if necessary)
+            range=[0, max_target_2],
+            tickmode='linear',  
+            nticks=5,
+            
+            
         ),
     )
 
@@ -330,7 +332,7 @@ def view_experiment(expt_name):
         if request.form['action'] == "view-my-stuff":
             return redirect(url_for('home_dash.home'))
         if request.form['action'] == 'run':
-        # Check if target_2_column_name is None i.e. distinguishing mobo vs sobo case
+        
             if target_2_column_name is None:
                 # sobo
                 recs, campaign = run_bo(expt,  expt.target,expt.opt_type, batch_size=expt.batch_size)
