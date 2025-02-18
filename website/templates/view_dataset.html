@@ -1,12 +1,13 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
 <br />
-<div class="jumbotron" style="background-color:#E6E6FA;">
-    <h1 class="display-4">Your {{name}} dataset</h1>
-    <p class="lead">This is the information present in the {{name}} dataset.</p>
+
+<div class="jumbotron text-left" style="background-color:#E6E6FA; padding: 20px; border-radius: 10px;">
+    <h1 class="display-4">Your {{ name }} Dataset</h1>
+    <p style="text-align: left;" class="lead">This page displays detailed information about the {{ name }} dataset.</p>
 </div>
-<hr class="my-4">
 {% if name.endswith("-sample-reizman") %}
 <div class="container">
 
@@ -242,37 +243,46 @@
 
 </div>
 {% endif %}
+</br>
 
 
-</br>
-</br>
-<div class="row">
-    <div class="col container" style="text-align: center;">
-        <h2>The dataset</h2>
-        <br />
+
+<div class="container">
+    <h1 class="mb-3" style="text-align: left;">Dataset description</h1>
+    <hr class="my-4">
+    <div class="table-wrapper"  style="overflow-x:auto;">
         {% for table in tables %}
-            <div style="display: inline-block; text-align: left; padding: 20px; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0px 4px 8px rgba(0,0,0,0.1);">
-                {{ table|safe }}
-            </div>
-        {% endfor %}
-    </div>
-
-    <div class="col container" style="text-align: center;">
-        <h2>Dataset summary statistics</h2>
-        <br />
-        {% for summary in summaries %}
-            <div style="display: inline-block; text-align: left; padding: 20px; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0px 4px 8px rgba(0,0,0,0.1);">
-                {{ summary|safe }}
-            </div>
+            <div>{{ table|safe }}</div>
         {% endfor %}
     </div>
 </div>
 
-<form method="POST" style="text-align: center;">
+<div class="container mt-5">
+        <h1 class="mb-3" style="text-align: left;">Dataset statistics</h1>
+        <p style="text-align: left;" class="lead">Explore the key statistics and trends in your dataset by pressing the button below.</p>
+        <hr class="my-4">
+    
+        <div class="text-center mb-4">
+
+            <button class="btn btn-info btn-lg my-3" id="toggleSummary">Show Summary</button>
+        </div>
+    
+        <div id="summarySection" class="text-center" style="display:none;">
+            {% for summary in summaries %}
+                <div>{{ summary|safe }}</div>
+            {% endfor %}
+        </div>
+</div>
+</br>
+
+<form method="POST">
+    <button type="submit" class="btn btn-primary btn-lg" name="action" value="download"
+        style="margin-right: 20px;">Download
+        dataset</button>
     <button type="submit" class="btn btn-secondary btn-lg" name="action" value="view-my-stuff">Web-BO home</button>
 </form>
 
-<!-- CSS for table styling -->
+
 <style>
     table {
         width: 100%;
@@ -291,11 +301,9 @@
         background-color: #B0B0B0;
         color: white;
         font-weight: bold;
+        cursor: pointer;
     }
 
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
 
     tr:hover {
         background-color: #ddd;
@@ -305,8 +313,41 @@
         background-color: white;
         font-size: 14px;
     }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        background: #f9f9f9;
+    }
+
+    #summarySection {
+        display: none; /* Hidden by default */
+    }
+
+    /* Responsive layout */
+    @media (max-width: 768px) {
+        .row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #summaryContainer {
+            margin-top: 20px;
+        }
+    }
+    .btn-lg {
+        font-size: 1.25rem; 
+        padding: 10px 20px; 
+        width: auto; 
+    }
+
+    #toggleSummary {
+        display: inline-block;
+    }
+
+    .container {
+        text-align: center; 
+    }
 </style>
-
-
 
 {% endblock %}

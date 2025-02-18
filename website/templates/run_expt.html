@@ -60,31 +60,24 @@
     
     
     </br>
-    <h3>Graph for target: {{ target }}</h3>
-    <div id="plot"></div>
+    {% for target, graph in graphs.items() %}
+    <h5>{{ target | title }} vs Iteration</h5>
+    <div id="plot-{{ target }}"></div>
     <script>
-        var graphs = {{ graphJSON | safe }};
-        Plotly.newPlot('plot', graphs);
+        var fig = {{ graph | safe }};
+        Plotly.newPlot('plot-{{ target }}', fig);
     </script>
     </br>
-    {% if graphJSON2 %}
-    </br>
-    <!-- Second Graph (Only if Target 2 Exists) -->
-    <h3>Graph for secondary target: {{ target_2 }}</h3>
-    <div id="plot2"></div>
-    <script>
-        var graphs2 = {{ graphJSON2 | safe }};
-        Plotly.newPlot('plot2', graphs2);
-    </script>
-    {% endif %}
+{% endfor %}
 </br>
-</div>
 
+</div>
     <form method="POST">
         <div class="row">
             <button type="submit" class="btn btn-primary btn-lg" name="action" value="add">Add measurements!</button>
         </div>
     </form>
+
 </div>
 <style>
     table {

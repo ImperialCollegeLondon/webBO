@@ -16,9 +16,12 @@ def rerun_bo(campaign_db_entry, new_measurements, batch_size=1):
     return campaign.recommend(batch_size=batch_size)
 
 
-def run_bo(expt_info, target, opt_type, batch_size=1): #previously def run_bo(expt_info, target, opt_type="MAX", batch_size=1): but now opt_type varies
+def run_bo(expt_info, target, opt_type, batch_size=1):
     variable_type_dict = pd.read_json(expt_info.variables)
     baybe_paramter_list = []
+    target = target[0]
+    opt_type = opt_type[0]
+    print('target:',target, 'opt type', opt_type)
 
     columns = list(variable_type_dict.keys())
     target_name = columns[int(target)]
@@ -42,7 +45,7 @@ def run_bo(expt_info, target, opt_type, batch_size=1): #previously def run_bo(ex
             )
     search_space = SearchSpace.from_product(baybe_paramter_list)
 
-    objective = Objective(mode="SINGLE", targets=[NumericalTarget(name=target_name, mode=f"{opt_type}", bounds=[variable_type_dict[target_name]["min"],variable_type_dict[target_name]["max"]])])
+    objective = Objective(mode="SINGLE", targets=[NumericalTarget(name=target_name, mode=f"{opt_type}", bounds=[variable_type_dict[target_name]["min"],variable_type_dict[target_name]["max"]], transformation='LINEAR')])
 
     recommender = TwoPhaseMetaRecommender(
         initial_recommender=RandomRecommender(),
@@ -63,20 +66,29 @@ def run_bo(expt_info, target, opt_type, batch_size=1): #previously def run_bo(ex
     return campaign.recommend(batch_size=batch_size), campaign
 
 
-def run_mobo(expt_info, target, target_2, opt_type, opt_type_2, batch_size=1):
+def run_mobo(expt_info, targets,  opt_types, weights, batch_size=1):
     variable_type_dict = pd.read_json(expt_info.variables)
     baybe_parameter_list = []
-
-    print('target:', target)
-    print('target two:', target_2)
     columns = list(variable_type_dict.keys())
+    targets_arr = []
     
-    target_name = columns[int(target)]
-    target_2_name = columns[int(target_2)]
 
-    print("target_name:", target_name)
-    print("target_2_name:", target_2_name)
+    for i in range(len(targets)):
+        target = targets[i] 
+        opt_type = opt_types[i]  
+        target_name = columns[int(target)] 
+        
 
+        
+        numerical_target = NumericalTarget(
+            name=target_name,
+            mode=f"{opt_type}",  
+            bounds=[variable_type_dict[target_name]["min"], variable_type_dict[target_name]["max"]],
+            transformation='LINEAR'
+
+        )
+
+        targets_arr.append(numerical_target)
 
     for col in variable_type_dict.columns:
         df = variable_type_dict[col].T
@@ -96,10 +108,10 @@ def run_mobo(expt_info, target, target_2, opt_type, opt_type_2, batch_size=1):
             baybe_parameter_list.append(
                 NumericalContinuousParameter(f"{col}", bounds=(float(df['min']), float(df['max'])))
             )
+
+    print(targets_arr)
     search_space = SearchSpace.from_product(baybe_parameter_list)
-    print('target one: name, opt type, min, max', target_name, opt_type,  variable_type_dict[target_name]["min"],variable_type_dict[target_name]["max"] )
-    print('target two: name, opt type, min, max', target_2_name, opt_type_2,  variable_type_dict[target_2_name]["min"],variable_type_dict[target_2_name]["max"] )
-    objective = Objective(mode="DESIRABILITY", targets=[NumericalTarget(name=target_name, mode=f"{opt_type}", bounds=[variable_type_dict[target_name]["min"],variable_type_dict[target_name]["max"]]),NumericalTarget(name=target_2_name, mode=f"{opt_type_2}", bounds=[variable_type_dict[target_2_name]["min"],variable_type_dict[target_2_name]["max"]]) ], weights=[50,50], combine_func="GEOM_MEAN")
+    objective = Objective(mode="DESIRABILITY",targets=targets_arr, weights=weights, combine_func="GEOM_MEAN")
 
     recommender = TwoPhaseMetaRecommender(
         initial_recommender=RandomRecommender(),

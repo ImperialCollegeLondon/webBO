@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Upload{% endblock %}
 
-{% block content %}
 
+{% block content %}
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='expt.css') }}">
 </head>
@@ -12,7 +12,7 @@
             <div class="col-12 col-sm-10 col-md-9 col-lg-8 text-center p-0 mt-3 mb-2">
                 <div class="card pt-4 pb-0 mt-3 mb-3">
                     <h2><strong>Define your experiment</strong></h2>
-                    <p>fill all form fields to go to the next step</p>
+                    <p>Fill all form fields to go to the next step</p>
                     <div class="row">
                         <div class="col-md-12 mx-0">
                             <form id="msform" method="POST" enctype="multipart/form-data">
@@ -23,10 +23,15 @@
                                     <li id="payment"><strong>Hyperparameters</strong></li>
                                     <li id="confirm"><strong>Finish</strong></li>
                                 </ul>
+
                                 <!-- fieldsets -->
+
                                 <fieldset>
+
                                     <div class="form-card">
                                         <h2 class="fs-title">Select your dataset</h2>
+                                        <input type="hidden" name="num_targets" value="{{ num_targets }}">
+
                                         <div class="col">
                                             {{ data_form.name.label }}
                                             {{ data_form.name }}
@@ -50,9 +55,12 @@
                                     <input type="button" name="next" class="next action-button" value="Next Step"
                                         id="select_dataset_btn" />
                                 </fieldset>
+                                
                                 <fieldset>
                                     <div class="form-card">
                                         <h2 class="fs-title">Define your parameter space</h2>
+                                        <input type="hidden" name="num_targets" value="{{ num_targets }}">
+
                                         <br />
                                         <h6>
                                             For every variable defining your search space, select the variable type, and
@@ -100,120 +108,129 @@
                                         value="Previous" />
                                     <input type="button" name="next" class="next action-button" value="Next Step" />
                                 </fieldset>
+
                                 <fieldset>
                                     <div class="form-card">
                                         <h2 class="fs-title">Select your hyperparameters</h2>
-                                        <div class="col">
-                                            {{ hyp_form.kernel.label }}
-                                            {{ hyp_form.kernel() }}
-                                        </div>
-                                        <div class="col">
-                                            {{ hyp_form.acqFunc.label }}
-                                            {{ hyp_form.acqFunc() }}
-                                        </div>
+                                        <input type="hidden" name="num_targets" value="{{ num_targets }}">
+                                
                                         
-                                            <!--{{ hyp_form.batch_size.label }}-->
+                                            <div class="col-md-6 mb-4">
+                                                <div class="mb-3 d-flex flex-column">
+                                                    {{ hyp_form.kernel.label }}
+                                                    <div class="dropdown-container">
+                                                        {{ hyp_form.kernel() }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="mb-3 d-flex flex-column">
+                                                    {{ hyp_form.acqFunc.label }}
+                                                    <div class="dropdown-container">
+                                                        {{ hyp_form.acqFunc() }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                
+                                        <!-- Batch Size -->
+                                        <div class="col-md-6 mb-4">
+                                            <div class="mb-3 d-flex flex-column">
                                             <label for="{{ hyp_form.batch_size.id_for_label }}">
-                                                Batch size 
-                                                <button type="button" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" 
+                                                Batch size
+                                                <button type="button" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right"
                                                         title="This determines the number of experiments it suggests you to run before coming back to web-BO. E.g. if you set batch size equal to 2, it will tell you to go to the lab and perform your experiment with 2 different sets of initial conditions and input them, before it gives you the next 2 sets of initial conditions based on your results">
                                                     ?
                                                 </button>
                                             </label>
                                             {{ hyp_form.batch_size() }}
-                                        
-                                        <!--Target selection-->
-                                        
-                                        <div class="row mb-4">
-                                            <!-- Target 1 -->
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="{{ data_form.target1.id_for_label }}" class="form-label fw-bold">
-                                                        Target 1 <small class="text-muted">(What do you want to optimise)</small>
-                                                    </label>
-                                                    <select name="target1" id="target1" class="form-select">
-                                                        {% for choice in data_form.target1.choices %}
-                                                            <option value="{{ choice[0] }}" {% if choice[0] == data_form.target1.data %} selected {% endif %}>
-                                                                {{ choice[1] }}
-                                                            </option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
                                             </div>
+                                        </div>
+                                    
+                                
+                                        <!-- Select Your Target Section -->
+                                        <h3 class="fs-title">Select your targets</h3>
                                         
-                                            <!-- Optimisation Type for Target 1 -->
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="target1_optimisation" class="form-label fw-bold">
-                                                        Optimisation type for Target 1
-                                                    </label>
-                                                    <select name="target1_optimisation" id="target1_optimisation" class="form-select">
-                                                        <option value="maximise" {% if hyp_form.target1_optimisation.data == "maximise" %} selected {% endif %}>
-                                                            Maximise
-                                                        </option>
-                                                        <option value="minimise" {% if hyp_form.target1_optimisation.data == "minimise" %} selected {% endif %}>
-                                                            Minimise
-                                                        </option>
-                                                    </select>
+                                        {% for target_form in data_form.targets %}
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5 class="fw-bold mb-0" tyle="font-size: 1.2rem;">Target {{ loop.index }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <!-- Target Selection -->
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3 d-flex flex-column">
+                                                            <label for="{{ target_form.target.id_for_label }}" class="form-label">
+                                                                Target
+                                                            </label>
+                                                            <select name="targets[{{ loop.index0 }}].target" id="{{ target_form.target.id }}" class="form-select custom-input-height">
+                                                                {% if target_form.target.choices %}
+                                                                    {% for choice in target_form.target.choices %}
+                                                                    <option value="{{ choice[0] }}" {% if choice[0] == target_form.target.data %} selected {% endif %}>
+                                                                        {{ choice[1] }}
+                                                                    </option>
+                                                                    {% endfor %}
+                                                                {% else %}
+                                                                    <option disabled>No choices available</option>
+                                                                {% endif %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Optimisation Type -->
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3 d-flex flex-column">
+                                                            <label for="{{ target_form.optimisation.id_for_label }}" class="form-label">
+                                                                Optimisation type
+                                                            </label>
+                                                            <select name="targets[{{ loop.index0 }}].optimisation" id="{{ target_form.optimisation.id }}" class="form-select custom-input-height">
+                                                                <option value="maximise" {% if target_form.optimisation.data == "maximise" %} selected {% endif %}>
+                                                                    Maximise
+                                                                </option>
+                                                                <option value="minimise" {% if target_form.optimisation.data == "minimise" %} selected {% endif %}>
+                                                                    Minimise
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                    
+                                                    <!-- Relative Weighting -->
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3 d-flex flex-column">
+                                                            <label for="{{ target_form.weight.id_for_label }}" class="form-label">
+                                                                Relative Weight
+                                                            </label>
+                                                            <input type="number" step="0.1" name="targets[{{ loop.index0 }}].weight" id="{{ target_form.weight.id }}" class="form-control form-control-sm custom-input-height" value="{{ target_form.weight.data }}" placeholder="Enter weight">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="row">
-                                            <!-- Target 2 -->
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="{{ data_form.target2.id_for_label }}" class="form-label fw-bold">
-                                                        Target 2 <small class="text-muted">(What do you want to optimise)</small>
-                                                    </label>
-                                                    <select name="target2" id="target2" class="form-select">
-                                                        {% for choice in data_form.target2.choices %}
-                                                            <option value="{{ choice[0] }}" {% if choice[0] == data_form.target2.data %} selected {% endif %}>
-                                                                {{ choice[1] }}
-                                                            </option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        
-                                            <!-- Optimisation Type for Target 2 -->
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="target2_optimisation" class="form-label fw-bold">
-                                                        Optimisation type for Target 2
-                                                    </label>
-                                                    <select name="target2_optimisation" id="target2_optimisation" class="form-select">
-                                                        <option value="maximise" {% if hyp_form.target2_optimisation.data == "maximise" %} selected {% endif %}>
-                                                            Maximise
-                                                        </option>
-                                                        <option value="minimise" {% if hyp_form.target2_optimisation.data == "minimise" %} selected {% endif %}>
-                                                            Minimise
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
+                                    {% endfor %}
+
+                                    
                                     </div>
-                                        
-                                        <!--end target selection-->
-                                    
-                                    
-                                    <input type="button" name="previous" class="previous action-button-previous"
-                                        value="Previous" />
-                                    <input type="button" name="make_payment" class="next action-button"
-                                        value="Confirm" />
+                                
+                                    <!-- Navigation Buttons -->
+                                    <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                                    <input type="button" name="next" class="next action-button" value="Next Step" />
                                 </fieldset>
+                                
+                                
+                                
+                                <!-- Confirm Section -->
                                 <fieldset>
                                     <div class="form-card">
                                         <h2 class="fs-title text-center">Success !</h2>
+                                        <input type="hidden" name="num_targets" value="{{ num_targets }}">
+
                                         <br><br>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col text-center">
                                                     <form method="POST">
-                                                        <button type="submit" class="btn btn-primary" id="expt_btn"
-                                                            name="expt_btn" value="run-expt">view experiment</button>
+                                                        <button type="submit" class="btn btn-primary" id="expt_btn" name="expt_btn" value="run-expt">View Experiment</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -226,6 +243,7 @@
                                         </div>
                                     </div>
                                 </fieldset>
+
                             </form>
                         </div>
                     </div>
@@ -234,4 +252,55 @@
         </div>
     </div>
 </div>
+<head>
+    <style>
+        /* Ensure labels and inputs are properly aligned */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Add margin to the dropdowns to separate them from the label */
+        .dropdown-container {
+            margin-top: 5px; /* Adjust as needed */
+            width: 100%;
+        }
+
+        /* Adjust the width of the select to make it consistent */
+        select.form-select {
+            width: 75%;
+        }
+
+
+/* Ensure both select and input elements have the same height */
+.custom-input-height {
+    height: 38px; /* Ensure both have the same height */
+    padding: 0.375rem 0.75rem; /* Add padding to match default padding */
+    font-size: 1rem; /* Ensure font size matches */
+}
+
+/* Ensure labels and inputs are aligned in a column */
+.d-flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align items at the bottom */
+}
+
+/* Optional: Adjust margin for labels */
+.form-label {
+    margin-bottom: 0.5rem; /* Adjust margin for better spacing */
+}
+
+/* Optional: Adjust card padding to balance input sizes */
+.card-body {
+    padding: 1rem; /* Adjust if needed */
+}
+
+/* Optional: Adjust row spacing for a better layout */
+.row {
+    margin-bottom: 10px; /* Optional space between rows */
+}
+    </style>
+</head>
+
 {% endblock %}

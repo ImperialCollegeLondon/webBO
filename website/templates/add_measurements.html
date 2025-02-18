@@ -8,7 +8,7 @@
     {% if emulator %}
     <div class="row">
         <div class="col">
-            {% if target_2 %}
+            {% if target_names|length > 1 %}
                 <h4>The target values of the experiment that you ran are: 
                 </br>
                     <p>Yield = {{ emulator_value }} and Turnover Number = {{ emulator_value_2 }} </p></h4>
@@ -41,10 +41,9 @@
                     <tr>
                         {% for column in df.columns %}
                         <td style="border: 1px solid black; padding: 8px; text-align: left; word-wrap: break-word; white-space: normal;">
-                            {% if column == target_name %}
+                            {% if column in target_name_columns %}
                             <div style="background-color: rgb(142, 142, 226);">{{ row[column] }}</div>
-                            {% elif column == target_2 %}
-                            <div style="background-color: rgb(142, 142, 226);">{{ row[column] }}</div>
+                        
                             {% else %}
                             {{ row[column] }}
                             {% endif %}
@@ -58,13 +57,13 @@
                     <tr>
                         {% for column in recs.columns %}
                         <td style="border: 1px solid black; background-color: rgb(226, 142, 205); padding: 8px; text-align: left; word-wrap: break-word; white-space: normal;">
-                            {% if column != 'iteration' and column != target_name and column != target_2 %}
+                            {% if column != 'iteration' and column not in target_names %}
                                 {% if row[column] is number %}
                                     <input type="text" name={{ column }} id={{ column }} placeholder="{{ "%.3g" | format(row[column]) }}" style="width: 80%; max-width: 150px;"/>
                                 {% else %}
                                     <input type="text" name={{ column }} id={{ column }} placeholder="{{ row[column] }}" style="width: 80%; max-width: 150px;"/>
                                 {% endif %}
-                            {% elif column == target_name or column == target_2 %}
+                            {% elif column in target_names %}
                                 <input type="text" name={{ column }} id={{ column }} style="width: 80%; max-width: 150px;"/>
                             {% else %}
                                 {{ row[column] }}

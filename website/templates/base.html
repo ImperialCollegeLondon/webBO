@@ -17,6 +17,11 @@
         transform: translateY(-50%); /* Adjust back up by 50% of its height */
         margin-right: 10px; /* Adjust as needed */
     }
+    .container {
+    max-width: 80%;  /* Or any value you prefer */
+    margin: 0 auto;  /* Centers the container */
+}
+
 </style>
 
 <head>
@@ -203,7 +208,11 @@
                     success: function (response) {
                     },
                 });
+ 
 
+                console.log("Current fieldset:", current_fs);
+                console.log("Next fieldset:", next_fs);
+                
                 //show the next fieldset
                 next_fs.show();
                 current_fs.hide();
@@ -386,7 +395,115 @@
             }
         }
     </script>
+    <script>
+        // show dataset statistics
+        document.getElementById('toggleSummary').addEventListener('click', function () {
+            let summarySection = document.getElementById('summarySection');
+            summarySection.style.display = summarySection.style.display === "none" ? "block" : "none";
+    });
+    </script>
+
+    <script>
+        let exptName = "{{ expt_name }}"; 
+
+        document.getElementById('plot-button').addEventListener('click', function() {
+            let xVar = document.getElementById('x-selector').value;
+            let yVar = document.getElementById('y-selector').value;
+
+            if (!xVar || !yVar) {
+                alert("Please select both X and Y variables.");
+                return;
+            }
+            if (xVar === yVar) {
+                alert("X and Y variables must be different. Please select two distinct variables.");
+                return;
+            }
+
+            document.getElementById('loading-spinner').style.display = "block";
+
+            fetch(`/get_plot_data?x_var=${xVar}&y_var=${yVar}&expt_name=${exptName}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading-spinner').style.display = "none"; 
+
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    let fig = JSON.parse(data.graph);
+                    document.getElementById('plot-container').style.display = "block";
+                
+                    Plotly.newPlot('dynamic-plot', fig, {
+                        responsive: true,
+                        width: document.getElementById('plot-container').clientWidth,
+                        height: document.getElementById('plot-container').clientHeight
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching graph:', error);
+                    document.getElementById('loading-spinner').style.display = "none";  
+                });
+    });
+    </script>
+
+
+    <script>
+        function submitExperimentForm(type) {
+            let form = document.createElement("form");
+            form.method = "POST";
+        
+            if (type === 'multi') {
+            // Show the modal when 'multi' is selected
+                document.getElementById("multiTargetModal").style.display = "block";
+            } else {
+                form.action = "/setup";  // Route to '/setup' for single-objective
+                let input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "experiment_type";
+                input.value = type;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function submitMultiObjective() {
+         // Get the number of targets entered by the user
+            let numTargets = document.getElementById("numTargets").value;
+            if (!numTargets || numTargets <= 0) {
+            alert("Please enter a valid number of targets.");
+            } else if (numTargets == 1) {
+            alert("Please enter more than one target for a multi-objective experiment.");
+            } else {
+
+                let form = document.createElement("form");
+                form.method = "POST";
+                form.action = "/setup_mo";  // Route to '/setup_mo' for multi-objective
+            
+                let inputType = document.createElement("input");
+                inputType.type = "hidden";
+                inputType.name = "experiment_type";
+                inputType.value = "multi";
+                form.appendChild(inputType);
+            
+                let inputTargets = document.createElement("input");
+                inputTargets.type = "hidden";
+                inputTargets.name = "num_targets";
+                inputTargets.value = numTargets;
+                form.appendChild(inputTargets);
+            
+                document.body.appendChild(form);
+                form.submit();
+
+                // Hide the modal after submission
+                document.getElementById("multiTargetModal").style.display = "none";
+
+                }}
+    </script>
+
     {% endblock %}
+
 </body>
 
 </html>

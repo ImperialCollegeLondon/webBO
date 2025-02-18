@@ -3,59 +3,58 @@
 {% block content %}
 
 <style>
-    /* Custom CSS for layout */
+    
     .sidebar {
         position: fixed;
-        top: 76px; /* Adjust top position as needed */
+        top: 76px; 
         left: 0;
-        width: 150px; /* Adjust as needed */
-        background-color: #c1c5c9; /* Example background color */
+        width: 150px;
+        background-color: #c1c5c9; 
         overflow-x: hidden;
         padding-top: 0px;
         color: black;
-        border-top-right-radius: 12px; /* Rounded corners top left */
-        border-bottom-right-radius: 12px; /* Rounded corners bottom left */
+        border-top-right-radius: 12px; 
+        border-bottom-right-radius: 12px; 
     }
 
     .sidebar .nav-link {
-        color: black; /* Set text color of links to black */
+        color: black;
     }
 
     .content {
-        margin-left: 50px; /* Adjust to accommodate sidebar width and spacing */
-        margin-right: 50px; /* Add margin on the right for spacing */
-        padding: 20px; /* Adjust as needed */
+        margin-left: 50px; 
+        margin-right: 50px; 
+        padding: 20px; 
     }
 
     .jumbotron {
-        padding-top: 20px; /* Adjust the top padding of the jumbotron */
-        padding-bottom: 20px; /* Optional: Adjust the bottom padding of the jumbotron */
-        border-radius: 12px; /* Rounded corners for the jumbotron */
-        /*background-color: #f8f9fa; /* Example background color */
+        padding-top: 20px; 
+        padding-bottom: 20px; 
+        border-radius: 12px; 
     }
 
     .custom-svg-line {
         width: 100%;
-        height: 20px; /* Adjust line thickness */
+        height: 20px; 
     }
 
     .code-box {
-        background-color: #ffffff; /* White background */
-        padding: 10px; /* Padding inside the code box */
-        border-radius: 8px; /* Rounded corners */
-        display: inline-block; /* Display as inline block to wrap content */
-        cursor: pointer; /* Pointer cursor */
-        width: 100%; /* Auto width */
-        max-width: 100%; /* Max width */
-        box-sizing: border-box; /* Include padding and border in width calculation */
-        position: relative; /* Ensure relative positioning for child elements */
-        margin-bottom: 20px; /* Add margin to the bottom for spacing */
+        background-color: #ffffff;
+        padding: 10px; 
+        border-radius: 8px; 
+        display: inline-block; 
+        cursor: pointer; 
+        width: 100%; 
+        max-width: 100%;
+        box-sizing: border-box; 
+        position: relative; 
+        margin-bottom: 20px; 
     }
 
     .copy-icon {
         position: absolute;
-        left: 830px; /* Distance from the left edge of code-box */
-        top: 8px; /* Distance from the top edge of code-box */
+        left: 830px;
+        top: 8px; 
         display: inline-block;
         background-color: #dddddd;
         border-radius: 6px;
@@ -68,10 +67,10 @@
     }
 
     .copy-icon img {
-        width: 20px; /* Adjust icon width */
-        height: 20px; /* Adjust icon height */
-        vertical-align: middle; /* Align icon vertically */
-        margin-right: 0px; /* Add some margin to the right of the icon */
+        width: 20px; 
+        height: 20px; 
+        vertical-align: middle; 
+        margin-right: 0px; 
     }
 </style>
 
@@ -122,13 +121,14 @@
 
 
             <h2 id="Examples" class="text-left"><u>Examples</u></h2>
-            <p>Web-BO possesses 2 examples and 1 walk-through; one example demonstrates a sample optimisation task
-                (which you can go over by clicking the 'Explore' button on the home page), one example provides sample
-                input <i>csv</i> files, and the walk-through demonstrates the integration with datalab.</p>
+            <p>Web-BO includes two examples and a step-by-step walk-through. One example showcases a sample optimization task, which you can find 
+                by clicking the 'Explore' button on the homepage. The second example provides sample input <i>CSV</i> files. Additionally, the walk-through
+                 demonstrates how to integrate Web-BO with Datalab.</p>
+
 
             </br>
             <p>We also offer an example of the <i>csv</i> format expected by Web-BO. This is comprised of a dataset and a list of categories for the categorical
-                variable. See below to learn how to format the <i>csv</i> files correctly.</p>
+                variable. See the Tutorial page to learn how to format the <i>csv</i> files correctly.</p>
 
 
             <hr>
@@ -171,7 +171,7 @@
 </div>
 
 <script>
-    // Adjust sidebar height dynamically based on number of nav links
+    
     document.addEventListener("DOMContentLoaded", function() {
         var sidebar = document.getElementById('sidebar');
         var navLinks = sidebar.querySelectorAll('.nav-link');
@@ -181,7 +181,7 @@
         sidebar.style.height = sidebarHeight + 'px';
     });
 
-    // Function to copy code to clipboard
+    
     function copyCode() {
         var codeText = "git clone https://github.com/austin-mroz/webBO\n" +
                         "cd webBO\n" +
