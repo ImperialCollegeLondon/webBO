@@ -94,7 +94,7 @@
     </div>
 
     <div class="text-center mt-4">
-        <button id="plot-button" class="btn btn-primary btn-lg px-4">
+        <button id="plot-button" class="btn btn-info btn-lg my-3">
             Generate Plot
         </button>
     </div>
@@ -128,11 +128,14 @@
 {% endif %}
 </br>
 <form method="POST">
-    <button type="submit" class="btn btn-primary btn-lg" name="action" value="download"
-        style="margin-right: 20px;">Download
-        dataset</button>
-    <button type="submit" class="btn btn-secondary btn-lg" name="action" value="view-my-stuff">Web-BO home</button>
-
+    <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary btn-lg" name="action" value="download" style="margin-right: 20px;">
+            Download dataset
+        </button>
+        <button type="submit" class="btn btn-secondary btn-lg" name="action" value="view-my-stuff">
+            Web-BO home
+        </button>
+    </div>
 </form>
 
 </br>

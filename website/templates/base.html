@@ -502,6 +502,41 @@
                 }}
     </script>
 
+    <script>
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            var sidebar = document.getElementById('sidebar');
+            var navLinks = sidebar.querySelectorAll('.nav-link');
+            var lastNavLink = navLinks[navLinks.length - 1];
+            var sidebarHeight = lastNavLink.offsetTop + lastNavLink.offsetHeight + 10; 
+
+            sidebar.style.height = sidebarHeight + 'px';
+        });
+
+    
+        function copyCode() {
+            var codeText = "git clone https://github.com/austin-mroz/webBO\n" +
+                        "cd webBO\n" +
+                        "conda env create -p ./.venv -f environment.yml\n" +
+                        "conda activate ./.venv\n" +
+                        "python main.py" ; // Text to copy
+            navigator.clipboard.writeText(codeText).then(function() {
+                var copyIcon = document.getElementById('copyIcon');
+                var copyImg = document.getElementById('copyImg');
+                copyImg.src = "{{ url_for('static', filename='checkmark_v01.png') }}"; 
+                setTimeout(function() {
+                    copyImg.src = "{{ url_for('static', filename='clipboard_icon_v01.png') }}"; 
+                }, 3000); // Reset copy text after 3 seconds
+            }, function(err) {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+    
+
+
+</script>
+
     {% endblock %}
 
 </body>
