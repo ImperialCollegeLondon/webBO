@@ -7,4 +7,4 @@ os.environ["BAYBE_TELEMETRY_ENABLED"] = "false"
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(host="localhost", port=8050, debug=True)
+    app.run(host="localhost", port=8066, debug=True)

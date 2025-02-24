@@ -111,10 +111,7 @@
                                             {{ hyp_form.acqFunc.label }}
                                             {{ hyp_form.acqFunc() }}
                                         </div>
-                                        <div class="col">
-                                            {{ hyp_form.opt_type.label }}
-                                            {{ hyp_form.opt_type() }}
-                                        </div>
+                                        
                                         <div class="col">
                                             <!--{{ hyp_form.batch_size.label }}-->
                                             <label for="{{ hyp_form.batch_size.id_for_label }}">
@@ -129,6 +126,10 @@
                                         <div class="col">
                                             {{ data_form.target.label }}
                                             {{ data_form.target() }}
+                                        </div>
+                                        <div class="col">
+                                            {{ hyp_form.opt_type.label }}
+                                            {{ hyp_form.opt_type() }}
                                         </div>
                                     </div>
                                     
