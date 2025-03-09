@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import JSONB
 
+
 class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True)
@@ -10,32 +11,21 @@ class Data(db.Model):
     variables = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
-class Target(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    index = db.Column(db.Integer, nullable=False)  
-    name = db.Column(db.String(255), nullable=False) 
-    opt_type = db.Column(db.String(10), nullable=False)  # "MAX" or "MIN"
-    weight = db.Column(db.Float, nullable=False)  
-    experiment_id = db.Column(db.Integer, db.ForeignKey('experiment.id'), nullable=False)
-    experiment = db.relationship('Experiment', backref=db.backref('targets', lazy=True, cascade="all, delete-orphan"))
-
 
 class Experiment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True)
     dataset_name = db.Column(db.String(150))
     data = db.Column(db.Text)
-    objective = db.Column(db.String(150), nullable = False) # will contain 'MULTI' or 'SINGLE'
-    fidelity = db.Column(db.String(150), nullable = False) # will contain 'MULTI' or 'SINGLE'
-    n_targets = db.Column(db.Integer, nullable = False)
+    target = db.Column(db.String(150))
     variables = db.Column(db.Text)
     kernel = db.Column(db.String(150))
     acqFunc = db.Column(db.String(150))
+    opt_type = db.Column(db.String(150))
     batch_size = db.Column(db.Integer)
     next_recs = db.Column(db.Text)
     iterations_completed = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    
 
 
 class User(db.Model, UserMixin):

@@ -2,12 +2,6 @@
 
 {% block content %}
 <!-- added by me - navigation bar code-->
-<!-- Bootstrap CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Bootstrap Bundle JS  -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-
 
 <nav class="navbar navbar-expand-lg" style="background-color: grey;">
     <div class="container-fluid">
@@ -33,10 +27,8 @@
                 
                 <!-- Visible buttons that trigger the hidden form submission -->
                 <a href="#" onclick="document.getElementById('hidden-form').querySelector('[value=add-dataset]').click(); return false;" class="btn" style="color: white; background-color: transparent; border: none; margin-right: 10px;">Add Dataset</a>
-                
-                <button type="button" class="btn" style="color: white; background-color: transparent; border: none; margin-right: 10px;" data-toggle="modal" data-target="#experimentModal">Add Experiment</button>
+                <a href="#" onclick="document.getElementById('hidden-form').querySelector('[value=add-experiment]').click(); return false;" class="btn" style="color: white; background-color: transparent; border: none; margin-right: 10px;">Add Experiment</a>
 
-                
                 <!-- Logout form -->
                 <form method="POST" id="logout-form" style="display: inline;">
                     <button type="submit" class="btn btn-secondary" name="action" value="logout" style="display: none;">Logout</button>
@@ -47,6 +39,11 @@
         </div>
     </div>
 </nav>
+
+
+
+
+
 
 <!-- navigation bar code finishes-->
 
@@ -60,7 +57,7 @@
             <h1 class="display-4">Web-BO</h1>
             <p class="lead">This is a simple GUI to support Bayesian Optimisation</p>
             <hr class="my-4">
-            <p>Web-BO expects data of a certain format to perform. We strongly suggest exploring the example experiments.</p>
+            <p>Web-BO expects data of a certain format to perform. We strongly suggest exploring the example codes!</p>
             <p>To do this, press the button below!</p>
 
             <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal"
@@ -121,14 +118,10 @@
                                     href="https://gosummit.readthedocs.io/en/latest/experiments_benchmarks/implemented_benchmarks.html#cross-coupling-emulator-benchmarks"
                                     class="tooltip-test" title="Tooltip">Suzuki-Miyaura Cross Coupling Emulator</a>.
                             </p>
-                            <p>We will populate your Datasets with the new `sample-reizman-suzuki` dataset.</p>
-
-                            <p>Select 'Single Objective' or 'Multi Objective' below to explore the correct dataset for your desired optimisation case study.</p>
-
+                            <p>We will populate your Datasets with the new `sample-reizman-suzuki` dataset!</p>
                             <p>When you close this popup, we'd recommend clicking on your new dataset to explore the
-                                Dataset features and set-up an experiment.</p>
+                                Dataset features!</p>
                         </div>
-                        <!--
                         <div class="modal-footer">
                             <form method="POST">
                                 <label for="sample-dataset-name">Enter a name for your new dataset!</label>
@@ -140,21 +133,6 @@
                             </form>
 
                         </div>
-                    -->
-                    <div class="modal-footer">
-                        <!--Form -->
-                        <form method="POST" >
-                            <label for="sample-dataset-name" class="form-label">Enter a name for your new dataset!</label>
-                            <input type="text" class="form-control" id="sample-dataset-name" name="sample-dataset-name" placeholder="Dataset name" />
-                            <br>
-                            <button type="submit" class="btn btn-secondary" name="action" value="add-sample-dataset">Single Objective</button>
-                            <button type="submit" class="btn btn-secondary" name="action" value="add-sample-dataset-mo">Multi-Objective</button>
-                        </form>
-                        
-                    </div>
-                    
-                    
-
                     </div>
                 </div>
             </div>
@@ -169,7 +147,7 @@
             <hr class="my-4">
             <div class="row">
                 <div class="col-md-12">
-                    <p>If you are looking for further explanations, the page below has got you covered.</p>
+                    <p>If you are looking for further explanations, the page below has got you covered!</p>
                 </div>
             </div>
             <div class="row">
@@ -288,7 +266,9 @@
         </div>
     </div>
 </div>
+
 <br />
+
 <div class="container mb-5">
     <form method="POST">
         <div class="row g-5">
@@ -300,44 +280,11 @@
             </div>
             <div class="col-md-6">
                 <div class="col-md-12" align="center">
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#experimentModal" name="action" value="add-experiment">Add Experiment</button>
+                    <button type="submit" class="btn btn-secondary" name="action" value="add-experiment">Add
+                        Experiment</button>
                 </div>
             </div>
-            <!-- Modal -->
-            <div id="experimentModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Create Experiment</h4>
-                        </div>
-                    <div class="modal-body">
-                    <p>Do you want to create a <strong>single-objective</strong> or <strong>multi-objective</strong> experiment?</p>
-                    </div>
-                
-                    <div class="modal-footer">
-                        <form method="POST" id="experimentForm">
-                            <input type="hidden" name="action" value="add-experiment">
-                            <input type="hidden" name="experiment_type" id="experimentType">
-                        </form>
-                       
-                        <br>
-                       
-                        <button type="button" class="btn btn-primary" onclick="submitExperimentForm('single')">Single Objective</button>
-                        <button type="button" class="btn btn-primary" onclick="submitExperimentForm('multi')">Multi-Objective</button>
-                    
-                        <!-- Modal for entering the number of targets -->
-                        <div id="multiTargetModal" class="modal" style="display: none;">
-                            <div class="modal-content">
-                                <p>Please enter <strong>how many targets</strong> you would like to optimise:</p>
-                                <input type="number" id="numTargets" placeholder="Enter number of targets" min="1" style="width: 50%;"/>
-                                <button type="button" class="btn btn-primary" onclick="submitMultiObjective()">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </form>
 </div>
@@ -345,10 +292,13 @@
 <hr />
 <div class="container mt-5">
     <div class="alert alert-warning">
+
         <h2 align="left">Disclaimer</h2>
+
         <p>Web-BO is NOT a data storage solution; it is a data optimisation tool. For best practice, it is
             suggested
             to download your dataset after each iteration.</p>
+
     </div>
 </div>
 </span>
@@ -365,7 +315,6 @@
             User</button>
     </div>
 </div>
-
 <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-sm">
@@ -388,77 +337,5 @@
 </form>
 </br>
 </br>
-</div>
-<style>
-    
-    .modal-header .close {
-        font-size: 1.5rem;
-        padding: 0.5rem 1rem;
-        color: #000;
-        border: none;
-    }
-    .modal-header {
-        position: relative;
-        text-align: center; 
-    }
 
-   
-    .modal-title {
-        margin: 0 auto;
-        text-align: center;
-        width: 100%;
-    }
-
-   
-    .modal-footer {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    
-    .modal-footer button {
-        margin: 0 10px;
-    }
-    
-        
-        #multiTargetModal {
-        display: none;
-        position: absolute;
-        top: 0%; 
-        left: 49.5%;
-        transform: translate(-50%, 100%); 
-        width: 505px; 
-        z-index: 1050; 
-        margin-top: 10px; 
-    }
-
-    #multiTargetModal .modal-content {
-        padding: 20px;
-    }
-
-    #multiTargetModal .modal-header {
-        background-color: #f7f7f7;
-        border-bottom: 1px solid #ccc;
-        text-align: center
-    }
-
-    #multiTargetModal .modal-footer {
-        padding-top: 15px;
-        padding-bottom: 10px;
-    }
-
-    #multiTargetModal input[type="number"] {
-        width: 50%;
-        padding: 5px;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        display: block; 
-        margin: 0 auto;
-    }
-
-    #multiTargetModal button {
-        margin-top: 10px;
-    }
-</style>
 {% endblock %}

@@ -3,59 +3,59 @@
 {% block content %}
 
 <style>
-    
+    /* Custom CSS for layout */
     .sidebar {
         position: fixed;
-        top: 76px; 
+        top: 76px; /* Adjust top position as needed */
         left: 0;
-        width: 200px; 
-        background-color: #c1c5c9; 
+        width: 150px; /* Adjust as needed */
+        background-color: #c1c5c9; /* Example background color */
         overflow-x: hidden;
         padding-top: 0px;
         color: black;
-        border-top-right-radius: 12px; 
-        border-bottom-right-radius: 12px; 
+        border-top-right-radius: 12px; /* Rounded corners top left */
+        border-bottom-right-radius: 12px; /* Rounded corners bottom left */
     }
 
     .sidebar .nav-link {
-        color: black; 
+        color: black; /* Set text color of links to black */
     }
 
     .content {
-        margin-left: 50px; 
-        margin-right: 50px; 
-        padding: 20px; 
+        margin-left: 50px; /* Adjust to accommodate sidebar width and spacing */
+        margin-right: 50px; /* Add margin on the right for spacing */
+        padding: 20px; /* Adjust as needed */
     }
 
     .jumbotron {
-        padding-top: 20px;
-        padding-bottom: 20px; 
-        border-radius: 12px; 
-        
+        padding-top: 20px; /* Adjust the top padding of the jumbotron */
+        padding-bottom: 20px; /* Optional: Adjust the bottom padding of the jumbotron */
+        border-radius: 12px; /* Rounded corners for the jumbotron */
+        /*background-color: #f8f9fa; /* Example background color */
     }
 
     .custom-svg-line {
         width: 100%;
-        height: 20px; 
+        height: 20px; /* Adjust line thickness */
     }
 
     .code-box {
-        background-color: #ffffff; 
-        padding: 10px; 
-        border-radius: 8px; 
-        display: inline-block; 
-        cursor: pointer;
-        width: 100%;
-        max-width: 100%; 
-        box-sizing: border-box; 
-        position: relative; 
-        margin-bottom: 20px; 
+        background-color: #ffffff; /* White background */
+        padding: 10px; /* Padding inside the code box */
+        border-radius: 8px; /* Rounded corners */
+        display: inline-block; /* Display as inline block to wrap content */
+        cursor: pointer; /* Pointer cursor */
+        width: 100%; /* Auto width */
+        max-width: 100%; /* Max width */
+        box-sizing: border-box; /* Include padding and border in width calculation */
+        position: relative; /* Ensure relative positioning for child elements */
+        margin-bottom: 20px; /* Add margin to the bottom for spacing */
     }
 
     .copy-icon {
         position: absolute;
-        left: 830px; 
-        top: 8px; 
+        left: 830px; /* Distance from the left edge of code-box */
+        top: 8px; /* Distance from the top edge of code-box */
         display: inline-block;
         background-color: #dddddd;
         border-radius: 6px;
@@ -68,10 +68,10 @@
     }
 
     .copy-icon img {
-        width: 20px; 
-        height: 20px;
-        vertical-align: middle;
-        margin-right: 0px; 
+        width: 20px; /* Adjust icon width */
+        height: 20px; /* Adjust icon height */
+        vertical-align: middle; /* Align icon vertically */
+        margin-right: 0px; /* Add some margin to the right of the icon */
     }
 </style>
 
@@ -162,13 +162,11 @@
                                 <div class="col-md-7">
                                     <b>Add the sample-reizman-suzuki Dataset:</b>
                                     <ul>
-                                        <li>Scroll to the bottom of the case study pop-up.</em></li>
-                                        <li>Select <em>'Single Objective'</em> or <em>'Multi Objective'</em> to explore the correct dataset for your desired optimisation case study.</li>
-                                        <li>Your chosen dataset will be added to the <em>Datasets</em> area of the home page. </li>
+                                        <li>Scroll to the bottom of the case study pop-up and select <em>Add Dataset!</em></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-5 d-flex justify-content-center align-items-center">
-                                    <img src="{{ url_for('static', filename='name_casestudy_dataset.png') }}" class="img-fluid" alt="Description of the image" style="max-width: 60%; height: auto;">
+                                    <img src="{{ url_for('static', filename='name_case_dataset.png') }}" class="img-fluid" alt="Description of the image" style="max-width: 60%; height: auto;">
                                 </div>
                             </div>
                         </li>
@@ -289,25 +287,6 @@
                         </li>
                         <br>
                         <li>
-                            <div class="row align-items-center">
-                                
-                                <div class="col-md-7">
-                                    <b>Number of Objectives:</b>
-                                    <ul>
-                                        <li>Choose to create a <em>single-objective</em> or <em>multi-objective</em> optimisation experiment.</li>
-                                        <li>For a <em>multi-objective</em> optimisation experiment, you will be prompted to enter the number of targets you wish to optimise.</li>
-                                    </ul>
-                                </div>
-                        
-                                
-                                <div class="col-md-5 d-flex justify-content-center">
-                                    <img src="{{ url_for('static', filename='SO_or_MO_exp.png') }}" class="img-fluid" alt="Add Experiment" style="max-width: 70%; height: auto;">
-                                </div>
-                            </div>
-                        </li>
-                        <br>
-                        
-                        <li>
                             <div class="row">
                                 <div class="col-md-7">
                                     <b>Dataset Selection:</b>
@@ -325,16 +304,12 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <b>Parameter Space:</b>
-                                
-                                    <p>Define the variable type and include additional requested information:</p>
                                     <ul>
                                         <li><em>Categorical:</em> Requires an uploaded csv file - see <em>FAQs</em> section for more details.</li>
                                         <li><em>Integer:</em> Define a range (min. and max. values).</li>
                                         <li><em>Continuous:</em> Define a range (min. and max. values).</li>
                                     </ul>
-                                
                                 </div>
-
                                 <div class="col-md-5 d-flex justify-content-center align-items-center">
                                     <img src="{{ url_for('static', filename='parameter_space_icon.png') }}" class="img-fluid" alt="Parameter Space" style="max-width: 60%; height: auto;"> 
                                 </div>
@@ -349,10 +324,9 @@
                                     <ul>
                                         <li><em>GP Kernel Type:</em> Choose between <em>Matern</em> and <em>Tanimoto</em>.</li>
                                         <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><em>Acquisition Function:</em> Select <em>Expected Improvement</em> or <em>Probability of Improvement</em>.</li>
+                                        <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><em>Optimisation Type:</em> Indicate if you want to <em>Maximise</em> or <em>Minimise</em> the target variable.</li>
                                         <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><em>Batch Size:</em> Input the number of experiments to run before recieving new recommendations from Web-BO - see <em>FAQs</em> section for more details </li>
-                                        <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><em>Target Variable(s):</em> Select the objective variable(s) you want to optimise - see FAQs section for more details.</li>
-                                        <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><em>Optimisation Type(s):</em> Indicate if you want to <em>Maximise</em> or <em>Minimise</em> the target variable(s).</li>
-                                        <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><em>Relative Weight (for multi-objective optimisations only):</em> Specify the relative importance of the targets - see <em>FAQs</em> section for more details</li>
+                                        <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><em>Target Variable:</em> Select the objective variable you want to optimise.</li>
                                     </ul>
                                     
                                 </div>
@@ -479,7 +453,7 @@
             <br>
             <p>For further clarification on the tutorial above, please watch the following video.</p>
             <br>
-            <p>This video will first walk you through the single-optimisation case study demonstration and then show how to add a CSV dataset, define and run an experiment, and download results.</p>
+            <p>This video will first walk you through the case study demonstration and then show how to add a CSV dataset, define and run an experiment, and download results.</p>
             
             <div class="embed-responsive embed-responsive-16by9">
                 <video controls class="embed-responsive-item">
@@ -579,33 +553,25 @@
                 </div>
             
             <hr>
-            <h4>Selecting targets: What types of variables can be optimised?</h4>
+<!--
+            <h4>Which hyperparameters should I choose when defining my experiment?</h4>
                 <div class="row">
                     <div class="col-md-10">
                         <ul> 
-                            <li style="margin-top: 0.35em; margin-bottom: 0.25em;">Web-BO can only optimise <b>numerical targets</b>. </li>
-                            <li style="margin-top: 0.35em; margin-bottom: 0.25em;">This means that only variables defined as <b>integer</b> or <b>continuous</b> variables in the parameter space can be optimised.</li>
+                            <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><b>GP Kernel type -</b> Matern vs Tanimoto: </li>
+                            <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><b>Acquisition function -</b> Expected improvement vs Probability of improvement:</li>
+                            <li style="margin-top: 0.35em; margin-bottom: 0.25em;"><b>Optimisation type -</b> minimisation vs maximisation: </li>
                         </ul>
                     </div>
                 </div>
             <hr>
+-->
             <h4>What is batch size?</h4>
                 <div class="row">
                     <div class="col-md-10">
                         <ul> 
                             <li style="margin-top: 0.35em; margin-bottom: 0.25em;">Batch size describes the <b>number of experiments</b> you wish to run before recieving new recommendations from Web-BO. </li>
                             <li style="margin-top: 0.35em; margin-bottom: 0.25em;">For example, a batch size of 2 means Web-BO will provide 2 sets of initial conditions to test, then, based on those experimental results, it will generate the next 2 sets.</li>
-                        </ul>
-                    </div>
-                </div>
-            <hr>
-
-            <h4>What is relative weight?</h4>
-                <div class="row">
-                    <div class="col-md-10">
-                        <ul> 
-                            <li style="margin-top: 0.35em; margin-bottom: 0.25em;">Relative weight describes the <b>relative importance</b> of the targets for a multi-objective optimisation experiment. </li>
-                            <li style="margin-top: 0.35em; margin-bottom: 0.25em;">Weight values must be positive numbers and will be normalised, so only their relative magnitudes matter.</li>
                         </ul>
                     </div>
                 </div>
@@ -617,6 +583,8 @@
     </div>
 </div>    
 
-    
+       
+
+</script>
 
 {% endblock %}

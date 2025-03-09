@@ -6,7 +6,7 @@
     <h1 class="display-4">The {{expt_name}} experiment</h1>
     <p class="lead">Here, the parameters and search space of the {{expt_name}} is described.</p>
     <hr class="my-4">
-    {% if expt_name.endswith("-sample-reizman-mo") and df['iteration'].max() < 1 %} <div class="container">
+    {% if expt_name == "sample-reizman-suzuki" and df['iteration'].max() < 1 %} <div class="container">
         <h3>Start by getting the next recommendation!</h3>
         </br>
         <form method="POST">
@@ -30,14 +30,14 @@
     <hr class="my-4">
     <h2>The {{dataset_name}} dataset is used in this experiment.</h2>
     </br>
-    <h5 class="text-left text-muted">The objective variables are highlighted in <span style="color: rgb(142, 142, 226);">purple</span>. The 'iteration' column indicates how many times Web-BO has given you recommendations on which experiment(s) to try next. When the iteration is 0 it means that you have not been recommended any additional experiment(s) yet.
+    <h5>The objective variable is highlighted in <span style="color: rgb(142, 142, 226);">purple</span>. The 'iteration' column indicates how many times web-BO has given you recommendations on which experiment(s) to try next. When the iteration is 0 it means that you have not been recommended any additional experiment(s) yet.
     </h5>
     </br>
     <table class="data" style="border-collapse: collapse; width: 100%;">
         <thead>
             <tr>
                 {% for title in titles %}
-                <th style="border: 1px solid black; padding: 10px;">{{ title}}</th>
+                <th style="border: 1px solid black; padding: 10px;">{{ title }}</th>
                 {% endfor %}
             </tr>
         </thead>
@@ -45,15 +45,18 @@
             {% for index, row in df.iterrows() %}
             <tr>
                 {% for column in df.columns %}
-                <td class="{% if column in target_names %}target-column{% endif %}" 
-                style="border: 1px solid black;">
-                    
+                <td style="border: 1px solid black;">
+                    {% if column == target_name %}
+                    <div style="background-color: rgb(142, 142, 226);">
+                        {{ row[column] }}
+                    </div>
+                    {% else %}
                         {% if row[column] is number %}
-                            {{ "%.3g" | format(row[column]) }} <!-- Ensures numbers are rounded to 3 sig figs -->
+                            {{ "%.3g" | format(row[column]) }} <!--the %.3g here should round numbers that are shown to MORE than 3sf, to 3sf (1 should stay 1, not be turned into 1.00)-->
                         {% else %}
                             {{ row[column] }}
                         {% endif %}
-                    
+                    {% endif %}
                 </td>
                 {% endfor %}
             </tr>
@@ -61,63 +64,17 @@
         </tbody>
     </table>
 </div>
+<div id="plot"></div>
+<script>
+    var graphs = {{ graphJSON | safe }};
 
-<div class="container mt-5">
-    <h1 class="text-left mb-3">Graphical Visualisation</h1>
-    <h5 class="text-left text-muted">
-        Explore the trends and relationships in your experiment by creating interactive graphs. Use the drop-down menus below to select variables for the X and Y axes. 
-    </h5>
-    <hr class="my-4">
-
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <label for="x-selector" class="h5">Select X-axis:</label>
-            <select id="x-selector" class="form-control">
-                <option value="">-- Select X Variable --</option>
-                <option value="iteration">Iteration</option>
-                {% for var in target_names %}
-                    <option value="{{ var }}">{{ var | title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-4">
-            <label for="y-selector" class="h5">Select Y-axis:</label>
-            <select id="y-selector" class="form-control">
-                <option value="">-- Select Y Variable --</option>
-                <option value="iteration">Iteration</option>
-                {% for var in target_names %}
-                    <option value="{{ var }}">{{ var | title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="text-center mt-4">
-        <button id="plot-button" class="btn btn-info btn-lg my-3">
-            Generate Plot
-        </button>
-    </div>
-
-    <div class="container text-center mt-4">
-        <div id="loading-spinner" class="mt-3" style="display: none;">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <div id="plot-container" class="mx-auto shadow-lg p-3 bg-white rounded" style="display: none;">
-            <div id="dynamic-plot"></div>
-        </div>
-    </div>    
+    // Ensure mode: 'markers' is set for each trace
+    for (var i = 0; i < graphs.data.length; i++) {
+        graphs.data[i].mode = 'markers';
+    }
     
-</div>
-
-
-
-
-
-
-
+    Plotly.newPlot('plot', graphs);
+</script>
 
 {% if "datalab" in dataset_name and df['iteration'].max() > 0 %}
 </br>
@@ -128,81 +85,13 @@
 {% endif %}
 </br>
 <form method="POST">
-    <div class="d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary btn-lg" name="action" value="download" style="margin-right: 20px;">
-            Download dataset
-        </button>
-        <button type="submit" class="btn btn-secondary btn-lg" name="action" value="view-my-stuff">
-            Web-BO home
-        </button>
-    </div>
+    <button type="submit" class="btn btn-primary btn-lg" name="action" value="download"
+        style="margin-right: 20px;">Download
+        dataset!</button>
+    <button type="submit" class="btn btn-secondary btn-lg" name="action" value="view-my-stuff">Web-BO home</button>
+
 </form>
 
 </br>
 </br>
-
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-    }
-
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #B0B0B0;
-        color: white;
-        font-weight: bold;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    tr:hover {
-        background-color: #ddd;
-    }
-
-    td {
-        background-color: white;
-        font-size: 14px;
-    }
-    .graph-container {
-    width: 90%;
-    max-width: 1000px; 
-    margin: auto; 
-    }
-    .target-column {
-        border-left: 3px solid black;
-        border-right: 3px solid black;
-        background-color: rgba(142, 142, 226, 0.2); 
-    }
-    .btn-lg {
-        font-size: 1.25rem; 
-        padding: 10px 20px; 
-        width: auto;
-    }
-    #plot-container {
-        width: 100%;
-        max-width: 1000px;
-        height: 600px;
-        min-height: 500px; 
-        display: flex;
-        justify-content: center;  
-        align-items: center; 
-        overflow: hidden;
-    }
-
-    #dynamic-plot {
-        width: 100%;
-        height: 100%; 
-    }
-
-</style>
 {% endblock %}
