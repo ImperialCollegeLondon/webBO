@@ -1,14 +1,13 @@
-{% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% extends "base.html" %} {% block title %}Home{% endblock %}
 
 {% block content %}
 <br />
-
-<div class="jumbotron text-left" style="background-color:#E6E6FA; padding: 20px; border-radius: 10px;">
-    <h1 class="display-4">Your {{ name }} Dataset</h1>
-    <p style="text-align: left;" class="lead">This page displays detailed information about the {{ name }} dataset.</p>
+<div class="jumbotron" style="background-color:#E6E6FA;">
+    <h1 class="display-4">Your {{name}} dataset</h1>
+    <p class="lead">This is the information present in the {{name}} dataset.</p>
 </div>
-{% if name.endswith("-sample-reizman") %}
+<hr class="my-4">
+{% if "sample-reizman" in name %}
 <div class="container">
 
     <h1>Welcome to your first dataset!</h1>
@@ -125,229 +124,29 @@
 
 </div>
 {% endif %}
-
-{% if name.endswith("-sample-reizman-mo") %}
-<div class="container">
-
-    <h1>Welcome to your first dataset</h1>
-    </br>
-    <h3>Let's explore the data, and create your first optimization experiment!</h3>
-    </br>
-    <h5>Recall, this case study concerns optimizing the coupling of 3-bromoquinoline with
-        3,5-dimethylisoxazole-4-boronic acid pinacol ester in the presence of
-        1,8-diazobicyclo[5.4.0]undec-7-ene (DBU) and THF/water, Figure 1. </h5>
-    </br>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <figure class="figure">
-                    <h3>Optimisation reaction</h3>
-                    <img src="{{ url_for('static', filename='reizman_reaction.png') }}" class="img-fluid">
-                    <figcaption class="figure-caption">Figure 1. The Suzuki-Miyaura cross-coupling
-                        reaction of this case study.
-                    </figcaption>
-                    </br>
-                    <h3>Parameter space</h3>
-                    <img src="{{ url_for('static', filename='parameter_space.png') }}" class="img-fluid">
-                    <figcaption class="figure-caption">Figure 2. The parameter space spanned by this
-                        case study includes 3 continuous variables (catalyst loading, temperature,
-                        and residence time) and 1 categorical variable (catalyst).
-                    </figcaption>
-                    </br>
-                </figure>
-            </div>
-            <div class="col">
-                <figure class="figure">
-                    <h3>Catalyst options</h3>
-                    <img src="{{ url_for('static', filename='catalyst_options.png') }}" class="img-fluid">
-                    <figcaption class="figure-caption">Figure 3. The catalyst options included in
-                        this study.
-                    </figcaption>
-                </figure>
-            </div>
-        </div>
-    </div>
-    </br>
-    <h5>The parameter space is
-        comprised of:</h5>
-    </br>
-    <table class="table table-striped">
-        <thead class="thead-dark">
-            <tr class="table-primary">
-                <td>variable</td>
-                <td>variable type</td>
-                <td>parameter space</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>precatalyst scaffold (P)</td>
-                <td>categorical</td>
-                <td>[shown in Figure 1]</td>
-            </tr>
-            <tr>
-                <td>ligand (L)</td>
-                <td>categorial</td>
-                <td>[shown in Figure 1]</td>
-            </tr>
-            <tr>
-                <td>catalyst loading</td>
-                <td>continuous</td>
-                <td>0.5 - 2.5 %</td>
-            </tr>
-            <tr>
-                <td>T (temperature)</td>
-                <td>continuous</td>
-                <td>30 - 110 <sup>o</sup>C</td>
-            </tr>
-            <tr>
-                <td>t<sub>res</sub> (reaction time)</td>
-                <td>continuous</td>
-                <td>1 - 10 min.</td>
-            </tr>
-        </tbody>
-    </table>
-    </br>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h4>And we want to maximize the...</h4>
-            </div>
-            <div class="col">
-                <h3 class="text-success">yield & turnover number (ton)</h3>
-            </div>
-        </div>
-    </div>
-    </br>
-    <h5>Since you likely don't have access to a lab space to perform these experients, we will take advantage of the
-        experiment emulators offered by the <a href="https://github.com/sustainable-processes/summit"
-            class="tooltip-test" title="Tooltip">Summit</a>
-        package. Specifically, the <a
-            href="https://gosummit.readthedocs.io/en/latest/experiments_benchmarks/implemented_benchmarks.html#cross-coupling-emulator-benchmarks"
-            class="tooltip-test" title="Tooltip">Suzuki-Miyaura Cross Coupling Emulator</a> to perform the experiments.
-    </h5>
-    </br>
-    <h5>Your initial datapoint is shown below -- as well as the summary statistics for your dataset.</h5>
-    </br>
-    <div class="col"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col text-center">
-                <form method="POST">
-                    <button type="submit" class="btn-lg btn-success" name="action" value="setup-experiment">Setup your
-                        experiment!</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-</div>
-{% endif %}
 </br>
-
-
-
-<div class="container">
-    <h1 class="mb-3" style="text-align: left;">Dataset description</h1>
-    <hr class="my-4">
-    <div class="table-wrapper"  style="overflow-x:auto;">
+</br>
+<div class="row">
+    <div class="col container">
+        <h2>The dataset</h2>
+        </br>
         {% for table in tables %}
-            <div>{{ table|safe }}</div>
+        {{ table|safe }}
+        {% endfor %}
+    </div>
+
+    <div class="col container">
+        <h2>Dataset summary statistics</h2>
+        </br>
+        {% for summary in summaries %}
+        {{ summary|safe }}
         {% endfor %}
     </div>
 </div>
 
-<div class="container mt-5">
-        <h1 class="mb-3" style="text-align: left;">Dataset statistics</h1>
-        <p style="text-align: left;" class="lead">Explore the key statistics and trends in your dataset by pressing the button below.</p>
-        <hr class="my-4">
-    
-        <div class="text-center mb-4">
-
-            <button class="btn btn-info btn-lg my-3" id="toggleSummary">Show Summary</button>
-        </div>
-    
-        <div id="summarySection" class="text-center" style="display:none;">
-            {% for summary in summaries %}
-                <div>{{ summary|safe }}</div>
-            {% endfor %}
-        </div>
-</div>
-</br>
-
 <form method="POST">
-    <button type="submit" class="btn btn-primary btn-lg" name="action" value="download"
-        style="margin-right: 20px;">Download
-        dataset</button>
     <button type="submit" class="btn btn-secondary btn-lg" name="action" value="view-my-stuff">Web-BO home</button>
 </form>
 
-
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-    }
-
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #B0B0B0;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-
-    tr:hover {
-        background-color: #ddd;
-    }
-
-    td {
-        background-color: white;
-        font-size: 14px;
-    }
-
-    .card {
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        background: #f9f9f9;
-    }
-
-    #summarySection {
-        display: none; /* Hidden by default */
-    }
-
-    /* Responsive layout */
-    @media (max-width: 768px) {
-        .row {
-            display: flex;
-            flex-direction: column;
-        }
-
-        #summaryContainer {
-            margin-top: 20px;
-        }
-    }
-    .btn-lg {
-        font-size: 1.25rem; 
-        padding: 10px 20px; 
-        width: auto; 
-    }
-
-    #toggleSummary {
-        display: inline-block;
-    }
-
-    .container {
-        text-align: center; 
-    }
-</style>
 
 {% endblock %}
