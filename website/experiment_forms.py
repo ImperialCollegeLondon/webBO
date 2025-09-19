@@ -180,17 +180,23 @@ def add_measurements(expt_name):
     if request.method == "POST":
         if request.form['action'] == 'submit_measurements':
             for index, row in recs.iterrows():
-                new_measurement = {}
+                ndf = pd.DataFrame()
                 # concatenate df with the input values from the form
                 for column in recs.columns:
-                    if column == 'iteration':
-                        new_measurement[column] = recs['iteration'].max()
-                    else:
-                        new_measurement[column] = request.form.getlist(f"{column}")
+                    if column != 'iteration':
+                        # new_measurement[column] = recs['iteration'].max()
+                        s = pd.Series(request.form.getlist(f"{column}"))
+                        ndf.insert(loc=0, column=column, value=s)
 
-                # updte the data entry in the Data DB
-                ndf = pd.DataFrame([new_measurement])
-                df = pd.concat([df, ndf])
+                ndf['iteration'] = recs['iteration'].max()
+
+                for col in ndf.columns:
+                    if recs[col].dtype == 'float64':
+                        ndf[col] = pd.to_numeric(ndf[col], errors='coerce').astype('float64')
+                    elif recs[col].dtype == "int64":
+                        ndf[col] = pd.to_numeric(ndf[col], errors='coerce').astype('int64')
+
+            df = pd.concat([df, ndf])
 
             expt_info.data = df.to_json(orient='records')
             db.session.add(expt_info)
