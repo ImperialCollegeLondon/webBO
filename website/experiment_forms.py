@@ -186,7 +186,7 @@ def add_measurements(expt_name):
                     if column == 'iteration':
                         new_measurement[column] = recs['iteration'].max()
                     else:
-                        new_measurement[column] = request.form.get(f"{column}")
+                        new_measurement[column] = request.form.getlist(f"{column}")
 
                 # updte the data entry in the Data DB
                 ndf = pd.DataFrame([new_measurement])
