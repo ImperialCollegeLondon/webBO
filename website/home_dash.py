@@ -242,6 +242,27 @@ def add_sample_dataset():
     return jsonify({})
 
 
+@home_dash.route('/perform-experiment', methods=['POST', 'GET'])
+def perform_experiment():
+    # Expect JSON body like: [{"catalyst": "...", "t_res": 600, ...}, ...]
+    payload = request.get_json()
+
+    # Convert payload to DataFrame
+    dataset_df = pd.DataFrame(payload)
+
+    emulator = get_pretrained_reizman_suzuki_emulator(case=1)
+    conditions = DataSet.from_df(dataset_df)
+    emulator_output = emulator.run_experiments(conditions, rtn_std=True)
+
+    rxn_yield = emulator_output.to_numpy()[0, 5]
+    dataset_df['yield'] = rxn_yield * 100
+    dataset_df['iteration'] = 0
+
+    # Return as JSON records
+    result_json = json.loads(dataset_df.to_json(orient="records"))
+    return jsonify(result_json)
+
+
 def please_add_sample_dataset(name):
     sample_dataset = {
         "catalyst": ["P1-L3"], "t_res": [600], "temperature": [30],"catalyst_loading": [0.498],
