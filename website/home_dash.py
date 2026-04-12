@@ -255,7 +255,7 @@ def perform_experiment():
     emulator_output = emulator.run_experiments(conditions, rtn_std=True)
 
     rxn_yield = emulator_output.to_numpy()[0, 5]
-    rxn_ton = emulator_output.to_numpy()[0, 6]
+    rxn_ton = emulator_output.to_numpy()[0, 4]
     dataset_df['yield'] = rxn_yield
     dataset_df['ton'] = rxn_ton
     dataset_df['iteration'] = 0
